@@ -1,0 +1,82 @@
+@import '../../../function.less';
+.sale-page{
+    padding: .5rem .7rem;
+    box-sizing: border-box;
+    .orderby-wrap{
+        display:flex;
+        margin-bottom: 15px;
+        .orderby-one,.orderby-two{
+            margin-right: .5rem;
+        }
+        .checkbox-wrapper{
+            margin-top: 8px;
+        }
+    }
+    .sale-table{
+        .bg-bx();
+        .table-ul{
+            // border: 1px solid red;
+            .table-th{
+                // border: 1px solid red;
+                padding: 0 30px;
+                .th-ul{
+                    // border: 1px solid red;
+                    display: flex;
+                    justify-content: space-between;
+                    .th-li{
+                        font-size: 14px;
+                        color: #B2B2B2;
+                        line-height: 54px;
+                        display: inline-block;
+                        &:nth-of-type(1){
+                            min-width: 7rem;
+                        }
+                        &:nth-of-type(2){
+                            min-width: 4rem;
+                        }
+                        &:nth-of-type(3){
+                            min-width: .3rem;
+                            text-align: center;
+                        }
+                    }
+                }
+            }
+            .table-td{
+                border-top: 1px solid #E5E5E5;
+                padding: 0 30px;
+                cursor: pointer;
+                &:hover{
+                    background: #FFF7F5;                    
+                }
+                .td-ul{
+                    display: flex;
+                    justify-content: space-between;
+                    .td-li{
+                        line-height: 60px;
+                        font-size: 16px;
+                        color: #333333;
+                        display: inline-block;
+                        &:nth-of-type(1){
+                            min-width: 7rem;
+                        }
+                        &:nth-of-type(2){
+                            min-width: 4rem;
+                        }
+                        &:nth-of-type(3){
+                            min-width: .3rem;
+                            text-align: center;
+                        }
+                        span{
+                            vertical-align: middle;
+                        }
+                        img{
+                            width: 20px;
+                            height: 20px;
+                            vertical-align: middle;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

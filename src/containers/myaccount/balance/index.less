@@ -1,0 +1,93 @@
+@import '../../../function.less';
+.balance-page{
+  padding: .5rem .7rem;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  .balance-warpper{
+    width: 6.35rem;
+    .balance-title{
+        margin-bottom: 15px;
+        .wtitle{
+            font-size: 20px;
+            color: #333333;
+            font-weight: 600;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+    }
+    .balance-content{
+        .bg-bx();
+        .bcontent-title{
+            font-size: 16px;
+            color:#b2b2b2;
+            padding: 20px 30px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+        .bcontent-middle{
+            height: 150px;
+            box-sizing: border-box;
+            padding: 0 30px;
+            border-bottom: 1px solid #e5e5e5;           
+            .balance-name{
+                font-size: 20px;
+                display: inline-block;
+                width: 110px;
+            }
+            .balance-number{
+                font-size: 30px;
+                display: inline-block;
+            }
+            .bsuccess{
+                font-size: 16px;   
+                text-align: center; 
+                padding-top: 7px;            
+            }
+        }
+        .abalance{
+            padding: 60px 30px;
+        }
+        .tbalance{
+            .balance-name,.balance-number{
+                padding-top: 36px;
+                vertical-align: middle;
+            }
+        }
+        .bbalance{
+            .balance-smallbox{
+                padding-top: 30px;
+                .b2-text{
+                    font-size: 16px;
+                    color: #B2B2B2;
+                    width: 110px;
+                    display: inline-block;
+                }
+                .balance-select,.balance-input{
+                    display: inline-block;
+                }
+                .balance-input{
+                    input{
+                        border: 1px solid #B2B2B2;
+                        border-radius: 3px;
+                        width: 2rem;
+                        height: 30px;
+                        padding: 0 15px;
+                        margin-right: 15px;
+                    }
+                    .tips-text{
+                        font-size: 14px;
+                        color: #B2B2B2;
+                    }
+                }
+            }
+        }
+    }
+    .bcontent-btn{
+        padding: 60px 0 50px 0;
+        text-align: center;
+        .white-btn{
+            margin-right: 30px;
+        }
+    }
+  }
+}
