@@ -2,67 +2,118 @@
  * 成交历史
  */
 import * as React from 'react';
-import { observer } from 'mobx-react';
+import { observer, inject } from 'mobx-react';
 import './index.less';
 import { injectIntl } from 'react-intl';
 import Button from '@/components/Button';
 import Page from '@/components/Page';
 import Select from '@/components/select';
+import { ITxHistoryProps, ITxHistoryList } from '../interface/txhistory.interface';
 
+@inject('txhistory')
 @observer
-class TXHistory extends React.Component<any, any> {
+class TXHistory extends React.Component<ITxHistoryProps, any> {
+  public state = {
+    txhistoryPage: 1,
+    txhistorySize: 15,
+    txhistoryOrderBy: 'MortgagePayments_High',// 筛选排序方式
+    txhistoryAsset: 'All',   // 筛选币种
+    txhistoryLoading: true, // 是否正在加载
+    txhistoryFistLoad: true // 是否初次加载
+  }
   // 筛选条件
-  public orderOptions = [
+  public txhistoryOrder = [
     {
-      id: 'no',
+      id: 'MortgagePayments_High',
       name: '默认',
     },
     {
-      id: 'new',
+      id: 'LaunchTime_New',
       name: '最新上架',
     },
     {
-      id: 'priceup',
+      id: 'Price_High',
       name: '价格最高',
     },
     {
-      id: 'pricedown',
+      id: 'Price_Low',
       name: '价格最低',
     },
     {
-      id: 'attention',
+      id: 'StarCount_High',
       name: '关注数量',
     }
   ]
   // 筛选条件二
-  public selectOptions = [
+  public txhistoryAssetOpt = [
     {
-      id: 'all',
+      id: 'All',
       name: '全部',
     },
     {
-      id: 'cgas',
+      id: 'CGAS',
       name: 'CGAS',
     },
     {
-      id: 'nnc',
+      id: 'NNC',
       name: 'NNC',
     }
   ]
-  // todo
-  public onCallback = (item) =>
+  public componentWillUnmount()
   {
-    console.log(item.id);
+    this.props.txhistory.txhistoryList = [];
+    this.props.txhistory.txhistoryListCount = 0;
   }
-  // 只看关注
-  public onShowMyAttention = (flag: boolean) =>
+  // 获取数据
+  public getTxHistoryData = async () =>
   {
-    console.log('flag' + flag)
+    await this.props.txhistory.getTxHistoryList(this.state.txhistoryPage, this.state.txhistorySize, this.state.txhistoryOrderBy, this.state.txhistoryAsset);
+    this.setState({
+      txhistoryLoading: false
+    })
+  }
+  // 排序显示
+  public onTxOrderBy = (item) =>
+  {
+    this.setState({
+      txhistoryPage: 1,
+      txhistoryOrderBy: item.id,
+      txhistoryLoading: true,
+    }, async () =>
+      {
+        this.getTxHistoryData();
+      })
+  }
+  // 筛选条件待定
+  public onTxAssetSelect = (item) =>
+  {
+    this.setState({
+      txhistoryPage: 1,
+      txhistoryAsset: item.id,
+      txhistoryLoading: true
+    }, async () =>
+      {
+        if (!this.state.txhistoryFistLoad)
+        {
+          this.getTxHistoryData();
+        } else
+        {
+          this.setState({
+            txhistoryFistLoad: false
+          })
+        }
+      })
   }
   // 翻页
-  public onTransPage = (index: number) =>
+  public onChangeTxPage = (index: number) =>
   {
-    console.log('index:' + index);
+    this.setState({
+      txhistoryPage: index,
+      txhistoryLoading: true
+    }, async () =>
+      {
+        this.getTxHistoryData();
+      })
   }
   public render()
   {
@@ -70,10 +121,10 @@ class TXHistory extends React.Component<any, any> {
       <div className="history-page">
         <div className="orderby-wrap">
           <div className="orderby-one">
-            <Select defaultValue='no' options={this.orderOptions} text='排序' onCallback={this.onCallback} />
+            <Select defaultValue='MortgagePayments_High' options={this.txhistoryOrder} text='排序' onCallback={this.onTxOrderBy} />
           </div>
           <div className="orderby-two">
-            <Select defaultValue='all' options={this.selectOptions} text='筛选' onCallback={this.onCallback} />
+            <Select defaultValue='All' options={this.txhistoryAssetOpt} text='筛选' onCallback={this.onTxAssetSelect} />
           </div>
           <Button text="成交价格分布" btnSize='sm-btn' />
         </div>
@@ -83,41 +134,31 @@ class TXHistory extends React.Component<any, any> {
               <ul className="th-ul">
                 <li className="th-li">域名</li>
                 <li className="th-li">成交价格</li>
-              </ul>              
-            </li>
-            <li className="table-td">
-              <ul className="td-ul">
-                <li className="td-li">
-                  <span>abcde1.neo</span>
-                  </li>
-                <li className="td-li"><span>12345678.12345678 CGAS</span></li>
               </ul>
             </li>
-            <li className="table-td">
-              <ul className="td-ul">
-                <li className="td-li">
-                  <span>abcde1.neo</span>
+            {
+              this.props.txhistory.txhistoryListCount > 0 && this.props.txhistory.txhistoryList.map((item: ITxHistoryList, index: number) =>
+              {
+                return (
+                  <li className="table-td" key={index} >
+                    <ul className="td-ul">
+                      <li className="td-li">
+                        <span>{item.fullDomain}</span>
+                      </li>
+                      <li className="td-li"><span>{item.price + ' ' + item.assetName}</span></li>
+                    </ul>
                   </li>
-                <li className="td-li"><span>12345678.12345678 CGAS</span></li>
-              </ul>
-            </li>
-            <li className="table-td">
-              <ul className="td-ul">
-                <li className="td-li">
-                  <span>abcde1.neo</span>
-                  </li>
-                <li className="td-li"><span>12345678.12345678 CGAS</span></li>
-              </ul>
-            </li>
+                )
+              })
+            }
           </ul>
           <Page
-          totalCount={1000000}
-          pageSize={15}
-          currentPage={1}
-          onChange={this.onTransPage}
-        />
+            totalCount={this.props.txhistory.txhistoryListCount}
+            pageSize={this.state.txhistorySize}
+            currentPage={this.state.txhistoryPage}
+            onChange={this.onChangeTxPage}
+          />
         </div>
-        
       </div>
     );
   }

@@ -7,7 +7,6 @@ import './index.less';
 import { injectIntl } from 'react-intl';
 import Button from '@/components/Button';
 import Card from '@/components/card';
-import Slider from '@/components/slider';
 
 @observer
 class SearchPage extends React.Component<any, any> {
@@ -39,8 +38,6 @@ class SearchPage extends React.Component<any, any> {
               <ul className="td-ul">
                 <li className="td-li">
                   <span>abcde1.neo</span>
-                  <Slider rate={20} />
-                  <Card text="我的" style={{'marginLeft':'15px'}} cardsize="sm-card" colortype="c-blue"/>
                 </li>
                 <li className="td-li"><span>12345678.12345678 CGAS</span></li>
                 <li className="td-li"><img src={require('@/img/star.png')} alt=""/></li>
@@ -50,19 +47,15 @@ class SearchPage extends React.Component<any, any> {
               <ul className="td-ul">
                 <li className="td-li">
                   <span>abcde1.neo</span>
-                  <Slider rate={20} />
-                  <Card text="我的" style={{'marginLeft':'15px'}} cardsize="sm-card" colortype="c-blue"/>
                 </li>
                 <li className="td-li"><span>12345678.12345678 CGAS</span></li>
-                <li className="td-li"><img src={require('@/img/unstar.png')} alt=""/></li>
+                <li className="td-li"><img src={require('@/img/star-un.png')} alt=""/></li>
               </ul>
             </li>
             <li className="table-td">
               <ul className="td-ul">
                 <li className="td-li">
                   <span>abcde1.neo</span>
-                  <Slider rate={20} />
-                  <Card text="我的" style={{'marginLeft':'15px'}} cardsize="sm-card" colortype="c-blue"/>
                 </li>
                 <li className="td-li"><span>12345678.12345678 CGAS</span></li>
                 <li className="td-li"><img src={require('@/img/star.png')} alt=""/></li>

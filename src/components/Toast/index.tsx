@@ -12,7 +12,7 @@ interface IProps
   type?: string,
 }
 
-export default (message: string, type?: "success"|"error") =>
+export default (message: string, type?: "success" | "error") =>
 {
   type = type ? type : 'success';
   // 释放组件
@@ -43,17 +43,18 @@ export default (message: string, type?: "success"|"error") =>
     {
       return (
         <div className="comp-toast">
-        {this.onClose()}
-          <div className="img-box">
-            {/* {
-              type === 'success' && <img src={require('@/img/right.png')} className="alert-success-icon" />
+          {this.onClose()}
+          {/* <div className="img-box">
+          ddd
+            {
+              this.props.type === 'success' && <img src={require('@/img/right.png')} className="alert-success-icon" />
             }
             {
-              type === 'error' && <img src={require('@/img/wrong.png')} className="alert-success-icon" />
-            } */}
-          </div>
-          <span className="text" dangerouslySetInnerHTML={{ '__html': this.props.message }} />
-        </div>
+              this.props.type === 'error' && <img src={require('@/img/wrong.png')} className="alert-success-icon" />
+            }
+          </div> */}
+           <span className="text" dangerouslySetInnerHTML={{ '__html': this.props.message }} /> 
+        </div >
       );
     }
   }
