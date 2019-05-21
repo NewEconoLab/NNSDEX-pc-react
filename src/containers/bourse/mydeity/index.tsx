@@ -48,7 +48,7 @@ class Mydeity extends React.Component<IMyDeityProps, any> {
   // 选择筛选条件
   public onMyDeityCallback = (item) =>
   {
-    console.log(item.id);
+    // console.log(item.id);
     this.setState({
       mydeityPage: 1,
       mydeityOrderBy: item.id,
@@ -69,12 +69,27 @@ class Mydeity extends React.Component<IMyDeityProps, any> {
         this.getMyDeityData();
       })
   }
+  // 列表显示样式
   public dealClassname = (deal:boolean)=>{
     if(deal){
       return 'td-ul gray-ul'
     }else{
       return 'td-ul'
     }
+  }
+  // 跳转到详情页
+  public onGoDomainInfo = (domain: string,isDeal:boolean,type:number) =>
+  {
+    if(isDeal){
+      return
+    }
+    // 出售类型：0表示降价出售，1表示一口价
+    if(type === 0){
+      this.props.history.push('/saleinfo/' + domain+'?selltype=reduce&opt=cancel')
+    }
+    else{
+      this.props.history.push('/saleinfo/' + domain+'?selltype=onceprice&opt=cancel')
+    }    
   }
   public render()
   {
@@ -97,7 +112,7 @@ class Mydeity extends React.Component<IMyDeityProps, any> {
               this.props.mydeity.mydeityListCount > 0 && this.props.mydeity.mydeityList.map((item: IMyDeityList, index: number) =>
               {
                 return (
-                  <li className="table-td" key={index} >
+                  <li className="table-td" key={index} onClick={this.onGoDomainInfo.bind(this,item.fullDomain,item.isDeal,item.saleRate)}>
                     <ul className={this.dealClassname(item.isDeal)}>
                       <li className="td-li">
                         {
@@ -108,7 +123,7 @@ class Mydeity extends React.Component<IMyDeityProps, any> {
                         }
                         <span>{item.fullDomain}</span>
                         {
-                          (!item.isDeal && item.saleRate !== 0) && <Slider rate={item.saleRate * 100} />
+                          (!item.isDeal && item.saleRate !== '0') && <Slider rate={parseFloat(item.saleRate) * 100} />
                         }
                         {
                           item.isDeal && <Card text="已成交" style={{ 'marginLeft': '15px' }} cardsize="md-card" colortype="cs-gray" />

@@ -2,17 +2,48 @@
  * 求购详情页
  */
 import * as React from 'react';
-import { observer } from 'mobx-react';
+import { observer, inject } from 'mobx-react';
 import '../index.less';
 import { injectIntl } from 'react-intl';
 import Button from '@/components/Button';
 import Card from '@/components/card';
+import { IAskbuyInfoProps, IAskbuyOtherList } from '../interface/askbuyinfo.interface';
+import * as formatTime from '@/utils/formatTime';
+import {getQueryString} from '@/utils/function'
 
+@inject('askbuyinfo')
 @observer
-class AskBuyInfo extends React.Component<any, any> {
+class AskBuyInfo extends React.Component<IAskbuyInfoProps, any> {
+    public state = {
+        askBuyer:getQueryString('addr') || '',
+    }
+    public componentDidMount()
+    {
+        const params = this.props.match.params;
+        const domain = params["domain"];
+        this.props.askbuyinfo.askbuyDomain = domain;
+        this.props.askbuyinfo.getAskbuyInfo(domain,this.state.askBuyer);
+        this.props.askbuyinfo.getAskbuyOtherList(domain,this.state.askBuyer);
+        console.log(JSON.stringify(this.props.askbuyinfo));
+    }
     // 返回上一页
-    public onGoBack = () => {
+    public onGoBack = () =>
+    {
         this.props.history.go(-1);
+    }
+    // 跳转到详情页
+    public onGoInfo = (type:string,addr:string,selltype:number) =>
+    {
+        // selltype出售类型：0表示降价出售，1表示一口价
+        if(type=== 'Buying'){
+            this.props.history.push('/askbuyinfo/' + this.props.askbuyinfo.askbuyDomain+'?addr='+addr)
+        }
+        else if(type === 'Selling' && selltype === 0){
+            this.props.history.push('/saleinfo/' + this.props.askbuyinfo.askbuyDomain+'?selltype=reduce')
+        }else if(type === 'Selling' && selltype === 1){
+            this.props.history.push('/saleinfo/' + this.props.askbuyinfo.askbuyDomain+'?selltype=onceprice')
+        }
+        
     }
     public render()
     {
@@ -25,31 +56,21 @@ class AskBuyInfo extends React.Component<any, any> {
                 <div className="domaininfo-wrap">
                     <div className="line-wrapper">
                         <div className="line-name">域名：</div>
-                        <div className="line-text">abcde.neo</div>
+                        <div className="line-text">{this.props.askbuyinfo.askbuyData && this.props.askbuyinfo.askbuyData.fullDomain}</div>
                     </div>
                     <div className="line-wrapper">
                         <div className="line-name">求购价格</div>
-                        <div className="line-text">11 CGAS</div>
+                        <div className="line-text">{this.props.askbuyinfo.askbuyData && (this.props.askbuyinfo.askbuyData.price + ' ' + this.props.askbuyinfo.askbuyData.assetName)}</div>
                     </div>
-                    {/* <div className="line-wrapper">
-                        <div className="line-name">当前价格</div>
-                        <div className="line-text sign-text">10 CGAS</div>
-                    </div>
-                    <div className="line-wrapper">
-                        <div className="line-name">降价速度</div>
-                        <div className="line-text">1 CGAS/天</div>
-                    </div>
-                    <div className="line-wrapper">
-                        <div className="line-name">最低价格</div>
-                        <div className="line-text">1 CGAS</div>
-                    </div> */}
                     <div className="line-wrapper">
                         <div className="line-name">求购人</div>
-                        <div className="line-text">ARtmDzcTZxHCYydqFxFw31d21CpSArZwi4</div>
+                        <div className="line-text">{this.props.askbuyinfo.askbuyData && this.props.askbuyinfo.askbuyData.buyer}</div>
                     </div>
                     <div className="line-wrapper">
                         <div className="line-name">发起时间</div>
-                        <div className="line-text">2019/04/11 | 10:07:25</div>
+                        <div className="line-text">
+                            {this.props.askbuyinfo.askbuyData && formatTime.format('yyyy/MM/dd | hh:mm:ss', this.props.askbuyinfo.askbuyData.time.toString(), this.props.intl.locale)}
+                        </div>
                     </div>
                 </div>
                 <div className="domain-account">
@@ -74,48 +95,33 @@ class AskBuyInfo extends React.Component<any, any> {
                                 <li className="th-li">时间</li>
                             </ul>
                         </li>
-                        <li className="table-td">
-                            <ul className="td-ul">
-                                <li className="td-li">
-                                    <Card text="求购" style={{ 'marginRight': '15px' }} cardsize="sm-card" colortype="cs-blue" />
-                                </li>
-                                <li className="td-li"><span>AJN2SZJuF7j4mvKaMYAY9N8KsyD4j1fNdf</span></li>
-                                <li className="td-li"><span>12345678.12345678 CGAS</span></li>
-                                <li className="td-li"><span>2019/04/11 | 10:07:25</span></li>
-                            </ul>
-                        </li>
-                        <li className="table-td">
-                            <ul className="td-ul">
-                                <li className="td-li">
-                                    <Card text="求购" style={{ 'marginRight': '15px' }} cardsize="sm-card" colortype="cs-blue" />
-                                </li>
-                                <li className="td-li"><span>AJN2SZJuF7j4mvKaMYAY9N8KsyD4j1fNdf</span></li>
-                                <li className="td-li"><span>12345678.12345678 CGAS</span></li>
-                                <li className="td-li"><span>2019/04/11 | 10:07:25</span></li>
-                            </ul>
-                        </li>
-                        <li className="table-td">
-                            <ul className="td-ul">
-                                <li className="td-li">
-                                    <Card text="出售" style={{ 'marginRight': '15px' }} cardsize="sm-card" colortype="c-red" />
-                                </li>
-                                <li className="td-li"><span>AJN2SZJuF7j4mvKaMYAY9N8KsyD4j1fNdf</span></li>
-                                <li className="td-li"><span>12345678.12345678 CGAS</span></li>
-                                <li className="td-li"><span>2019/04/11 | 10:07:25</span></li>
-                            </ul>
-                        </li>
-                        <li className="table-td">
-                            <ul className="td-ul">
-                                <li className="td-li">
-                                    <Card text="求购" style={{ 'marginRight': '15px' }} cardsize="sm-card" colortype="cs-blue" />
-                                </li>
-                                <li className="td-li"><span>AJN2SZJuF7j4mvKaMYAY9N8KsyD4j1fNdf</span></li>
-                                <li className="td-li"><span>12345678.12345678 CGAS</span></li>
-                                <li className="td-li"><span>2019/04/11 | 10:07:25</span></li>
-                            </ul>
-                        </li>
+                        {
+                            this.props.askbuyinfo.askbuyOtherList.length > 0 && this.props.askbuyinfo.askbuyOtherList.map((item: IAskbuyOtherList, index: number) =>
+                            {
+                                return (
+                                    <li className="table-td" key={index} onClick={this.onGoInfo.bind(this,item.orderType,item.address,item.sellType)} >
+                                        <ul className="td-ul">
+                                            <li className="td-li">
+                                                {
+                                                    item.orderType === 'Buying' && <Card text="求购" style={{ 'marginRight': '15px' }} cardsize="sm-card" colortype="cs-blue" />
+                                                }
+                                                {
+                                                    item.orderType === 'Selling' && <Card text="出售" style={{ 'marginRight': '15px' }} cardsize="sm-card" colortype="c-red" />
+                                                }
+                                            </li>
+                                            <li className="td-li"><span>{item.address}</span></li>
+                                            <li className="td-li"><span>{item.price + ' ' + item.assetName}</span></li>
+                                            <li className="td-li">
+                                                <span>
+                                                    {formatTime.format('yyyy/MM/dd | hh:mm:ss', item.time.toString(), this.props.intl.locale)}
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                )
+                            })
+                        }
                     </ul>
-
                 </div>
             </div>
         );

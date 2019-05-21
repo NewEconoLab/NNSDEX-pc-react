@@ -22,7 +22,7 @@ export interface ICommonStore {
   setLanguage:(msg: string)=>void;// 设置语言
   // getNNCBalance: () => Promise<boolean>, // 获取nnc资产
   // getCGASBalance: () => Promise<boolean>, // 获取cgas资产
-  // getContract:() => Promise<boolean>, // 获取注册器资产
+  getContract:() => Promise<boolean>, // 获取注册器资产
   // getBlockHeight:()=>Promise<boolean>, // 获取区块高度
   // updateAllData:()=>Promise<boolean>, // 更新所有
   // setTimeGetBlock:()=>Promise<boolean>, // 定时请求高度

@@ -129,9 +129,9 @@ class AskBuyMarket extends React.Component<IAskBuyMarketProps, any> {
       })
   }
   // 跳转到详情页
-  public onGoDomainInfo = (domain: string, type: string) =>
+  public onGoDomainInfo = (domain: string,addr:string) =>
   {
-    this.props.history.push('/askbuyinfo/' + domain + '?type=' + type)
+    this.props.history.push('/askbuyinfo/' + domain+'?addr='+addr)
   }
   // 关注或取消关注
   public onStarClick = (domain: string, event: any) =>
@@ -167,7 +167,7 @@ class AskBuyMarket extends React.Component<IAskBuyMarketProps, any> {
               this.props.askbuymarket.askbuyListCount > 0 && this.props.askbuymarket.askbuyList.map((item: IAskBuyList, index: number) =>
               {
                 return (
-                  <li className="table-td" key={index} onClick={this.onGoDomainInfo.bind(this, item.fullDomain)} >
+                  <li className="table-td" key={index} onClick={this.onGoDomainInfo.bind(this, item.fullDomain,item.buyer)} >
                     <ul className="td-ul">
                       <li className="td-li">
                         <span>{item.fullDomain}</span>
@@ -178,7 +178,7 @@ class AskBuyMarket extends React.Component<IAskBuyMarketProps, any> {
                           item.isNewly && <Card text="新" style={{ 'marginLeft': '15px' }} cardsize="sm-card" colortype="cs-yellow" />
                         }
                       </li>
-                      <li className="td-li"><span>{item.maxPrice + ' ' + item.maxAssetName}</span></li>
+                      <li className="td-li"><span>{item.price + ' ' + item.assetName}</span></li>
                       <li className="td-li" >
                         <span className="star-icon" onClick={this.onStarClick.bind(this, item.fullDomain)}>
                           {item.isStar ? <img src={require('@/img/star.png')} alt="" /> : <img src={require('@/img/star-un.png')} alt="" />}

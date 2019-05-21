@@ -11,9 +11,10 @@ export interface IMyDeityProps extends RouteComponentProps{
 }
 export interface IMyDeityList{
     orderType:string, // 类型
+    sellType:number, // 出售类型，0为降价，1为一口价，-1为已成交或求购状态
     fullDomain:string, // 域名
     nowPrice:string, // 资产价格
-    saleRate:number, // 降价幅度
+    saleRate:string, // 降价幅度
     assetName:string, // 资产名称
     isDeal:boolean // 是否成交
 }

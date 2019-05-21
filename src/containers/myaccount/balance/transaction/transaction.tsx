@@ -30,6 +30,9 @@ class TransactionBalance extends React.Component<any, any> {
             name: 'NNC'
         }
     ]
+    public componentDidMount(){
+        this.props.common.initAccountBalance();
+    }
     // 选择币种
     public onCallback = (item) =>
     {

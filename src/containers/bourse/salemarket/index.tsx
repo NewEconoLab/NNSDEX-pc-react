@@ -130,9 +130,15 @@ class SaleMarket extends React.Component<ISaleMarketProps, any> {
       })
   }
   // 跳转到详情页
-  public onGoDomainInfo = (domain: string) =>
+  public onGoDomainInfo = (domain: string,type:number) =>
   {
-    this.props.history.push('/saleinfo/' + domain)
+    // 出售类型：0表示降价出售，1表示一口价
+    if(type === 0){
+      this.props.history.push('/saleinfo/' + domain+'?selltype=reduce')
+    }
+    else{
+      this.props.history.push('/saleinfo/' + domain+'?selltype=onceprice')
+    }    
   }
   // 关注或取消关注
   public onStarClick = (domain: string, event: any) =>
@@ -168,11 +174,11 @@ class SaleMarket extends React.Component<ISaleMarketProps, any> {
               this.props.salemarket.saleListCount > 0 && this.props.salemarket.saleList.map((item: ISaleList, index: number) =>
               {
                 return (
-                  <li className="table-td" key={index} onClick={this.onGoDomainInfo.bind(this, item.fullDomain)} >
+                  <li className="table-td" key={index} onClick={this.onGoDomainInfo.bind(this, item.fullDomain,item.sellType)} >
                     <ul className="td-ul">
                       <li className="td-li">
                         <span>{item.fullDomain}</span>
-                        {item.saleRate !== '0' && <Slider rate={parseFloat(item.saleRate) * 100} />}
+                        {(item.saleRate !== '0' && item.sellType === 0)&& <Slider rate={parseFloat(item.saleRate) * 100} />}
                         {
                           item.isMine && <Card text="我的" style={{ 'marginLeft': '15px' }} cardsize="sm-card" colortype="c-blue" />
                         }

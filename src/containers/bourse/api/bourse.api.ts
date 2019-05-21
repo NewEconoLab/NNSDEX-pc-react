@@ -90,9 +90,3 @@ export const getmydeitylist = (addr:string,type:number,page:number,size:number) 
   }
   return request(opts);
 }
-
-// 详情相关接口：
-// getDexDomainSellDetail
-// getDexDomainSellOther
-// getDexDomainBuyDetail
-// getDexDomainBuyOther

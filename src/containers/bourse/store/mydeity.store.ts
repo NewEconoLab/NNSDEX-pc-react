@@ -15,11 +15,11 @@ class Mydeity implements IMyDeityStore
      */
     @action public async getMyDeityList(type:number,page: number, size: number)
     {
-        console.log(common.address)
+        console.log('common.address:'+common.address)
         let result: any = null;
         try
         {
-            result = await Api.getmydeitylist('ALjSnMZidJqd18iQaoCgFun6iqWRm2cVtj',type, page, size);
+            result = await Api.getmydeitylist(common.address,type, page, size);
         } catch (error)
         {
             this.mydeityListCount = 0;
@@ -28,7 +28,7 @@ class Mydeity implements IMyDeityStore
         }
         this.mydeityListCount = result[0].count || 0;
         this.mydeityList = result ? result[0].list : [];
-        console.log(result[0].list)
+        console.log(result)
         return true; 
     }
 }
