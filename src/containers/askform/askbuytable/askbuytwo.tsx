@@ -6,9 +6,10 @@ import { observer } from 'mobx-react';
 import '../index.less';
 import { injectIntl } from 'react-intl';
 import Button from '@/components/Button';
+import { IAskBuyProps } from '../interface/askbuy.interface';
 
 @observer
-class AskBuyStepTwo extends React.Component<any, any> {
+class AskBuyStepTwo extends React.Component<IAskBuyProps, any> {
     // 上一步
     public onGoPrevious = () =>
     {

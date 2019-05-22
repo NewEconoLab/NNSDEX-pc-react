@@ -13,6 +13,11 @@ import { IAskBuyProps } from '../interface/askbuy.interface';
 @inject('askbuy')
 @observer
 class AskBuyTable extends React.Component<IAskBuyProps, any> {
+    public componentDidMount(){
+        const params = this.props.match.params;
+        const domain =params["domain"];
+        this.props.askbuy.askBuyDomain = domain;
+    }
     // 返回上一页
     public onGoBack = () =>
     {

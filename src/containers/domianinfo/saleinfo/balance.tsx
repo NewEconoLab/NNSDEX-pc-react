@@ -17,6 +17,7 @@ class BalanceInfo extends React.Component<ISaleInfoProps, any> {
     // 我要出价 todo
     public onMakePrice = ()=>{
         console.log('todo')
+        this.props.history.push('/askbuytable/' + this.props.saleinfo.saleDomain)
     }
     // 购买域名
     public onBuyDomain = ()=> {
