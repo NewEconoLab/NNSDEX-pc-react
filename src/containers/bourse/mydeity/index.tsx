@@ -11,7 +11,7 @@ import Card from '@/components/card';
 import Slider from '@/components/slider';
 import { IMyDeityProps, IMyDeityList } from '../interface/mydeity.interface';
 
-@inject('mydeity')
+@inject('mydeity', 'common')
 @observer
 class Mydeity extends React.Component<IMyDeityProps, any> {
   public state = {
@@ -40,7 +40,8 @@ class Mydeity extends React.Component<IMyDeityProps, any> {
   // 获取数据
   public getMyDeityData = async () =>
   {
-    await this.props.mydeity.getMyDeityList(parseInt(this.state.mydeityOrderBy, 10), this.state.mydeityPage, this.state.mydeitySize);
+    console.log(this.props.common.address);
+    await this.props.mydeity.getMyDeityList(this.props.common.address, parseInt(this.state.mydeityOrderBy, 10), this.state.mydeityPage, this.state.mydeitySize);
     this.setState({
       mydeityLoading: false
     })
@@ -70,26 +71,34 @@ class Mydeity extends React.Component<IMyDeityProps, any> {
       })
   }
   // 列表显示样式
-  public dealClassname = (deal:boolean)=>{
-    if(deal){
+  public dealClassname = (deal: boolean) =>
+  {
+    if (deal)
+    {
       return 'td-ul gray-ul'
-    }else{
+    } else
+    {
       return 'td-ul'
     }
   }
   // 跳转到详情页
-  public onGoDomainInfo = (domain: string,isDeal:boolean,type:number) =>
+  public onGoDomainInfo = (domain: string, isDeal: boolean, orderType: string, selltype: number) =>
   {
-    if(isDeal){
+    if (isDeal)
+    {
       return
     }
-    // 出售类型：0表示降价出售，1表示一口价
-    if(type === 0){
-      this.props.history.push('/saleinfo/' + domain+'?selltype=reduce&opt=cancel')
+    if (orderType === 'Buying')
+    {
+      this.props.history.push('/askbuyinfo/' + domain + '?addr=' + this.props.common.address)
+    }// 出售类型：0表示降价出售，1表示一口价
+    else if (orderType === 'Selling' && selltype === 0)
+    {
+      this.props.history.push('/saleinfo/' + domain + '?selltype=reduce')
+    } else if (orderType === 'Selling' && selltype === 1)
+    {
+      this.props.history.push('/saleinfo/' + domain + '?selltype=onceprice')
     }
-    else{
-      this.props.history.push('/saleinfo/' + domain+'?selltype=onceprice&opt=cancel')
-    }    
   }
   public render()
   {
@@ -112,14 +121,14 @@ class Mydeity extends React.Component<IMyDeityProps, any> {
               this.props.mydeity.mydeityListCount > 0 && this.props.mydeity.mydeityList.map((item: IMyDeityList, index: number) =>
               {
                 return (
-                  <li className="table-td" key={index} onClick={this.onGoDomainInfo.bind(this,item.fullDomain,item.isDeal,item.saleRate)}>
+                  <li className="table-td" key={index} onClick={this.onGoDomainInfo.bind(this, item.fullDomain, item.isDeal, item.orderType, item.sellType)}>
                     <ul className={this.dealClassname(item.isDeal)}>
                       <li className="td-li">
                         {
-                          item.orderType === 'Selling' && <Card text="出售" style={{ 'marginRight': '15px' }} cardsize="sm-card" colortype={!item.isDeal?"c-red":"cs-gray"} />
+                          item.orderType === 'Selling' && <Card text="出售" style={{ 'marginRight': '15px' }} cardsize="sm-card" colortype={!item.isDeal ? "c-red" : "cs-gray"} />
                         }
                         {
-                          item.orderType === 'Buying' && <Card text="求购" style={{ 'marginRight': '15px' }} cardsize="sm-card" colortype={!item.isDeal?"cs-blue":"cs-gray"} />
+                          item.orderType === 'Buying' && <Card text="求购" style={{ 'marginRight': '15px' }} cardsize="sm-card" colortype={!item.isDeal ? "cs-blue" : "cs-gray"} />
                         }
                         <span>{item.fullDomain}</span>
                         {

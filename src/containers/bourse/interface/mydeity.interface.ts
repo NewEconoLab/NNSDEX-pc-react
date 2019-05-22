@@ -1,12 +1,14 @@
 import { RouteComponentProps } from "react-router";
+import { ICommonStore } from "@/store/interface/common.interface";
 
 export interface IMyDeityStore{
     mydeityList:IMyDeityList[],
     mydeityListCount:number,
-    getMyDeityList:(type:number,page:number,size:number)=>Promise<boolean>,
+    getMyDeityList:(addr:string,type:number,page:number,size:number)=>Promise<boolean>,
 }
 export interface IMyDeityProps extends RouteComponentProps{
     mydeity:IMyDeityStore,
+    common:ICommonStore,
     intl:any
 }
 export interface IMyDeityList{

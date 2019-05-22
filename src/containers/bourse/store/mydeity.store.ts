@@ -1,6 +1,5 @@
 import { observable, action } from 'mobx';
 import * as Api from '../api/bourse.api'
-import common from '@/store/common'
 import { IMyDeityStore, IMyDeityList } from '../interface/mydeity.interface';
 
 class Mydeity implements IMyDeityStore
@@ -13,13 +12,12 @@ class Mydeity implements IMyDeityStore
      * @param page 当前页码
      * @param size 每页条数
      */
-    @action public async getMyDeityList(type:number,page: number, size: number)
+    @action public async getMyDeityList(addr:string,type:number,page: number, size: number)
     {
-        console.log('common.address:'+common.address)
         let result: any = null;
         try
         {
-            result = await Api.getmydeitylist(common.address,type, page, size);
+            result = await Api.getmydeitylist(addr,type, page, size);
         } catch (error)
         {
             this.mydeityListCount = 0;
