@@ -9,6 +9,7 @@ import Button from '@/components/Button';
 import Card from '@/components/card';
 import { IAskbuyInfoProps, IAskbuyOtherList } from '../interface/askbuyinfo.interface';
 import * as formatTime from '@/utils/formatTime';
+import Hint from '@/components/hint'
 import { getQueryString } from '@/utils/function'
 
 @inject('askbuyinfo')
@@ -63,7 +64,12 @@ class AskBuyInfo extends React.Component<IAskbuyInfoProps, any> {
                     </div>
                     <div className="line-wrapper">
                         <div className="line-name">求购价格</div>
-                        <div className="line-text">{this.props.askbuyinfo.askbuyData && (this.props.askbuyinfo.askbuyData.price + ' ' + this.props.askbuyinfo.askbuyData.assetName)}</div>
+                        <div className="line-text">
+                            {this.props.askbuyinfo.askbuyData && (this.props.askbuyinfo.askbuyData.price + ' ' + this.props.askbuyinfo.askbuyData.assetName)}
+                            <div className="tips-text">
+                                （ 手续费：2%  <Hint text="使用CGAS成交的订单，合约会抽取2%成交额的手续费进入分红池。" />  ）
+                            </div>
+                        </div>
                     </div>
                     <div className="line-wrapper">
                         <div className="line-name">求购人</div>

@@ -178,7 +178,7 @@ class SaleMarket extends React.Component<ISaleMarketProps, any> {
                     <ul className="td-ul">
                       <li className="td-li">
                         <span>{item.fullDomain}</span>
-                        {(item.saleRate !== '0' && item.sellType === 0)&& <Slider rate={parseFloat(item.saleRate) * 100} />}
+                        {(parseFloat(item.saleRate) !== 0 && item.sellType === 0)&& <Slider rate={parseFloat(item.saleRate) * 100} />}
                         {
                           item.isMine && <Card text="我的" style={{ 'marginLeft': '15px' }} cardsize="sm-card" colortype="c-blue" />
                         }

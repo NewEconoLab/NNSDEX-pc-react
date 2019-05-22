@@ -10,7 +10,7 @@ import StepOne from './askbuyone';
 import StepTwo from './askbuytwo';
 import { IAskBuyProps } from '../interface/askbuy.interface';
 
-@inject('askbuy')
+@inject('askbuy','common')
 @observer
 class AskBuyTable extends React.Component<IAskBuyProps, any> {
     public componentDidMount(){
@@ -21,6 +21,7 @@ class AskBuyTable extends React.Component<IAskBuyProps, any> {
     // 返回上一页
     public onGoBack = () =>
     {
+        this.props.askbuy.askBuyStep = 1;
         this.props.history.go(-1);
     }
 

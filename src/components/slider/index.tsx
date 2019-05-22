@@ -120,7 +120,7 @@ export default class Slider extends React.Component<IProps> {
               <div className="tips">{Math.ceil(this.state.rate)}</div>
             </div> 
           </div>*/}
-          <span className="num">降价中：20%</span>
+          <span className="num">降价中：{this.props.rate}%</span>
           {/* <span className="num">100</span> */}
         </div>
       </div>
