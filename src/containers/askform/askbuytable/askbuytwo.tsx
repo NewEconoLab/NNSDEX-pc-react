@@ -52,7 +52,6 @@ class AskBuyStepTwo extends React.Component<IAskBuyProps, any> {
     // 立即挂单
     private onDoAskBuy = async () =>
     {
-        console.log('todo');
         console.log(this.props.common.address+"---"+this.props.askbuy.askBuyDomain+"---"+this.state.priceId+"---"+this.props.askbuy.askBuyPrice+"---"+this.state.nncPrice)
         const res = await Contract.askBuy(this.props.common.address,this.props.askbuy.askBuyDomain,this.state.priceId,this.props.askbuy.askBuyPrice,this.state.nncPrice);
         if (res)

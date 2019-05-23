@@ -54,7 +54,7 @@ class SaleInfo extends React.Component<ISaleInfoProps, any> {
                     this.state.opt === 'cancel' && <CancelSale {...this.props} />
                 }
                 {
-                    this.props.saleinfo.saleOtherList.length>0 && <OtherList {...this.props} />
+                    (this.props.saleinfo.saleOtherList.length>0 && this.state.opt !== 'cancel')&& <OtherList {...this.props} />
                 }
             </div>
         );

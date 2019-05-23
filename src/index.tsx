@@ -22,6 +22,33 @@ window.addEventListener('Teemo.NEO.READY',()=>{
   // common.initAccountBalance();
 });
 
+// 网络切换
+window.addEventListener('Teemo.NEO.NETWORK_CHANGED',(data:CustomEvent)=>{
+  console.log("inject NETWORK_CHANGED ");
+  console.log(data.detail.networks[0]);
+  const base = data.detail.networks[0]==='MainNet'?'':'/test';
+  const locations = window.location;
+  // console.log(`${location.origin}${base || ''}${locations.pathname}${locations.search}${locations.hash}`)
+
+  window.location.href = `${location.origin}${base || ''}${locations.pathname}${locations.search}${locations.hash}`
+  // window.location.reload();
+})
+// 账户变更
+window.addEventListener('Teemo.NEO.ACCOUNT_CHANGED',(data:CustomEvent)=>{
+  console.log("inject ACCOUNT_CHANGED ");
+  console.log(data.detail);
+})
+// 链接
+window.addEventListener('Teemo.NEO.CONNECTED',(data:CustomEvent)=>{
+  console.log("inject CONNECTED ");
+  console.log(data.detail);
+})
+// 断开链接
+window.addEventListener('Teemo.NEO.DISCONNECTED',(data:CustomEvent)=>{
+  console.log("inject DISCONNECTED ");
+  console.log(data.detail);
+})
+
 if (process.env.NODE_ENV === "development") {    
     // common.initLoginInfo(document.getElementById("test")as HTMLElement);
     ReactDOM.render(

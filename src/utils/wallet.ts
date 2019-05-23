@@ -39,7 +39,7 @@ export function getBalance()
   }
   // 获得余额的参数
   const data: GetBalanceArgs = {
-    network: common.network==='testnet'?'TestNet':'MainNet',
+    network: common.network,
     params: params
   }
   return new Promise((resolve, reject) =>
@@ -112,3 +112,26 @@ export function invokeGroup(params: InvokeGroup)
       })
   })
 }
+/**
+ * 检测网络变换
+ * @param params 
+ */
+export function getApplicationLog(params:string)
+    {
+        const data:GetApplicationLogArgs={
+            // network:"TestNet",
+            txid:params
+        }
+        return new Promise((resolve,reject)=>{            
+            Teemo.NEO.getApplicationLog(data) // 获得余额的方法
+            .then(result=>{
+                console.log(result);
+                // document.getElementById("getApplicationLog_R").innerText = JSON.stringify(result, null, 2);
+                resolve();
+            })
+            .catch(error=>{
+                console.log(error);
+                reject();
+            })
+        })
+    }

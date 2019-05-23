@@ -40,7 +40,6 @@ class Mydeity extends React.Component<IMyDeityProps, any> {
   // 获取数据
   public getMyDeityData = async () =>
   {
-    console.log(this.props.common.address);
     await this.props.mydeity.getMyDeityList(this.props.common.address, parseInt(this.state.mydeityOrderBy, 10), this.state.mydeityPage, this.state.mydeitySize);
     this.setState({
       mydeityLoading: false
@@ -49,14 +48,15 @@ class Mydeity extends React.Component<IMyDeityProps, any> {
   // 选择筛选条件
   public onMyDeityCallback = (item) =>
   {
-    // console.log(item.id);
     this.setState({
       mydeityPage: 1,
       mydeityOrderBy: item.id,
       mydeityLoading: true,
     }, async () =>
       {
-        this.getMyDeityData();
+        if(this.props.common.address!==''){
+          this.getMyDeityData();
+        }        
       })
   }
   // 翻页
@@ -90,14 +90,14 @@ class Mydeity extends React.Component<IMyDeityProps, any> {
     }
     if (orderType === 'Buying')
     {
-      this.props.history.push('/askbuyinfo/' + domain + '?addr=' + this.props.common.address)
+      this.props.history.push('/askbuyinfo/' + domain + '?addr=' + this.props.common.address+'&opt=cancel')
     }// 出售类型：0表示降价出售，1表示一口价
     else if (orderType === 'Selling' && selltype === 0)
     {
-      this.props.history.push('/saleinfo/' + domain + '?selltype=reduce')
+      this.props.history.push('/saleinfo/' + domain + '?selltype=reduce&opt=cancel')
     } else if (orderType === 'Selling' && selltype === 1)
     {
-      this.props.history.push('/saleinfo/' + domain + '?selltype=onceprice')
+      this.props.history.push('/saleinfo/' + domain + '?selltype=onceprice&opt=cancel')
     }
   }
   public render()

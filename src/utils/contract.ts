@@ -64,20 +64,20 @@ export class Contract
         const str = amount.toFixed(HASH_CONFIG.assetDecimal[assetid.toString()]).replace(".", "");
         const count = parseFloat(str);
 
-        const addressto = ThinNeo.Helper.GetAddressFromScriptHash(HASH_CONFIG.DEX_HASH);
+        // const addressto = ThinNeo.Helper.GetAddressFromScriptHash(HASH_CONFIG.DEX_HASH);
         const address = common.address;
         const params: InvokeGroup = {
-            merge: true,
+            merge: false,
             group: [
                 {
-                    scriptHash: assetid.toString(),  // 合约地址
+                    scriptHash: HASH_CONFIG.DEX_HASH.toString(), // 合约地址
                     operation: "transferIn",
                     arguments: [
                         { type: "Address", value: address },
-                        { type: "Address", value: addressto },
+                        { type: "Hash160", value: assetid.toString() },
                         { type: "Integer", value: count }
                     ],
-                    network: common.network === 'testnet' ? 'TestNet' : 'MainNet'
+                    network: common.network
                     // assets: 暂时用不到
                 },
                 {
@@ -93,11 +93,12 @@ export class Contract
                         { type: "Hash160", value: assetid.toString() },
                     ],
                     fee: '0.001',
-                    network: common.network === 'testnet' ? 'TestNet' : 'MainNet',
+                    network: common.network,
                     description: common.language === 'zh' ? '充值' : 'Topup'
                 }
             ]
         }
+        console.log(params)
         return Wallet.invokeGroup(params)
     }
 
@@ -121,7 +122,7 @@ export class Contract
                 { type: "Integer", value: count }
             ],
             fee: '0.001',
-            network: common.network === 'testnet' ? 'TestNet' : 'MainNet',
+            network: common.network,
             description: common.language === 'zh' ? '退款' : 'Getmoneyback'
             // assets: 暂时用不到
         }
@@ -139,7 +140,7 @@ export class Contract
     public static async askBuy(addr: string, domain: string, assetid: Neo.Uint160, price: number, nncPrice: number)
     {
         let arr = domain.split(".").reverse();
-        arr = arr.map(str => `(str)${str}`);
+        arr = arr.map(str => `${str}`);
         // 小数精度的处理
         const strPrice = price.toFixed(HASH_CONFIG.assetDecimal[assetid.toString()]).replace(".", "");
         const amount = parseFloat(strPrice);
@@ -151,18 +152,21 @@ export class Contract
             operation: "offerToBuy",
             arguments: [
                 { type: "Address", value: addr },
-                { type: "Array", value: [
-                    {type:"String",value:arr[0]},
-                    {type:"String",value:arr[1]}
-                ] },
+                {
+                    type: "Array", value: [
+                        { type: "String", value: arr[0] },
+                        { type: "String", value: arr[1] },                        
+                    ]
+                },
                 { type: "Hash160", value: assetid.toString() },
                 { type: "Integer", value: amount },
                 { type: "Integer", value: nncAmount }
             ],
             fee: "0.001",
-            network: common.network === 'testnet' ? 'TestNet' : 'MainNet',
+            network: common.network,
             description: common.language === 'zh' ? '求购域名' : '求购域名'
         }
+        console.log(params)
         return Wallet.invoke(params);
     }
 
@@ -172,7 +176,7 @@ export class Contract
      * @param domain 取消求购的域名
      * @param assetid 求购所花费的资产id
      */
-    public static async cancelDeity(addr: string,domain:string,assetid: Neo.Uint160)
+    public static async cancelAskbuy(addr: string, domain: string, assetid: Neo.Uint160)
     {
         const domainHash = this.nameHashArray(domain.split("."));
         const params: InvokeArgs = {
@@ -184,7 +188,7 @@ export class Contract
                 { type: "Hash160", value: assetid.toString() },
             ],
             fee: '0',
-            network: common.network === 'testnet' ? 'TestNet' : 'MainNet',
+            network: common.network,
             description: common.language === 'zh' ? '取消求购' : '取消求购'
         }
         return Wallet.invoke(params);
@@ -195,7 +199,7 @@ export class Contract
      * @param domain 求购的域名
      * @param assetid 求购所花费的资产id
      */
-    public static async sellDomainToWho(who: string,domain:string,assetid: Neo.Uint160)
+    public static async sellDomainToWho(who: string, domain: string, assetid: Neo.Uint160)
     {
         const domainHash = this.nameHashArray(domain.split("."));
         const params: InvokeArgs = {
@@ -207,7 +211,7 @@ export class Contract
                 { type: "Hash160", value: assetid.toString() },
             ],
             fee: '0',
-            network: common.network === 'testnet' ? 'TestNet' : 'MainNet',
+            network: common.network,
             description: common.language === 'zh' ? '指定出售域名' : '指定出售域名'
         }
         return Wallet.invoke(params);
@@ -221,10 +225,10 @@ export class Contract
      * @param salePrice 每轮降价的价格
      * @param nncPrice 抵押的nnc
      */
-    public static async domainSell( domain: string, assetid: Neo.Uint160, startPrice: number,endPrice:number,salePrice:number, nncPrice: number)
+    public static async domainSell(domain: string, assetid: Neo.Uint160, startPrice: number, endPrice: number, salePrice: number, nncPrice: number)
     {
         let arr = domain.split(".").reverse();
-        arr = arr.map(str => `(str)${str}`);
+        arr = arr.map(str => `${str}`);
         // 小数精度的处理
         const startStr = startPrice.toFixed(HASH_CONFIG.assetDecimal[assetid.toString()]).replace(".", "");
         const startAmount = parseFloat(startStr);
@@ -239,10 +243,12 @@ export class Contract
             scriptHash: HASH_CONFIG.DEX_HASH.toString(),
             operation: "auction",
             arguments: [
-                { type: "Array", value: [
-                    {type:"String",value:arr[0]},
-                    {type:"String",value:arr[1]}
-                ] },
+                {
+                    type: "Array", value: [
+                        { type: "String", value: arr[0] },
+                        { type: "String", value: arr[1] }
+                    ]
+                },
                 { type: "Hash160", value: assetid.toString() },
                 { type: "Integer", value: startAmount },
                 { type: "Integer", value: endAmount },
@@ -250,7 +256,7 @@ export class Contract
                 { type: "Integer", value: nncAmount }
             ],
             fee: "0.001",
-            network: common.network === 'testnet' ? 'TestNet' : 'MainNet',
+            network: common.network,
             description: common.language === 'zh' ? '出售域名' : '出售域名'
         }
         return Wallet.invoke(params);
@@ -259,7 +265,7 @@ export class Contract
      * 取消出售域名
      * @param domain 域名
      */
-    public static async cancelSellDomain(domain:string)
+    public static async cancelSellDomain(domain: string)
     {
         const domainHash = this.nameHashArray(domain.split("."));
         const params: InvokeArgs = {
@@ -269,7 +275,7 @@ export class Contract
                 { type: "Hash256", value: domainHash.toString() }
             ],
             fee: '0',
-            network: common.network === 'testnet' ? 'TestNet' : 'MainNet',
+            network: common.network,
             description: common.language === 'zh' ? '取消出售域名' : '取消出售域名'
         }
         return Wallet.invoke(params);
@@ -282,7 +288,7 @@ export class Contract
      * @param assetid 购买资产id
      * @param price 购买价格
      */
-    public static async betDomain(buyer: string,domain:string,assetid: Neo.Uint160,price:number)
+    public static async betDomain(buyer: string, domain: string, assetid: Neo.Uint160, price: number)
     {
         const domainHash = this.nameHashArray(domain.split("."));
         const priceStr = price.toFixed(HASH_CONFIG.assetDecimal[assetid.toString()]).replace(".", "");
@@ -297,7 +303,7 @@ export class Contract
                 { type: "Integer", value: amount }
             ],
             fee: '0',
-            network: common.network === 'testnet' ? 'TestNet' : 'MainNet',
+            network: common.network,
             description: common.language === 'zh' ? '购买域名' : '购买域名'
         }
         return Wallet.invoke(params);

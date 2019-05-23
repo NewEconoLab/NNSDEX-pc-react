@@ -7,12 +7,15 @@ import '../index.less';
 import { injectIntl } from 'react-intl';
 import Button from '@/components/Button';
 import { ISaleInfoProps } from '../interface/saleinfo.interface';
+import { Contract } from '@/utils/contract';
 
 @observer
 class CancelSale extends React.Component<ISaleInfoProps, any> {
-    // 取消挂单 todo
-    public onCancelDeity = ()=>{
-        console.log('todo')
+    // 取消挂单
+    public onCancelDeity = async ()=>{
+        console.log(this.props.common.address+"---"+this.props.saleinfo.saleDomain)
+        const res = await Contract.cancelSellDomain(this.props.saleinfo.saleDomain)
+        console.log(res)
     }
     public render()
     {

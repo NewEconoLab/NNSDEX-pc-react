@@ -17,7 +17,9 @@ class TransactionBalance extends React.Component<any, any> {
         stepNum: 0,// 显示控制 0为显示余额，1为充值，2为提取，3为提示,4为失败
         selectId: '',// 选中资产的显示id
         topupValue: '', // 交易账户中的充值输入金额
-        withdrawValue: '' // 提取金额
+        withdrawValue: '', // 提取金额
+        canDoTopup:false, // 是否可充值
+        canDoWithdraw:false, // 是否可提现
     }
     // 币种
     public typeOptions = [
@@ -92,7 +94,7 @@ class TransactionBalance extends React.Component<any, any> {
                                 </div>
                                 <div className="bcontent-btn">
                                     <Button text="取消" btnColor="white-btn" onClick={this.onGoFiristStep} />
-                                    <Button text="确定" onClick={this.doTopup} />
+                                    <Button text="确定" onClick={this.doTopup} btnColor={this.state.canDoTopup ? '' : 'gray-btn'} />
                                 </div>
                             </>
                         )
@@ -123,7 +125,7 @@ class TransactionBalance extends React.Component<any, any> {
                                 </div>
                                 <div className="bcontent-btn">
                                     <Button text="取消" btnColor="white-btn" onClick={this.onGoFiristStep} />
-                                    <Button text="确定" onClick={this.doWithdraw} />
+                                    <Button text="确定" onClick={this.doWithdraw} btnColor={this.state.canDoWithdraw ? '' : 'gray-btn'}/>
                                 </div>
                             </>
                         )
@@ -158,12 +160,11 @@ class TransactionBalance extends React.Component<any, any> {
     }
     private doTopup = async () =>
     {
+        if(!this.state.canDoTopup){
+            return false;
+        }
         console.log('todo')
         const amount = parseFloat(this.state.topupValue);
-        if (amount <= 0)
-        {
-            return false
-        }
         const asset: Neo.Uint160 = this.state.selectId === "cgas" ? hashConfig.ID_CGAS : hashConfig.ID_NNC;
         const res = await Contract.rechargeReg(amount, asset);
         console.log("交易结果");
@@ -183,14 +184,13 @@ class TransactionBalance extends React.Component<any, any> {
     }
     private doWithdraw = async () =>
     {
-        console.log('todo')
-        const amount = parseFloat(this.state.withdrawValue);
-        if (amount <= 0)
-        {
+        if(!this.state.canDoWithdraw){
             return false
         }
+        console.log('todo')
+        const amount = parseFloat(this.state.withdrawValue);
         const asset: Neo.Uint160 = this.state.selectId === "cgas" ? hashConfig.ID_CGAS : hashConfig.ID_NNC;
-        const res = await Contract.getmoneyback(asset,this.props.common.address, parseFloat(this.state.withdrawValue));
+        const res = await Contract.getmoneyback(asset,this.props.common.address, amount);
         console.log("交易结果");
         console.log(res);
         if (res)
@@ -217,18 +217,46 @@ class TransactionBalance extends React.Component<any, any> {
         {
             return false
         }
+        // 若输入为空或为0时
+        if (parseFloat(value) === 0 || value === '')
+        {
+            this.setState({
+                canDoTopup: false
+            })
+        }
+        if (this.state.selectId === 'cgas')
+        {
+            // 精确到一位
+            if (/\./.test(value) && value.split('.')[1].length >= 2)
+            {
+                return false;
+            }
+            
+        } else // nnc的
+        {
+            // 精确到两位
+            if (/\./.test(value) && value.split('.')[1].length >= 3)
+            {
+                return false;
+            }
+        }
+        // 大于1000000000
+        if(parseFloat(value)>1000000000){
+            return false;
+        }
+        this.setState({
+            topupValue: value,
+            canDoTopup:true
+        })
         // 如果大于可用金额
         const num = parseFloat(this.state.selectId === 'cgas' ? this.props.common.balances.cgas : this.props.common.balances.nnc);
-        if (value > num)
+        if (parseFloat(value) > num)
         {
             this.setState({
                 topupValue: num
             })
-            return true
         }
-        this.setState({
-            topupValue: value
-        })
+        
         return true
     }
     private onWithdrawValue = (e) =>
@@ -240,6 +268,38 @@ class TransactionBalance extends React.Component<any, any> {
         {
             return false
         }
+        // 若输入为空或为0时
+        if (parseFloat(value) === 0 || value === '')
+        {
+            this.setState({
+                canDoWithdraw: false
+            })
+        }
+        if (this.state.selectId === 'cgas')
+        {
+            // 精确到一位
+            if (/\./.test(value) && value.split('.')[1].length >= 2)
+            {
+                return false;
+            }
+            
+        } else // nnc的
+        {
+            // 精确到两位
+            if (/\./.test(value) && value.split('.')[1].length >= 3)
+            {
+                return false;
+            }
+        }
+        
+        // 大于1000000000
+        if(parseFloat(value)>1000000000){
+            return false;
+        }
+        this.setState({
+            withdrawValue: value,
+            canDoWithdraw:true
+        })
         // 如果大于可用金额
         const num = parseFloat(this.state.selectId === 'cgas' ? this.props.common.balances.contractcgas : this.props.common.balances.contractnnc);
         if (value > num)
@@ -249,9 +309,7 @@ class TransactionBalance extends React.Component<any, any> {
             })
             return true
         }
-        this.setState({
-            withdrawValue: value
-        })
+        
         return true
     }
     // 进入充值

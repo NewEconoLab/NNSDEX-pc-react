@@ -11,13 +11,17 @@ import { IAskbuyInfoProps, IAskbuyOtherList } from '../interface/askbuyinfo.inte
 import * as formatTime from '@/utils/formatTime';
 import Hint from '@/components/hint'
 import { getQueryString } from '@/utils/function'
+import { Contract } from '@/utils/contract';
+import { HASH_CONFIG } from '@/config';
 
-@inject('askbuyinfo')
+@inject('askbuyinfo','common')
 @observer
 class AskBuyInfo extends React.Component<IAskbuyInfoProps, any> {
     public state = {
         askBuyer: getQueryString('addr') || '',
+        opt: getQueryString('opt') || 'normal',
     }
+
     public componentDidMount()
     {
         const params = this.props.match.params;
@@ -26,6 +30,15 @@ class AskBuyInfo extends React.Component<IAskbuyInfoProps, any> {
         this.props.askbuyinfo.getAskbuyInfo(domain, this.state.askBuyer);
         this.props.askbuyinfo.getAskbuyOtherList(domain, this.state.askBuyer);
         console.log(JSON.stringify(this.props.askbuyinfo));
+    }
+    // 取消挂单
+    public onCancelAskbuy = async () =>
+    {
+        const assetName = this.props.askbuyinfo.askbuyData?this.props.askbuyinfo.askbuyData.assetName:'CGAS';
+        const assetId = assetName === 'CGAS'?HASH_CONFIG.ID_CGAS:HASH_CONFIG.ID_NNC;
+        console.log(this.props.common.address+"---"+this.props.askbuyinfo.askbuyDomain+"---"+assetId)
+        const res = await Contract.cancelAskbuy(this.props.common.address,this.props.askbuyinfo.askbuyDomain,assetId)
+        console.log(res)
     }
     // 返回上一页
     public onGoBack = () =>
@@ -82,19 +95,32 @@ class AskBuyInfo extends React.Component<IAskbuyInfoProps, any> {
                         </div>
                     </div>
                 </div>
-                <div className="domain-account">
-                    <div className="account-title">
-                        <div className="account-text">您已持有该域名</div>
-                        <div className="account-text">域名上架中</div>
-                        <div className="account-text">您未持有该域名</div>
-                    </div>
-                    <div className="account-btn">
-                        <Button text="出售给他" />
-                        <Button text="无法出售" btnColor="gray-btn" />
-                    </div>
-                </div>
                 {
-                    this.props.askbuyinfo.askbuyOtherList.length > 0 && (
+                    this.state.opt === 'normal' && (
+                        <div className="domain-account">
+                            <div className="account-title">
+                                <div className="account-text">您已持有该域名</div>
+                                <div className="account-text">域名上架中</div>
+                                <div className="account-text">您未持有该域名</div>
+                            </div>
+                            <div className="account-btn">
+                                <Button text="出售给他" />
+                                <Button text="无法出售" btnColor="gray-btn" />
+                            </div>
+                        </div>
+                    )
+                }
+                {
+                    this.state.opt === 'cancel' && (
+                        <div className="domain-account">
+                            <div className="account-btn">
+                                <Button text="取消挂单" onClick={this.onCancelAskbuy} />
+                            </div>
+                        </div>
+                    )
+                }
+                {
+                    (this.props.askbuyinfo.askbuyOtherList.length > 0 && this.state.opt !== 'cancel') && (
                         <>
                             <div className="domain-title">该域名的其他挂单</div>
                             <div className="domain-table">

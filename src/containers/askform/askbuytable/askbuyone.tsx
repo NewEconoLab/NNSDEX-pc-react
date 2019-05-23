@@ -97,38 +97,52 @@ class AskBuyStepOne extends React.Component<IAskBuyProps, any> {
     // 选择币种
     private onChooseAsset = (item) =>
     {
-        console.log(this.state.nncCheck)
         this.setState({
             selectType: item.id,
             buyInput: '',
         })
         this.props.askbuy.assetName = item.id
     }
-    // 输入金额 todo
-    private onBuyValue = (e) =>
+    // 输入金额
+    private onBuyValue = (e:any) =>
     {
         const value = e.target.value;
-        console.log(value)
-        
-        // 精确到一位
-        if (/\./.test(value) && value.split('.')[1].length >= 2)
-        {
-            return false;
-        }
         // 判断是否是数字
         if (isNaN(value))
         {
             return false
         }
+
         // 若输入为空或为0时
         if (parseFloat(value) === 0 || value === '')
         {
             this.setState({
                 canDoNext: false
             })
+        }
+
+        if (this.state.selectType === 'cgas')
+        {
+            // 精确到一位
+            if (/\./.test(value) && value.split('.')[1].length >= 2)
+            {
+                return false;
+            }
+            
+        } else // nnc的
+        {
+            // 精确到两位
+            if (/\./.test(value) && value.split('.')[1].length >= 3)
+            {
+                return false;
+            }
+        }
+
+        // 大于1000000000
+        if(parseFloat(value)>1000000000){
             return false;
         }
-        
+
         this.setState({
             buyInput: value
         })

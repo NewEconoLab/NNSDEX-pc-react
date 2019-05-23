@@ -14,7 +14,7 @@ class Common
   @observable public isLoadTeemo: boolean = false; // 检测是否有Teemo钱包
   @observable public language: string = lang;  // 当前语言
   @observable public message: any | null = null;// 当前显示内容
-  @observable public network: string = 'testnet';  // 当前网络
+  @observable public network: 'TestNet'|'MainNet' = process.env.REACT_APP_SERVER_ENV === 'DEV' ? 'TestNet':'MainNet';  // 当前网络
   @observable public address:string = ''; // 当前地址
   @observable public balances: IAccountBalanceStore =
   { contractnnc: 0, contractcgas: 0, cgas: 0, nnc: 0 };  // 初始化账户余额的信息
@@ -64,7 +64,6 @@ class Common
   {
     this.getContract();
     const result: any = await Wallet.getBalance();
-    console.log(result)
     if (!result)
     {
       this.balances.nnc = 0;
@@ -95,7 +94,6 @@ class Common
     {
       result[0].list.forEach(element =>
       {
-        console.log(element)
         const id = element.assetHash as string;
         if (id.includes(hashConfig.ID_CGAS.toString()))
         {
