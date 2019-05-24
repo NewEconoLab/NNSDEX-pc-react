@@ -1,5 +1,5 @@
 /**
- * 一口价挂单第三步
+ * 降价挂单第三步
  */
 import * as React from 'react';
 import { observer } from 'mobx-react';
@@ -10,14 +10,15 @@ import Select from '@/components/select';
 import Hint from '@/components/hint';
 import Checkbox from '@/components/Checkbox';
 import classnames from 'classnames';
+import { ISellFormProps } from '../interface/sellform.interface';
 
 @observer
-class StepThree extends React.Component<any, any> {
+class StepThree extends React.Component<ISellFormProps, any> {
     public state = {
-        inputValue: '', // 
-        showAdd: false // 是否显示追加抵押
+        inputValue: '',
+        showAdd: false
     }
-    // 接受币种
+    // 币种
     public typeOptions = [
         {
             id: 'cgas',
@@ -31,12 +32,12 @@ class StepThree extends React.Component<any, any> {
     // 上一步
     public onGoPrevious = () =>
     {
-        this.props.askform.stepNumber = 2;
+        this.props.sellform.stepNumber = 2;
     }
     // 下一步
     public onGoNext = () =>
     {
-        this.props.askform.stepNumber = 4;
+        this.props.sellform.stepNumber = 6;
     }
     // 选择币种
     public onCallback = (item) =>
@@ -46,7 +47,14 @@ class StepThree extends React.Component<any, any> {
         })
         console.log(item.id);
     }
-    
+    // 显示追加抵押
+    public onClickShow = () =>
+    {
+        console.log('todo');
+        this.setState({
+            showAdd: !this.state.showAdd
+        })
+    }
     public render()
     {
         const lineClassname = classnames('line-wrapper', { 'line-other': this.state.showAdd })
@@ -77,9 +85,24 @@ class StepThree extends React.Component<any, any> {
                         </div>
                     </div>
                     <div className="line-wrapper">
-                        <div className="line-name">价格</div>
+                        <div className="line-name">初始价格</div>
                         <div className="line-text line-input-wrapper">
                             <input type="text" className="line-input" />
+                        </div>
+                    </div>
+                    <div className="line-wrapper">
+                        <div className="line-name">最低价格</div>
+                        <div className="line-text line-input-wrapper">
+                            <input type="text" className="line-input" />
+                        </div>
+                    </div>
+                    <div className="line-wrapper">
+                        <div className="line-name">每天降低</div>
+                        <div className="line-text line-input-wrapper">
+                            <input type="text" className="line-input" />
+                            <div className="tips-text">
+                                （ 手续费：2%  <Hint text="使用CGAS成交的订单，合约会抽取2%成交额的手续费进入分红池。" />  ）
+                                </div>
                         </div>
                     </div>
                     <div className="line-wrapper">
@@ -115,14 +138,6 @@ class StepThree extends React.Component<any, any> {
                 </div>
             </div>
         );
-    }
-    // 显示追加抵押
-    private onClickShow = () =>
-    {
-        console.log('todo');
-        this.setState({
-            showAdd: !this.state.showAdd
-        })
     }
 }
 

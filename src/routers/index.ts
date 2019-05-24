@@ -37,12 +37,8 @@ export default [
     path: '/askbuytable/:domain',
   },
   {
-    component: asyncComponent(() => import('../containers/askform/reducetable')),
-    path: '/reducetable',
-  },
-  {
-    component: asyncComponent(() => import('../containers/askform/deitytable')),
-    path: '/deitytable',
+    component: asyncComponent(() => import('../containers/askform/selltable')),
+    path: '/selltable',
   },
   {
     component: asyncComponent(() => import('../containers/domianinfo/askbuy')),

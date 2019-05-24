@@ -1,23 +1,24 @@
 /**
- * 降价挂单第四步
+ * 一口价挂单第四步
  */
 import * as React from 'react';
 import { observer } from 'mobx-react';
 import '../index.less';
 import { injectIntl } from 'react-intl';
 import Button from '@/components/Button';
+import { ISellFormProps } from '../interface/sellform.interface';
 
 @observer
-class StepFour extends React.Component<any, any> {
-   // 上一步
+class StepFour extends React.Component<ISellFormProps, any> {
+    // 上一步
     public onGoPrevious = () =>
     {
-        this.props.askform.stepNumber = 3;
+        this.props.sellform.stepNumber = 3;
     }
     // 下一步
     public onGoNext = () =>
     {
-        this.props.askform.stepNumber = 4;
+        this.props.sellform.stepNumber = 4;
     }
     public render()
     {
@@ -29,24 +30,22 @@ class StepFour extends React.Component<any, any> {
                         <div className="line-text">abcde.neo</div>
                     </div>
                     <div className="line-wrapper">
-                        <div className="line-name">初始价格</div>
-                        <div className="line-text">200 CGAS</div>
-                    </div>
-                    <div className="line-wrapper">
-                        <div className="line-name">最低价格</div>
-                        <div className="line-text">50 CGAS</div>
-                    </div>
-                    <div className="line-wrapper">
-                        <div className="line-name">每天降低</div>
-                        <div className="line-text">20 CGAS<span className="tips-text">（ 扣除手续费 2 CGAS ）</span></div>
+                        <div className="line-name">价格</div>
+                        <div className="line-text">100 CGAS</div>
                     </div>
                     <div className="line-wrapper">
                         <div className="line-name">手续费</div>
-                        <div className="line-text">2%</div>
+                        <div className="line-text">2 CGAS</div>
                     </div>
                     <div className="line-wrapper">
                         <div className="line-name">抵押NNC</div>
-                        <div className="line-text">150 NNC</div>
+                        <div className="line-text">100 CGAS</div>
+                    </div>
+                    <div className="line-wrapper">
+                        <div className="line-name">预计收入</div>
+                        <div className="line-text">
+                            <span className="orange-text">98 CGAS</span><span className="tips-text">（ 扣除手续费 2 CGAS ）</span>
+                        </div>
                     </div>
                     <div className="node-tips">注意：未成交的挂单可随时取消，合约不会收取任何费用。抵押的NNC将在订单成交或取消后全部返还。</div>
                 </div>

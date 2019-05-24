@@ -3,15 +3,15 @@
  */
 import * as React from 'react';
 import { observer } from 'mobx-react';
-import './index.less';
+import '../index.less';
 import { injectIntl } from 'react-intl';
 import Button from '@/components/Button';
 import Select from '@/components/select';
-import { IAskFormProps } from './interface/askform.interface';
+import { ISellFormProps } from '../interface/sellform.interface';
 
 
 @observer
-class StepTwo extends React.Component<IAskFormProps, any> {
+class StepTwo extends React.Component<ISellFormProps, any> {
     public state = {
         selectType: '',
     }
@@ -29,12 +29,17 @@ class StepTwo extends React.Component<IAskFormProps, any> {
     // 上一步
     public onGoPrevious = () =>
     {
-        this.props.askform.stepNumber = 1;
+        this.props.sellform.stepNumber = 1;
     }
     // 下一步
     public onGoNext = () =>
     {
-        this.props.askform.stepNumber = 3;
+        if(this.state.selectType === 'one'){
+            this.props.sellform.stepNumber = 3;
+        }else{
+            this.props.sellform.stepNumber = 5;
+        }
+        
     }
     // 选择挂单的方式
     public onCallback = (item) =>
