@@ -39,7 +39,9 @@ class TransactionBalance extends React.Component<any, any> {
     public onCallback = (item) =>
     {
         this.setState({
-            selectId: item.id
+            selectId: item.id,
+            topupValue: '', 
+            withdrawValue: ''
         })
     }
 

@@ -64,17 +64,17 @@ export class Contract
         const str = amount.toFixed(HASH_CONFIG.assetDecimal[assetid.toString()]).replace(".", "");
         const count = parseFloat(str);
 
-        // const addressto = ThinNeo.Helper.GetAddressFromScriptHash(HASH_CONFIG.DEX_HASH);
+        const addressto = ThinNeo.Helper.GetAddressFromScriptHash(HASH_CONFIG.DEX_HASH);
         const address = common.address;
         const params: InvokeGroup = {
             merge: false,
             group: [
                 {
-                    scriptHash: HASH_CONFIG.DEX_HASH.toString(), // 合约地址
-                    operation: "transferIn",
+                    scriptHash: assetid.toString(), // 合约地址
+                    operation: "transfer",
                     arguments: [
                         { type: "Address", value: address },
-                        { type: "Hash160", value: assetid.toString() },
+                        { type: "Address", value: addressto },
                         { type: "Integer", value: count }
                     ],
                     network: common.network
@@ -126,6 +126,7 @@ export class Contract
             description: common.language === 'zh' ? '退款' : 'Getmoneyback'
             // assets: 暂时用不到
         }
+        console.log(params)
         return Wallet.invoke(params);
     }
 
