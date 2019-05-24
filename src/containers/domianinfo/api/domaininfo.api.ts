@@ -63,3 +63,19 @@ export const getaskbuyother = (domain:string,addr:string) =>
   }
   return request(opts);
 }
+/**
+ * 获取该域名的拥有状态
+ * @param domain 域名
+ * @param addr 当前地址
+ */
+export const getdomainowner = (domain:string,addr:string) =>
+{
+  const opts = {
+    method: 'getDexDomainInfo',
+    params: [
+      domain,
+      addr
+    ]
+  }
+  return request(opts);
+}

@@ -5,8 +5,10 @@ export interface IAskBuyInfoStore{
     askbuyDomain:string,
     askbuyData:IAskbuyInfo|null,
     askbuyOtherList:IAskbuyOtherList[],
+    ownerInfo:IOwnerInfo|null,
     getAskbuyInfo:(domain:string,addr:string)=>Promise<boolean>,
     getAskbuyOtherList:(domain:string,addr:string)=>Promise<boolean>,
+    getDomainOwner:(domain:string,addr:string)=>Promise<boolean>
 }
 export interface IAskbuyInfoProps extends RouteComponentProps{
     askbuyinfo:IAskBuyInfoStore,
@@ -29,4 +31,9 @@ export interface IAskbuyOtherList{
     price:string,
     orderType:string,
     sellType:number
+}
+export interface IOwnerInfo{
+    domain:string,
+    isOwn:boolean,
+    isLaunch:boolean
 }

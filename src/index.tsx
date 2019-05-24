@@ -48,6 +48,16 @@ window.addEventListener('Teemo.NEO.DISCONNECTED',(data:CustomEvent)=>{
   console.log("inject DISCONNECTED ");
   console.log(data.detail);
 })
+// 交易成功通知
+// window.addEventListener('Teemo.NEO.TRANSACTION_CONFIRMED',(data:CustomEvent)=>{
+//   console.log("inject TRANSACTION_CONFIRMED ");
+//   console.log(data.detail);
+// })
+// 高度变化
+// window.addEventListener('Teemo.NEO.BLOCK_HEIGHT_CHANGED',(data:CustomEvent)=>{
+//   console.log("inject BLOCK_HEIGHT_CHANGED ");
+//   console.log(data.detail);
+// })
 
 if (process.env.NODE_ENV === "development") {    
     // common.initLoginInfo(document.getElementById("test")as HTMLElement);

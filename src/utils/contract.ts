@@ -195,7 +195,7 @@ export class Contract
         return Wallet.invoke(params);
     }
     /**
-     * 出售某个域名个求购者
+     * 出售某个域名给求购者
      * @param addr 求购者
      * @param domain 求购的域名
      * @param assetid 求购所花费的资产id
@@ -218,7 +218,7 @@ export class Contract
         return Wallet.invoke(params);
     }
     /**
-     * 
+     * 域名出售
      * @param domain 出售的域名
      * @param assetid 出售的资产
      * @param startPrice 起始价格

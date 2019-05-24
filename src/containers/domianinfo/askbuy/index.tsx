@@ -14,7 +14,7 @@ import { getQueryString } from '@/utils/function'
 import { Contract } from '@/utils/contract';
 import { HASH_CONFIG } from '@/config';
 
-@inject('askbuyinfo','common')
+@inject('askbuyinfo', 'common')
 @observer
 class AskBuyInfo extends React.Component<IAskbuyInfoProps, any> {
     public state = {
@@ -29,15 +29,16 @@ class AskBuyInfo extends React.Component<IAskbuyInfoProps, any> {
         this.props.askbuyinfo.askbuyDomain = domain;
         this.props.askbuyinfo.getAskbuyInfo(domain, this.state.askBuyer);
         this.props.askbuyinfo.getAskbuyOtherList(domain, this.state.askBuyer);
+        this.props.askbuyinfo.getDomainOwner(domain, this.props.common.address);
         console.log(JSON.stringify(this.props.askbuyinfo));
     }
     // 取消挂单
     public onCancelAskbuy = async () =>
     {
-        const assetName = this.props.askbuyinfo.askbuyData?this.props.askbuyinfo.askbuyData.assetName:'CGAS';
-        const assetId = assetName === 'CGAS'?HASH_CONFIG.ID_CGAS:HASH_CONFIG.ID_NNC;
-        console.log(this.props.common.address+"---"+this.props.askbuyinfo.askbuyDomain+"---"+assetId)
-        const res = await Contract.cancelAskbuy(this.props.common.address,this.props.askbuyinfo.askbuyDomain,assetId)
+        const assetName = this.props.askbuyinfo.askbuyData ? this.props.askbuyinfo.askbuyData.assetName : 'CGAS';
+        const assetId = assetName === 'CGAS' ? HASH_CONFIG.ID_CGAS : HASH_CONFIG.ID_NNC;
+        console.log(this.props.common.address + "---" + this.props.askbuyinfo.askbuyDomain + "---" + assetId)
+        const res = await Contract.cancelAskbuy(this.props.common.address, this.props.askbuyinfo.askbuyDomain, assetId)
         console.log(res)
     }
     // 返回上一页
@@ -60,7 +61,10 @@ class AskBuyInfo extends React.Component<IAskbuyInfoProps, any> {
         {
             this.props.history.push('/saleinfo/' + this.props.askbuyinfo.askbuyDomain + '?selltype=onceprice')
         }
-
+    }
+    // 出售域名给某人
+    public sellDomainToHim =()=>{
+        console.log("todo")
     }
     public render()
     {
@@ -98,15 +102,42 @@ class AskBuyInfo extends React.Component<IAskbuyInfoProps, any> {
                 {
                     this.state.opt === 'normal' && (
                         <div className="domain-account">
-                            <div className="account-title">
-                                <div className="account-text">您已持有该域名</div>
-                                <div className="account-text">域名上架中</div>
-                                <div className="account-text">您未持有该域名</div>
-                            </div>
-                            <div className="account-btn">
-                                <Button text="出售给他" />
-                                <Button text="无法出售" btnColor="gray-btn" />
-                            </div>
+                            {
+                                (this.props.askbuyinfo.ownerInfo && !this.props.askbuyinfo.ownerInfo.isOwn) && (
+                                    <>
+                                        <div className="account-title">
+                                            <div className="account-text">您未持有该域名</div>
+                                        </div>
+                                        <div className="account-btn">
+                                            <Button text="无法出售" btnColor="gray-btn" />
+                                        </div>
+                                    </>
+                                )
+                            }
+                            {
+                                (this.props.askbuyinfo.ownerInfo && this.props.askbuyinfo.ownerInfo.isOwn && !this.props.askbuyinfo.ownerInfo.isLaunch) && (
+                                    <>
+                                        <div className="account-title">
+                                            <div className="account-text">您已持有该域名</div>
+                                        </div>
+                                        <div className="account-btn">
+                                            <Button text="出售给他" onClick={this.sellDomainToHim} />
+                                        </div>
+                                    </>
+                                )
+                            }
+                            {
+                                (this.props.askbuyinfo.ownerInfo && this.props.askbuyinfo.ownerInfo.isOwn && this.props.askbuyinfo.ownerInfo.isLaunch) && (
+                                    <>
+                                        <div className="account-title">
+                                            <div className="account-text">域名上架中</div>
+                                        </div>
+                                        <div className="account-btn">
+                                            <Button text="无法出售" btnColor="gray-btn" />
+                                        </div>
+                                    </>
+                                )
+                            }
                         </div>
                     )
                 }
