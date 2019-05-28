@@ -14,13 +14,33 @@ import ReStepThree from './restepthree';
 import ReStepFour from './restepfour';
 import { ISellFormProps } from '../interface/sellform.interface';
 
-@inject('sellform','common')
+@inject('sellform', 'common')
 @observer
 class SellTable extends React.Component<ISellFormProps, any> {
     // 返回上一页
     public onGoBack = () =>
     {
+
         this.props.history.go(-1);
+    }
+    // 销毁
+    public componentWillUnmount()
+    {
+        this.props.sellform.stepNumber = 1;
+        this.props.sellform.sellAssetName = 'cgas';
+        this.props.sellform.sellStartPrice = 0;
+        this.props.sellform.sellEndPrice = 0;
+        this.props.sellform.sellReducePrice = 0;
+        this.props.sellform.endNNCPrice = 0;
+        this.props.sellform.sellDomainCount = 0;
+        this.props.sellform.sellDomainList = [];
+        this.props.sellform.pageIndex = 1;// 当前页面
+        this.props.sellform.isLast = false;
+        this.props.sellform.isLoading = false;
+        this.props.sellform.readySellDomainName = ''; // 记录准备出售的域名
+        this.props.sellform.readySellItem = null; // 记录准备出售的域名
+        this.props.sellform.orderRank = 0;
+        this.props.sellform.endNNCPrice = 0;
     }
 
     public render()
@@ -43,16 +63,23 @@ class SellTable extends React.Component<ISellFormProps, any> {
 
                                 <span>选择挂单类型</span>
                             </li>
-                            <li className={this.stepShow(3||5)}>
+                            <li className={this.stepShow(3) || this.stepShow(5)}>
                                 {
-                                    (this.props.sellform.stepNumber === 3 || this.props.sellform.stepNumber === 5 ) ? <img src={require('@/img/next.png')} alt="" />
+                                    (this.props.sellform.stepNumber === 3 || this.props.sellform.stepNumber === 5) ? <img src={require('@/img/next.png')} alt="" />
                                         : <img src={require('@/img/next-un.png')} alt="" />
                                 }
                                 <span>设置价格</span>
                             </li>
-                            <li className={this.stepShow(4||6)}>
+                            {/* <li className={this.stepShow(5)}>
                                 {
-                                    (this.props.sellform.stepNumber === 4 || this.props.sellform.stepNumber === 6 )? <img src={require('@/img/next.png')} alt="" />
+                                    this.props.sellform.stepNumber === 5 ? <img src={require('@/img/next.png')} alt="" />
+                                        : <img src={require('@/img/next-un.png')} alt="" />
+                                }
+                                <span>设置价格</span>
+                            </li> */}
+                            <li className={this.stepShow(4 || 6)}>
+                                {
+                                    (this.props.sellform.stepNumber === 4 || this.props.sellform.stepNumber === 6) ? <img src={require('@/img/next.png')} alt="" />
                                         : <img src={require('@/img/next-un.png')} alt="" />
                                 }
                                 <span>挂单确认</span>

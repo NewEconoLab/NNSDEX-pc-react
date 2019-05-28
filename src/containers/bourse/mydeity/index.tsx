@@ -132,7 +132,7 @@ class Mydeity extends React.Component<IMyDeityProps, any> {
                         }
                         <span>{item.fullDomain}</span>
                         {
-                          (!item.isDeal && item.saleRate !== '0') && <Slider rate={parseFloat(item.saleRate) * 100} />
+                          (!item.isDeal && parseFloat(item.saleRate) !== 0) && <Slider rate={parseFloat(item.saleRate) * 100} />
                         }
                         {
                           item.isDeal && <Card text="已成交" style={{ 'marginLeft': '15px' }} cardsize="md-card" colortype="cs-gray" />

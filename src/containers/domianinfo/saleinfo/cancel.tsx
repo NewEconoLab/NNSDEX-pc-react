@@ -16,6 +16,7 @@ class CancelSale extends React.Component<ISaleInfoProps, any> {
         console.log(this.props.common.address+"---"+this.props.saleinfo.saleDomain)
         const res = await Contract.cancelSellDomain(this.props.saleinfo.saleDomain)
         console.log(res)
+        this.props.history.go(-1);
     }
     public render()
     {

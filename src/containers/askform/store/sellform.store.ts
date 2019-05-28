@@ -13,7 +13,9 @@ class SellFormTable implements ISellFormStore
     @observable public isLoading: boolean = false;
     @observable public readySellDomainName:string = ''; // 记录准备出售的域名
     @observable public readySellItem:ISellDomainList|null = null; // 记录准备出售的域名
-    @observable public sellPrice:number = 0;
+    @observable public sellStartPrice:number = 0; // 出售的初始价格
+    @observable public sellEndPrice:number = 0; // 出售最低价格
+    @observable public sellReducePrice:number = 0; // 出售降价
     @observable public sellAssetName:string = 'cgas';
     @observable public orderRank: number = 0;
     @observable public endNNCPrice:number = 0;

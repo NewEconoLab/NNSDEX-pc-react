@@ -8,6 +8,7 @@ import { injectIntl } from 'react-intl';
 import Button from '@/components/Button';
 import { ISellFormProps } from '../interface/sellform.interface';
 import { HASH_CONFIG } from '@/config';
+import { Contract } from '@/utils/contract';
 
 @observer
 class StepFour extends React.Component<ISellFormProps, any> {
@@ -20,8 +21,13 @@ class StepFour extends React.Component<ISellFormProps, any> {
     public componentDidMount(){
         if(this.props.sellform.sellAssetName === 'cgas'){
             this.setState({
-                sellFee:this.props.sellform.sellPrice*0.02,
-                receivePrice:this.props.sellform.sellPrice*(1-0.02)
+                sellFee:this.props.sellform.sellStartPrice*0.02,
+                receivePrice:this.props.sellform.sellStartPrice*(1-0.02)
+            })
+        }else{
+            this.setState({
+                sellFee:0,
+                receivePrice:this.props.sellform.sellStartPrice
             })
         }
     }
@@ -31,9 +37,20 @@ class StepFour extends React.Component<ISellFormProps, any> {
         this.props.sellform.stepNumber = 3;
     }
     // 下一步
-    public onGoNext = () =>
+    public onSendOnePriceDeity = async () =>
     {
-        this.props.sellform.stepNumber = 4;
+        console.log(this.props.sellform.readySellDomainName+"---"+this.state.sellAssetId+"---"+this.props.sellform.sellStartPrice+"---"+this.props.sellform.sellStartPrice+"---"+0+"---"+this.props.sellform.endNNCPrice)
+        const res = await Contract.domainSell(this.props.sellform.readySellDomainName,this.state.sellAssetId,this.props.sellform.sellStartPrice,this.props.sellform.sellStartPrice,0,this.props.sellform.endNNCPrice);
+        if (res)
+        {
+            this.props.sellform.stepNumber = 1;
+            this.props.history.go(-1);
+        } else
+        {
+            this.props.sellform.stepNumber = 1;
+            this.props.history.go(-1);
+        }
+
     }
     public render()
     {
@@ -46,7 +63,7 @@ class StepFour extends React.Component<ISellFormProps, any> {
                     </div>
                     <div className="line-wrapper">
                         <div className="line-name">价格</div>
-                        <div className="line-text">{this.props.sellform.sellPrice+' '+this.state.sellAsset}</div>
+                        <div className="line-text">{this.props.sellform.sellStartPrice+' '+this.state.sellAsset}</div>
                     </div>
                     {
                         this.props.sellform.sellAssetName === 'cgas' && (
@@ -74,7 +91,7 @@ class StepFour extends React.Component<ISellFormProps, any> {
                 </div>
                 <div className="step-btn">
                     <Button text="上一步" btnColor="white-btn" onClick={this.onGoPrevious} />
-                    <Button text="立即挂单" onClick={this.onGoNext} />
+                    <Button text="立即挂单" onClick={this.onSendOnePriceDeity} />
                 </div>
             </div>
         );

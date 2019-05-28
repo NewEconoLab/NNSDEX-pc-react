@@ -16,7 +16,7 @@ import * as formatTime from '@/utils/formatTime';
 @observer
 class StepThree extends React.Component<ISellFormProps, any> {
     public state = {
-        sellValue: '', // 
+        sellValue: '', // 出售价格
         selectType: '',  // 支付资产的选择
         canDoNext: false, // 是否可下一步操作
         nncCheck: true, // 拥有的nnc金额是否够支付 true为够，false为不够
@@ -43,7 +43,7 @@ class StepThree extends React.Component<ISellFormProps, any> {
     public onGoPrevious = () =>
     {
         this.props.sellform.sellAssetName = '';
-        this.props.sellform.sellPrice = 0;
+        this.props.sellform.sellStartPrice = 0;
         this.props.sellform.endNNCPrice = 0;
         this.props.sellform.stepNumber = 2;        
     }
@@ -51,7 +51,7 @@ class StepThree extends React.Component<ISellFormProps, any> {
     public onGoNext = () =>
     {
         this.props.sellform.sellAssetName = this.state.selectType;
-        this.props.sellform.sellPrice = parseFloat(this.state.sellValue);
+        this.props.sellform.sellStartPrice = parseFloat(this.state.sellValue);
         this.props.sellform.endNNCPrice = parseFloat(this.state.addNNCNum.toString())+100;
         this.props.sellform.stepNumber = 4;
     }
@@ -141,7 +141,6 @@ class StepThree extends React.Component<ISellFormProps, any> {
     // 显示追加抵押
     private onClickShow = () =>
     {
-        console.log('todo');
         this.setState({
             showAdd: !this.state.showAdd,
             addNNCNum: 0
@@ -168,12 +167,20 @@ class StepThree extends React.Component<ISellFormProps, any> {
             return false
         }
 
-        // 若输入为空或为0时
-        if (parseFloat(value) === 0 || value === '')
+        // 若输入为空或为0,或小于0时
+        if ( value === '' || parseFloat(value)=== 0)
         {
             this.setState({
                 canDoNext: false
             })
+        }
+        // 小于0时
+        if (parseFloat(value) < 0)
+        {
+            this.setState({
+                canDoNext: false
+            })
+            return false
         }
 
         if (this.state.selectType === 'cgas')
@@ -200,34 +207,9 @@ class StepThree extends React.Component<ISellFormProps, any> {
         }
 
         this.setState({
-            sellValue: value
+            sellValue: value,
+            canDoNext:true
         })
-        // 如果大于可用金额
-        const num = this.state.selectType === 'cgas' ? this.props.common.balances.contractcgas : this.props.common.balances.contractnnc;
-        if (parseFloat(value) > num)
-        {
-            this.setState({
-                sellValue: num
-            })
-        }
-        // 判断nnc金额是否足够
-        if (this.state.selectType === 'cgas')
-        {
-            const flag = this.props.common.balances.contractnnc >= 100 ? true : false;
-            this.setState({
-                nncCheck: flag,
-                canDoNext: flag
-            })
-        } else
-        {
-            // 求支付出售域名抵押的nnc之后
-            const endflag = (this.props.common.balances.contractnnc - parseFloat(value)) > 100;
-            console.log(this.props.common.balances.contractnnc - parseFloat(value))
-            this.setState({
-                nncCheck: endflag,
-                canDoNext: endflag
-            })
-        }
         return true
     }
 
@@ -241,12 +223,19 @@ class StepThree extends React.Component<ISellFormProps, any> {
         }
 
         // 若输入为空或为0时
-        if (value === '' && parseFloat(value)<0)
+        if (value === '' && parseFloat(value)===0)
         {
             this.setState({
-                canDoNext: false,
                 addNNCNum: 0
             })
+        }
+        // 小于0时
+        if (parseFloat(value) < 0)
+        {
+            this.setState({
+                reAddNNCNum: 0
+            })
+            return false
         }
         // 精确到整数
         if (/\./.test(value))
@@ -272,24 +261,6 @@ class StepThree extends React.Component<ISellFormProps, any> {
                 maxNNCFlag:true
             })
         }
-        // 判断nnc金额是否足够
-        if (this.state.selectType === 'cgas')
-        {
-            const flag = this.props.common.balances.contractnnc - 100 - this.state.addNNCNum >= 0 ? true : false;
-            this.setState({
-                nncCheck: flag,
-                canDoNext: flag
-            })
-        } else
-        {
-            // 求支付出售域名抵押的nnc之后追加抵押
-            const endflag = this.props.common.balances.contractnnc - parseFloat(value) - 100 >= 0 ? true : false;
-            console.log(this.props.common.balances.contractnnc - parseFloat(value))
-            this.setState({
-                nncCheck: endflag,
-                canDoNext: endflag
-            })
-        }        
         return true
     }
     // 抵押nnc输入失去焦点
@@ -301,11 +272,9 @@ class StepThree extends React.Component<ISellFormProps, any> {
     private onPlusNNC = () =>
     {
         // 可花费的抵押
-        let costPrice = this.props.common.balances.contractnnc - 100;
+        const costPrice = this.props.common.balances.contractnnc - 100;
         console.log(parseFloat(this.state.addNNCNum.toString())+'---'+costPrice)
-        if(this.state.selectType === 'nnc'){
-            costPrice = costPrice-parseFloat(this.state.sellValue);
-        }        
+               
         this.setState({
             addNNCNum: parseFloat(this.state.addNNCNum.toString()) + 10
         },()=>{

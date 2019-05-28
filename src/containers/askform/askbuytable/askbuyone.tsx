@@ -121,6 +121,13 @@ class AskBuyStepOne extends React.Component<IAskBuyProps, any> {
                 canDoNext: false
             })
         }
+        if (parseFloat(value) < 0)
+        {
+            this.setState({
+                canDoNext: false
+            })
+            return false
+        }
 
         if (this.state.selectType === 'cgas')
         {

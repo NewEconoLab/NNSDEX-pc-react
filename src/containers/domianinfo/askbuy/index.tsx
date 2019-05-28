@@ -40,6 +40,7 @@ class AskBuyInfo extends React.Component<IAskbuyInfoProps, any> {
         console.log(this.props.common.address + "---" + this.props.askbuyinfo.askbuyDomain + "---" + assetId)
         const res = await Contract.cancelAskbuy(this.props.common.address, this.props.askbuyinfo.askbuyDomain, assetId)
         console.log(res)
+        this.props.history.go(-1);
     }
     // 返回上一页
     public onGoBack = () =>

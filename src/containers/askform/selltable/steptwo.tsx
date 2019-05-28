@@ -59,7 +59,7 @@ class StepTwo extends React.Component<ISellFormProps, any> {
                         options={this.typeOptions}
                         text=''
                         onCallback={this.onCallback}
-                        style={{ 'width': '3rem' }}
+                        style={{ 'width': '3rem','minWidth':"300px" }}
                     />
                     <div className="two-text">
                         {this.state.selectType === 'one' ? "以恒定价格出售您的域名。" : "降价拍卖需要您设置一个出售域名的最高价和最低价，订单以最高价挂出。如果没有卖掉每两天会降一次价，直到降到最低价。"}

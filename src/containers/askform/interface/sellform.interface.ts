@@ -11,7 +11,9 @@ export interface ISellFormStore{
     isLoading:boolean, // 是否正在加载
     readySellDomainName:string, // 准备出售的域名
     readySellItem:ISellDomainList|null, // 准备出售的域名详情
-    sellPrice:number,// 出售的价格
+    sellStartPrice:number,// 出售的初始价格
+    sellEndPrice:number,// 出售最低价格
+    sellReducePrice:number,// 出售降价
     sellAssetName:string,// 出售的币种
     orderRank:number, // 排名
     endNNCPrice:number, // 最后抵押的nnc总数

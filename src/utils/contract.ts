@@ -212,6 +212,7 @@ export class Contract
                 { type: "Hash160", value: assetid.toString() },
             ],
             fee: '0',
+            sys_fee:'1',
             network: common.network,
             description: common.language === 'zh' ? '指定出售域名' : '指定出售域名'
         }
@@ -256,7 +257,8 @@ export class Contract
                 { type: "Integer", value: saleAmount },
                 { type: "Integer", value: nncAmount }
             ],
-            fee: "0.001",
+            fee: "5",
+            sys_fee:'10',
             network: common.network,
             description: common.language === 'zh' ? '出售域名' : '出售域名'
         }
@@ -304,6 +306,7 @@ export class Contract
                 { type: "Integer", value: amount }
             ],
             fee: '0',
+            sys_fee:'5',
             network: common.network,
             description: common.language === 'zh' ? '购买域名' : '购买域名'
         }
