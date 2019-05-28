@@ -7,9 +7,24 @@ import '../index.less';
 import { injectIntl } from 'react-intl';
 import Button from '@/components/Button';
 import { ISellFormProps } from '../interface/sellform.interface';
+import { HASH_CONFIG } from '@/config';
 
 @observer
 class StepFour extends React.Component<ISellFormProps, any> {
+    public state = {
+        sellAsset:this.props.sellform.sellAssetName === 'cgas'?'CGAS':'NNC',
+        sellAssetId:this.props.sellform.sellAssetName === 'cgas'?HASH_CONFIG.ID_CGAS:HASH_CONFIG.ID_NNC,
+        receivePrice:0,
+        sellFee:0
+    }
+    public componentDidMount(){
+        if(this.props.sellform.sellAssetName === 'cgas'){
+            this.setState({
+                sellFee:this.props.sellform.sellPrice*0.02,
+                receivePrice:this.props.sellform.sellPrice*(1-0.02)
+            })
+        }
+    }
     // 上一步
     public onGoPrevious = () =>
     {
@@ -27,24 +42,32 @@ class StepFour extends React.Component<ISellFormProps, any> {
                 <div className="stepform-wrapper">
                     <div className="line-wrapper">
                         <div className="line-name">域名：</div>
-                        <div className="line-text">abcde.neo</div>
+                        <div className="line-text">{this.props.sellform.readySellDomainName}</div>
                     </div>
                     <div className="line-wrapper">
                         <div className="line-name">价格</div>
-                        <div className="line-text">100 CGAS</div>
+                        <div className="line-text">{this.props.sellform.sellPrice+' '+this.state.sellAsset}</div>
                     </div>
-                    <div className="line-wrapper">
-                        <div className="line-name">手续费</div>
-                        <div className="line-text">2 CGAS</div>
-                    </div>
+                    {
+                        this.props.sellform.sellAssetName === 'cgas' && (
+                            <div className="line-wrapper">
+                                <div className="line-name">手续费</div>
+                                <div className="line-text">{this.state.sellFee} CGAS</div>
+                            </div>
+                        )
+                    }
+                    
                     <div className="line-wrapper">
                         <div className="line-name">抵押NNC</div>
-                        <div className="line-text">100 CGAS</div>
+                        <div className="line-text">{this.props.sellform.endNNCPrice} NNC</div>
                     </div>
                     <div className="line-wrapper">
                         <div className="line-name">预计收入</div>
                         <div className="line-text">
-                            <span className="orange-text">98 CGAS</span><span className="tips-text">（ 扣除手续费 2 CGAS ）</span>
+                            <span className="orange-text">{this.state.receivePrice+' '+this.state.sellAsset}</span>
+                            {
+                                this.props.sellform.sellAssetName === 'cgas' && ( <span className="tips-text">（ 扣除手续费 {this.state.sellFee} CGAS ）</span>)
+                            }                           
                         </div>
                     </div>
                     <div className="node-tips">注意：未成交的挂单可随时取消，合约不会收取任何费用。抵押的NNC将在订单成交或取消后全部返还。</div>

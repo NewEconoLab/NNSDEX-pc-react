@@ -23,7 +23,7 @@ class StepOne extends React.Component<ISellFormProps, any> {
         {
             return
         }
-        this.getSellDomainData(false,true);
+        this.getSellDomainData(true);
         const table = document.querySelector('#sellTable');
         if (table)
         {
@@ -52,9 +52,15 @@ class StepOne extends React.Component<ISellFormProps, any> {
       return;
     }
     const tableScroll = table.scrollTop
-    if (tableScroll + (table['offsetHeight']) >= ul.offsetHeight + ul.offsetTop)
+    console.log('tableScroll:'+tableScroll);
+    console.log('(table[offsetHeight]):'+(table['offsetHeight']));
+    console.log('ul.offsetHeight:'+ul.offsetHeight);
+    console.log('左边:'+(tableScroll + (table['offsetHeight'])));
+    console.log('右边：'+(ul.offsetHeight-5));
+    // console.log(tableScroll + (table['offsetHeight']) >= ul.offsetHeight-5)
+    if ((tableScroll + (table['offsetHeight'])) >= (ul.offsetHeight-5))
     { 
-      this.getSellDomainData();
+      this.getSellDomainData(false);
     }
   }
   public componentWillUnmount()
@@ -68,9 +74,9 @@ class StepOne extends React.Component<ISellFormProps, any> {
     // clearInterval(this.state.timer);
   }
     // 获取可出售的域名列表
-    public getSellDomainData = (isTime?:boolean,isFirst?:boolean) =>
+    public getSellDomainData = (isFirst?:boolean) =>
     {
-        this.props.sellform.getSellDomainList(this.props.common.address, this.state.inputValue,isTime,isFirst)
+        this.props.sellform.getSellDomainList(this.props.common.address, this.state.inputValue,isFirst)
     }
     // 输入搜索域名
     public onSearchMydomain = (value: string) =>
@@ -92,9 +98,10 @@ class StepOne extends React.Component<ISellFormProps, any> {
         })
     }
     // 选择挂单域名
-    public onChooseDomain = (domain: string) =>
+    public onChooseDomain = (item) =>
     {
-        this.props.sellform.readySellDomainName = domain;
+        this.props.sellform.readySellDomainName = item.fulldomain;
+        this.props.sellform.readySellItem =item;
     }
     // 下一步
     public onGoNext = () =>
@@ -105,7 +112,7 @@ class StepOne extends React.Component<ISellFormProps, any> {
     public render()
     {
         return (
-            <div className="step-one">
+            <div className="step-one" ref={this.listRef} >
                 <Input
                     placeholder="请搜索您想要的域名"
                     value={this.state.inputValue}
@@ -115,12 +122,12 @@ class StepOne extends React.Component<ISellFormProps, any> {
                     onCancelSearch={this.onCancelSearch}
                     onEnter={this.doSearch}
                 />
-                <div className="domain-list" ref={this.listRef} id="sellTable">
+                <div className="domain-list" id="sellTable">
                     <ul className="list-ul">
                     {
                         this.props.sellform.sellDomainList.map((item,index)=>{
                             return (
-                                <li key={index} className={item.fulldomain === this.props.sellform.readySellDomainName?"list-li active":"list-li"} onClick={this.onChooseDomain.bind(this, item.fulldomain)}>{item.fulldomain}</li>
+                                <li key={index} className={item.fulldomain === this.props.sellform.readySellDomainName?"list-li active":"list-li"} onClick={this.onChooseDomain.bind(this, item)}>{item.fulldomain}</li>
                             )
                         })
                     }

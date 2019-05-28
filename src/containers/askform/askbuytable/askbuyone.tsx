@@ -100,11 +100,12 @@ class AskBuyStepOne extends React.Component<IAskBuyProps, any> {
         this.setState({
             selectType: item.id,
             buyInput: '',
+            canDoNext: false
         })
         this.props.askbuy.assetName = item.id
     }
     // 输入金额
-    private onBuyValue = (e:any) =>
+    private onBuyValue = (e: any) =>
     {
         const value = e.target.value;
         // 判断是否是数字
@@ -128,7 +129,7 @@ class AskBuyStepOne extends React.Component<IAskBuyProps, any> {
             {
                 return false;
             }
-            
+
         } else // nnc的
         {
             // 精确到两位
@@ -139,7 +140,8 @@ class AskBuyStepOne extends React.Component<IAskBuyProps, any> {
         }
 
         // 大于1000000000
-        if(parseFloat(value)>1000000000){
+        if (parseFloat(value) > 1000000000)
+        {
             return false;
         }
 
@@ -163,7 +165,7 @@ class AskBuyStepOne extends React.Component<IAskBuyProps, any> {
                 canDoNext: flag
             })
         } else
-        {
+        { 
             // 求支付求购金额之后的nnc
             const endflag = (this.props.common.balances.contractnnc - parseFloat(value)) >= 100;
             console.log(this.props.common.balances.contractnnc - parseFloat(value))

@@ -47,6 +47,7 @@ window.addEventListener('Teemo.NEO.CONNECTED',(data:CustomEvent)=>{
 window.addEventListener('Teemo.NEO.DISCONNECTED',(data:CustomEvent)=>{
   console.log("inject DISCONNECTED ");
   console.log(data.detail);
+  sessionStorage.removeItem('dexLogin');
 })
 // 交易成功通知
 // window.addEventListener('Teemo.NEO.TRANSACTION_CONFIRMED',(data:CustomEvent)=>{

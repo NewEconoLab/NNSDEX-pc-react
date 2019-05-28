@@ -10,7 +10,13 @@ export interface ISellFormStore{
     isLast:boolean, // 是否数据全部加载完了
     isLoading:boolean, // 是否正在加载
     readySellDomainName:string, // 准备出售的域名
-    getSellDomainList: (addr: string, str: string, isTime?: boolean, isFirst?: boolean)=>Promise<boolean>
+    readySellItem:ISellDomainList|null, // 准备出售的域名详情
+    sellPrice:number,// 出售的价格
+    sellAssetName:string,// 出售的币种
+    orderRank:number, // 排名
+    endNNCPrice:number, // 最后抵押的nnc总数
+    getSellDomainList: (addr: string, str: string, isFirst?: boolean)=>Promise<boolean>, // 获取可出售域名列表
+    getOrderRank:(num:number)=>Promise<boolean>// 获取排队状况
 }
 
 export interface ISellFormProps extends RouteComponentProps{
@@ -21,10 +27,5 @@ export interface ISellFormProps extends RouteComponentProps{
 
 export interface ISellDomainList {
     fulldomain:string,
-    ttl:number,
-    data:string,
-    isUsing:boolean,
-    isSelling:boolean,
-    isBind:boolean,
-    isTTL:boolean
+    TTL:number
 }
