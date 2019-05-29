@@ -212,7 +212,7 @@ export class Contract
                 { type: "Hash160", value: assetid.toString() },
             ],
             fee: '0',
-            sys_fee:'1',
+            sys_fee:'6',
             network: common.network,
             description: common.language === 'zh' ? '指定出售域名' : '指定出售域名'
         }
@@ -266,16 +266,16 @@ export class Contract
     }
     /**
      * 取消出售域名
-     * @param domain 域名
+     * @param auctionid 域名id
      */
-    public static async cancelSellDomain(domain: string)
+    public static async cancelSellDomain(auctionid: string)
     {
-        const domainHash = this.nameHashArray(domain.split("."));
+        // const domainHash = this.nameHashArray(domain.split("."));
         const params: InvokeArgs = {
             scriptHash: HASH_CONFIG.DEX_HASH.toString(),
             operation: "discontinueAuction",
             arguments: [
-                { type: "Hash256", value: domainHash.toString() }
+                { type: "Hash256", value: auctionid }
             ],
             fee: '0',
             network: common.network,
@@ -287,13 +287,13 @@ export class Contract
     /**
      * 购买某个域名
      * @param buyer 购买者
-     * @param domain 域名
+     * @param auctionid 域名id
      * @param assetid 购买资产id
      * @param price 购买价格
      */
-    public static async betDomain(buyer: string, domain: string, assetid: Neo.Uint160, price: number)
+    public static async betDomain(buyer: string, auctionid: string, assetid: Neo.Uint160, price: number)
     {
-        const domainHash = this.nameHashArray(domain.split("."));
+        // const domainHash = this.nameHashArray(domain.split("."));
         const priceStr = price.toFixed(HASH_CONFIG.assetDecimal[assetid.toString()]).replace(".", "");
         const amount = parseFloat(priceStr);
         const params: InvokeArgs = {
@@ -301,12 +301,12 @@ export class Contract
             operation: "bet",
             arguments: [
                 { type: "Address", value: buyer },
-                { type: "Hash256", value: domainHash.toString() },
+                { type: "Hash256", value: auctionid },
                 { type: "Hash160", value: assetid.toString() },
                 { type: "Integer", value: amount }
             ],
-            fee: '0',
-            sys_fee:'5',
+            fee: '0.01',
+            sys_fee:'6',
             network: common.network,
             description: common.language === 'zh' ? '购买域名' : '购买域名'
         }

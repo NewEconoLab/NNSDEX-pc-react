@@ -12,12 +12,12 @@ class SaleInfo implements ISaleInfoStore
      * 查询该域名出售详情
      * @param domain 域名
      */
-    @action public async getSaleInfo(domain:string)
+    @action public async getSaleInfo(domain:string,addr:string)
     {
         let result: any = null;
         try
         {
-            result = await Api.getselldetail(domain);
+            result = await Api.getselldetail(domain,addr);
         } catch (error)
         {
             this.saleData = null;

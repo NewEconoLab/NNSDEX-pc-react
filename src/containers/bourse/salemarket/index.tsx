@@ -130,15 +130,16 @@ class SaleMarket extends React.Component<ISaleMarketProps, any> {
       })
   }
   // 跳转到详情页
-  public onGoDomainInfo = (domain: string,type:number) =>
+  public onGoDomainInfo = (domain: string) =>
   {
+    this.props.history.push('/saleinfo/' + domain)
     // 出售类型：0表示降价出售，1表示一口价
-    if(type === 0){
-      this.props.history.push('/saleinfo/' + domain+'?selltype=reduce')
-    }
-    else{
-      this.props.history.push('/saleinfo/' + domain+'?selltype=onceprice')
-    }    
+    // if(type === 0){
+    //   this.props.history.push('/saleinfo/' + domain+'?selltype=reduce')
+    // }
+    // else{
+    //   this.props.history.push('/saleinfo/' + domain+'?selltype=onceprice')
+    // }    
   }
   // 关注或取消关注
   public onStarClick = (domain: string, event: any) =>
@@ -174,7 +175,7 @@ class SaleMarket extends React.Component<ISaleMarketProps, any> {
               this.props.salemarket.saleListCount > 0 && this.props.salemarket.saleList.map((item: ISaleList, index: number) =>
               {
                 return (
-                  <li className="table-td" key={index} onClick={this.onGoDomainInfo.bind(this, item.fullDomain,item.sellType)} >
+                  <li className="table-td" key={index} onClick={this.onGoDomainInfo.bind(this, item.fullDomain)} >
                     <ul className="td-ul">
                       <li className="td-li">
                         <span>{item.fullDomain}</span>

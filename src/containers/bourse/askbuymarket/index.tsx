@@ -20,7 +20,7 @@ class AskBuyMarket extends React.Component<IAskBuyMarketProps, any> {
     askbuyOrderBy: 'MortgagePayments_High',// 筛选排序方式
     askbuyAsset: 'All',   // 筛选币种
     askbuyStar: 'All', // 是否只看关注
-    askbuyLoading: true, // 是否正在加载
+    // askbuyLoading: true, // 是否正在加载
     askbuyFistLoad:true // 是否初次加载
   }
   // 求购市场排序方式
@@ -67,12 +67,12 @@ class AskBuyMarket extends React.Component<IAskBuyMarketProps, any> {
     this.props.askbuymarket.askbuyListCount = 0;
   }
    // 获取数据
-   public getAskbuyData = async() =>
+   public getAskbuyData = () =>
    {
-     await this.props.askbuymarket.getAskBuyList(this.state.askbuyPage, this.state.askbuySize, this.state.askbuyOrderBy, this.state.askbuyAsset, this.state.askbuyStar);
-     this.setState({
-       askbuyLoading: false
-     })
+     this.props.askbuymarket.getAskBuyList(this.state.askbuyPage, this.state.askbuySize, this.state.askbuyOrderBy, this.state.askbuyAsset, this.state.askbuyStar);
+    //  this.setState({
+    //    askbuyLoading: false
+    //  })
    }
   // 排序显示
   public onAskbuyOrderBy = (item) =>
@@ -80,8 +80,8 @@ class AskBuyMarket extends React.Component<IAskBuyMarketProps, any> {
     this.setState({
       askbuyPage: 1,
       askbuyOrderBy: item.id,
-      askbuyLoading: true,
-    }, async () =>
+      // askbuyLoading: true,
+    }, () =>
       {
         this.getAskbuyData();
       })
@@ -92,8 +92,8 @@ class AskBuyMarket extends React.Component<IAskBuyMarketProps, any> {
     this.setState({
       askbuyPage: 1,
       askbuyAsset: item.id,
-      askbuyLoading: true
-    }, async () =>
+      // askbuyLoading: true
+    }, () =>
       {
         if(!this.state.askbuyFistLoad){
           this.getAskbuyData();    
@@ -112,7 +112,7 @@ class AskBuyMarket extends React.Component<IAskBuyMarketProps, any> {
     console.log(starFlag)
     this.setState({
       askbuyStar: starFlag
-    }, async () =>
+    }, () =>
     {
       this.getAskbuyData();
     })
@@ -122,8 +122,8 @@ class AskBuyMarket extends React.Component<IAskBuyMarketProps, any> {
   {
     this.setState({
       askbuyPage: index,
-      askbuyLoading: true
-    }, async () =>
+      // askbuyLoading: true
+    }, () =>
       {
         this.getAskbuyData();
       })

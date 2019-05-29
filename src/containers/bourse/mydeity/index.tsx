@@ -19,7 +19,6 @@ class Mydeity extends React.Component<IMyDeityProps, any> {
     mydeitySize: 15,
     mydeityOrderBy: '0',// 筛选排序方式
     mydeityLoading: true, // 是否正在加载
-    mydeityFistLoad: true // 是否初次加载
   }
   // 筛选
   public mydeityOptions = [
@@ -82,7 +81,7 @@ class Mydeity extends React.Component<IMyDeityProps, any> {
     }
   }
   // 跳转到详情页
-  public onGoDomainInfo = (domain: string, isDeal: boolean, orderType: string, selltype: number) =>
+  public onGoDomainInfo = (domain: string, isDeal: boolean, orderType: string) =>
   {
     if (isDeal)
     {
@@ -92,12 +91,9 @@ class Mydeity extends React.Component<IMyDeityProps, any> {
     {
       this.props.history.push('/askbuyinfo/' + domain + '?addr=' + this.props.common.address+'&opt=cancel')
     }// 出售类型：0表示降价出售，1表示一口价
-    else if (orderType === 'Selling' && selltype === 0)
+    else if (orderType === 'Selling')
     {
-      this.props.history.push('/saleinfo/' + domain + '?selltype=reduce&opt=cancel')
-    } else if (orderType === 'Selling' && selltype === 1)
-    {
-      this.props.history.push('/saleinfo/' + domain + '?selltype=onceprice&opt=cancel')
+      this.props.history.push('/saleinfo/' + domain + '?opt=cancel'+'&addr='+ this.props.common.address)
     }
   }
   public render()
@@ -121,7 +117,7 @@ class Mydeity extends React.Component<IMyDeityProps, any> {
               this.props.mydeity.mydeityListCount > 0 && this.props.mydeity.mydeityList.map((item: IMyDeityList, index: number) =>
               {
                 return (
-                  <li className="table-td" key={index} onClick={this.onGoDomainInfo.bind(this, item.fullDomain, item.isDeal, item.orderType, item.sellType)}>
+                  <li className="table-td" key={index} onClick={this.onGoDomainInfo.bind(this, item.fullDomain, item.isDeal, item.orderType)}>
                     <ul className={this.dealClassname(item.isDeal)}>
                       <li className="td-li">
                         {

@@ -18,15 +18,14 @@ import { ISaleInfoProps } from '../interface/saleinfo.interface';
 @observer
 class SaleInfo extends React.Component<ISaleInfoProps, any> {
     public state = {
-        selltype:getQueryString('selltype') || 'onceprice',
-        opt:getQueryString('opt') || 'normal',
+        opt:getQueryString('opt') || '',
+        addr:getQueryString('addr') || '',
     }
     public componentDidMount(){
-        console.log(this.state.selltype);
         const params = this.props.match.params;
         const domain =params["domain"];
         this.props.saleinfo.saleDomain = domain;
-        this.props.saleinfo.getSaleInfo(domain);
+        this.props.saleinfo.getSaleInfo(domain,this.state.addr);
         this.props.saleinfo.getSaleOtherList(domain);
     }
     // 返回上一页
@@ -42,16 +41,16 @@ class SaleInfo extends React.Component<ISaleInfoProps, any> {
                     <Button text="<<&nbsp;&nbsp;返回" onClick={this.onGoBack} />
                 </div>
                 {
-                    this.state.selltype === 'onceprice' && <OncePrice {...this.props} />
+                    this.props.saleinfo.saleData && this.props.saleinfo.saleData.sellType === 0 && <ReducePrice {...this.props} />
                 }
                 {
-                    this.state.selltype === 'reduce' && <ReducePrice {...this.props} />
+                    this.props.saleinfo.saleData && this.props.saleinfo.saleData.sellType === 1 && <OncePrice {...this.props} />
                 }
                 {
-                    this.state.opt === 'normal' && <BalanceBox {...this.props} />
+                    (this.state.opt === 'normal'  || (this.props.saleinfo.saleData && this.props.saleinfo.saleData.seller !== this.props.common.address ) ) && <BalanceBox {...this.props} />
                 }
                 {
-                    this.state.opt === 'cancel' && <CancelSale {...this.props} />
+                    (this.state.opt === 'cancel' || (this.props.saleinfo.saleData && this.props.saleinfo.saleData.seller === this.props.common.address )) && <CancelSale {...this.props} />
                 }
                 {
                     (this.props.saleinfo.saleOtherList.length>0 && this.state.opt !== 'cancel')&& <OtherList {...this.props} />

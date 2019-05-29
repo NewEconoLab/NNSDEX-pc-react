@@ -66,13 +66,27 @@
                       vertical-align: middle;
                   }
                   .li-btn{
+                    display: none;
+                  }
+                  .li-lookinfo{
                     float: right;
                   }
               }
           }
+          .open-ul{
+            display: none;
+          }
       }
       .open-td{
         background: #FAFAFA;
+        .td-ul{
+          .td-li{
+            .li-btn{
+              display: block;
+              float: right;
+            }
+          }
+        }
         .open-ul{
           display: flex;
           justify-content: space-between;

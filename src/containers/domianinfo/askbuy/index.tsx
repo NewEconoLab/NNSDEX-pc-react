@@ -19,7 +19,7 @@ import { HASH_CONFIG } from '@/config';
 class AskBuyInfo extends React.Component<IAskbuyInfoProps, any> {
     public state = {
         askBuyer: getQueryString('addr') || '',
-        opt: getQueryString('opt') || 'normal',
+        opt: getQueryString('opt') || '',
     }
 
     public componentDidMount()
@@ -64,8 +64,14 @@ class AskBuyInfo extends React.Component<IAskbuyInfoProps, any> {
         }
     }
     // 出售域名给某人
-    public sellDomainToHim =()=>{
+    public sellDomainToHim = async ()=>{
         console.log("todo")
+        const assetName = this.props.askbuyinfo.askbuyData ? this.props.askbuyinfo.askbuyData.assetName : 'CGAS';
+        const assetId = assetName === 'CGAS' ? HASH_CONFIG.ID_CGAS : HASH_CONFIG.ID_NNC;
+        console.log(this.state.askBuyer + "---" + this.props.askbuyinfo.askbuyDomain + "---" + assetId)
+        const res = await Contract.sellDomainToWho(this.state.askBuyer, this.props.askbuyinfo.askbuyDomain, assetId)
+        console.log(res)
+        this.props.history.go(-1);
     }
     public render()
     {
@@ -101,7 +107,7 @@ class AskBuyInfo extends React.Component<IAskbuyInfoProps, any> {
                     </div>
                 </div>
                 {
-                    this.state.opt === 'normal' && (
+                    (this.state.opt === 'normal'|| this.state.askBuyer !== this.props.common.address) && (
                         <div className="domain-account">
                             {
                                 (this.props.askbuyinfo.ownerInfo && !this.props.askbuyinfo.ownerInfo.isOwn) && (
@@ -143,7 +149,7 @@ class AskBuyInfo extends React.Component<IAskbuyInfoProps, any> {
                     )
                 }
                 {
-                    this.state.opt === 'cancel' && (
+                    (this.state.opt === 'cancel'|| this.state.askBuyer === this.props.common.address) && (
                         <div className="domain-account">
                             <div className="account-btn">
                                 <Button text="取消挂单" onClick={this.onCancelAskbuy} />

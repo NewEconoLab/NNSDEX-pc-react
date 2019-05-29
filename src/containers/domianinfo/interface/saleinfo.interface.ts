@@ -5,7 +5,7 @@ export interface ISaleInfoStore{
     saleDomain:string, // 出售的域名
     saleData:ISaleInfo|null, // 出售域名的详情
     saleOtherList:ISaleOtherList[], // 其他挂单
-    getSaleInfo:(domain:string)=>Promise<boolean>,
+    getSaleInfo:(domain:string,addr:string)=>Promise<boolean>,
     getSaleOtherList:(domain:string)=>Promise<boolean>,
 }
 export interface ISaleInfoProps extends RouteComponentProps{
@@ -23,6 +23,7 @@ export interface ISaleInfo{
     salePrice:string // 下降幅度
     assetName:string, // 资产类型
     endPrice:string, // 最低价
+    auctionid:string,// 标记
 }
 export interface ISaleOtherList{
     assetHash:string,

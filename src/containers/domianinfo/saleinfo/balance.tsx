@@ -29,9 +29,11 @@ class BalanceInfo extends React.Component<ISaleInfoProps, any> {
         if(amount === 0){
             return 
         }
-        console.log(this.props.common.address + "---" + this.props.saleinfo.saleDomain + "---" + assetId+'---'+amount)
-        const res = await Contract.betDomain(this.props.common.address, this.props.saleinfo.saleDomain, assetId, amount)
+        const auctionId = this.props.saleinfo.saleData ?this.props.saleinfo.saleData.auctionid:'';
+        console.log(this.props.common.address + "---" + auctionId + "---" + assetId+'---'+amount)
+        const res = await Contract.betDomain(this.props.common.address, auctionId, assetId, amount);
         console.log(res)
+        this.props.history.go(-1);
         return true;
     }
     public render()

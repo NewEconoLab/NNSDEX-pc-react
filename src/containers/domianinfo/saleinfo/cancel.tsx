@@ -13,8 +13,9 @@ import { Contract } from '@/utils/contract';
 class CancelSale extends React.Component<ISaleInfoProps, any> {
     // 取消挂单
     public onCancelDeity = async ()=>{
-        console.log(this.props.common.address+"---"+this.props.saleinfo.saleDomain)
-        const res = await Contract.cancelSellDomain(this.props.saleinfo.saleDomain)
+        const auctionId = this.props.saleinfo.saleData ?this.props.saleinfo.saleData.auctionid:'';
+        console.log(this.props.common.address+"---"+auctionId)
+        const res = await Contract.cancelSellDomain(auctionId)
         console.log(res)
         this.props.history.go(-1);
     }

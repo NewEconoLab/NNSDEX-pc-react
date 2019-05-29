@@ -1,20 +1,16 @@
-// 详情相关接口：
-// getDexDomainSellDetail
-// getDexDomainSellOther
-// getDexDomainBuyDetail
-// getDexDomainBuyOther
 import request from 'utils/request';
 
 /**
  * 查询该域名出售详情
  * @param domain 域名
  */
-export const getselldetail = (domain:string) =>
+export const getselldetail = (domain:string,addr:string) =>
 {
   const opts = {
     method: 'getDexDomainSellDetail',
     params: [
-      domain
+      domain,
+      addr
     ]
   }
   return request(opts);
