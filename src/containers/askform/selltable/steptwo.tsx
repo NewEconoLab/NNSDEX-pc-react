@@ -16,7 +16,7 @@ class StepTwo extends React.Component<ISellFormProps, any> {
         selectType: '',
     }
     // 挂单方式
-    public typeOptions = [
+    private typeOptions = [
         {
             id: 'one',
             name: '一口价',  
@@ -26,29 +26,7 @@ class StepTwo extends React.Component<ISellFormProps, any> {
             name: '降价拍卖',
         }
     ]
-    // 上一步
-    public onGoPrevious = () =>
-    {
-        this.props.sellform.stepNumber = 1;
-    }
-    // 下一步
-    public onGoNext = () =>
-    {
-        if(this.state.selectType === 'one'){
-            this.props.sellform.stepNumber = 3;
-        }else{
-            this.props.sellform.stepNumber = 5;
-        }
-        
-    }
-    // 选择挂单的方式
-    public onCallback = (item) =>
-    {
-        this.setState({
-            selectType: item.id
-        })
-        console.log(item.id);
-    }
+    
     public render()
     {
         return (
@@ -71,6 +49,29 @@ class StepTwo extends React.Component<ISellFormProps, any> {
                 </div>
             </div>
         );
+    }
+    // 上一步
+    private onGoPrevious = () =>
+    {
+        this.props.sellform.stepNumber = 1;
+    }
+    // 下一步
+    private onGoNext = () =>
+    {
+        if(this.state.selectType === 'one'){
+            this.props.sellform.stepNumber = 3;
+        }else{
+            this.props.sellform.stepNumber = 5;
+        }
+        
+    }
+    // 选择挂单的方式
+    private onCallback = (item) =>
+    {
+        this.setState({
+            selectType: item.id
+        })
+        console.log(item.id);
     }
 }
 

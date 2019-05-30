@@ -26,26 +26,7 @@ class StepFour extends React.Component<ISellFormProps, any> {
             })
         }
     }
-    // 上一步
-    public onGoPrevious = () =>
-    {
-        this.props.sellform.stepNumber = 3;
-    }
-    // 下一步
-    public onSendReduceDeity = async () =>
-    {
-        console.log(this.props.sellform.readySellDomainName+"---"+this.state.sellAssetId+"---"+this.props.sellform.sellStartPrice+"---"+this.props.sellform.sellEndPrice+"---"+this.props.sellform.sellReducePrice+"---"+this.props.sellform.endNNCPrice)
-        const res = await Contract.domainSell(this.props.sellform.readySellDomainName,this.state.sellAssetId,this.props.sellform.sellStartPrice,this.props.sellform.sellEndPrice,this.props.sellform.sellReducePrice,this.props.sellform.endNNCPrice);
-        if (res)
-        {
-            this.props.sellform.stepNumber = 1;
-            this.props.history.go(-1);
-        } else
-        {
-            this.props.sellform.stepNumber = 1;
-            this.props.history.go(-1);
-        }
-    }
+
     public render()
     {
         return (
@@ -95,6 +76,26 @@ class StepFour extends React.Component<ISellFormProps, any> {
                 </div>
             </div>
         );
+    }
+    // 上一步
+    private onGoPrevious = () =>
+    {
+        this.props.sellform.stepNumber = 3;
+    }
+    // 下一步
+    private onSendReduceDeity = async () =>
+    {
+        console.log(this.props.sellform.readySellDomainName + "---" + this.state.sellAssetId + "---" + this.props.sellform.sellStartPrice + "---" + this.props.sellform.sellEndPrice + "---" + this.props.sellform.sellReducePrice + "---" + this.props.sellform.endNNCPrice)
+        const res = await Contract.domainSell(this.props.sellform.readySellDomainName, this.state.sellAssetId, this.props.sellform.sellStartPrice, this.props.sellform.sellEndPrice, this.props.sellform.sellReducePrice, this.props.sellform.endNNCPrice);
+        if (res)
+        {
+            this.props.sellform.stepNumber = 1;
+            this.props.history.go(-1);
+        } else
+        {
+            this.props.sellform.stepNumber = 1;
+            this.props.history.go(-1);
+        }
     }
 }
 

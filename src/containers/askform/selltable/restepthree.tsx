@@ -28,7 +28,7 @@ class StepThree extends React.Component<ISellFormProps, any> {
         reducePercent: 0, // 降价百分比
     }
     // 币种
-    public typeOptions = [
+    private typeOptions = [
         {
             id: 'cgas',
             name: 'CGAS',
@@ -41,26 +41,6 @@ class StepThree extends React.Component<ISellFormProps, any> {
     public componentDidMount()
     {
         this.props.sellform.getOrderRank(100);
-    }
-    // 上一步
-    public onGoPrevious = () =>
-    {
-        this.props.sellform.sellAssetName = '';
-        this.props.sellform.sellStartPrice = 0;
-        this.props.sellform.sellEndPrice = 0;
-        this.props.sellform.sellReducePrice = 0;
-        this.props.sellform.endNNCPrice = 0;
-        this.props.sellform.stepNumber = 2;
-    }
-    // 下一步 todo
-    public onGoNext = () =>
-    {
-        this.props.sellform.sellAssetName = this.state.reSelectType;
-        this.props.sellform.sellStartPrice = parseFloat(this.state.reStartValue);
-        this.props.sellform.sellEndPrice = parseFloat(this.state.reEndValue);
-        this.props.sellform.sellReducePrice = parseFloat(this.state.reduceValue);
-        this.props.sellform.endNNCPrice = parseFloat(this.state.reAddNNCNum.toString())+100;
-        this.props.sellform.stepNumber = 6;
     }
 
     public render()
@@ -160,6 +140,27 @@ class StepThree extends React.Component<ISellFormProps, any> {
             </div>
         );
     }
+
+    // 上一步
+    private onGoPrevious = () =>
+    {
+        this.props.sellform.sellAssetName = '';
+        this.props.sellform.sellStartPrice = 0;
+        this.props.sellform.sellEndPrice = 0;
+        this.props.sellform.sellReducePrice = 0;
+        this.props.sellform.endNNCPrice = 0;
+        this.props.sellform.stepNumber = 2;
+    }
+    // 下一步 todo
+    private onGoNext = () =>
+    {
+        this.props.sellform.sellAssetName = this.state.reSelectType;
+        this.props.sellform.sellStartPrice = parseFloat(this.state.reStartValue);
+        this.props.sellform.sellEndPrice = parseFloat(this.state.reEndValue);
+        this.props.sellform.sellReducePrice = parseFloat(this.state.reduceValue);
+        this.props.sellform.endNNCPrice = parseFloat(this.state.reAddNNCNum.toString()) + 100;
+        this.props.sellform.stepNumber = 6;
+    }
     // 选择币种
     private onReAcceptAsset = (item) =>
     {
@@ -244,10 +245,10 @@ class StepThree extends React.Component<ISellFormProps, any> {
             reEndValue: '',
             reduceValue: ''
         }, () =>
-        {
-            this.checkNextStep();
-            this.computePercent();
-        })
+            {
+                this.checkNextStep();
+                this.computePercent();
+            })
         return true
     }
     // 输入最低金额
@@ -268,9 +269,9 @@ class StepThree extends React.Component<ISellFormProps, any> {
             reEndValue: value,
             reduceValue: ''
         }, () =>
-        {
-            this.checkNextStep()
-        })
+            {
+                this.checkNextStep()
+            })
         return true
     }
     // 输入降价金额
@@ -292,10 +293,10 @@ class StepThree extends React.Component<ISellFormProps, any> {
         this.setState({
             reduceValue: value
         }, () =>
-        {
-            this.checkNextStep();
-            this.computePercent();
-        })
+            {
+                this.checkNextStep();
+                this.computePercent();
+            })
 
         return true
     }
@@ -331,7 +332,7 @@ class StepThree extends React.Component<ISellFormProps, any> {
         }
         const percent = (100 * parseFloat(this.state.reduceValue) / parseFloat(this.state.reStartValue)).toFixed(0);
         this.setState({
-            reducePercent: parseInt(percent.toString(),10)
+            reducePercent: parseInt(percent.toString(), 10)
         })
     }
     // 增加抵押NNC
@@ -398,7 +399,7 @@ class StepThree extends React.Component<ISellFormProps, any> {
         // 可花费的抵押
         const costPrice = this.props.common.balances.contractnnc - 100;
         console.log(parseFloat(this.state.reAddNNCNum.toString()) + '---' + costPrice)
-        
+
         this.setState({
             reAddNNCNum: parseFloat(this.state.reAddNNCNum.toString()) + 10
         }, () =>

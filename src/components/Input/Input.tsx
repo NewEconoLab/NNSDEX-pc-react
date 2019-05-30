@@ -28,23 +28,30 @@ export default class Input extends React.Component<IProps, any> {
 		isFocus:false
 	}
 	public inputRef:React.RefObject<HTMLInputElement> = React.createRef();
+	private timer:number = 0;
 	// 监控输入内容
-	public onInputChange = (event: any) => {
+	public onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		if (this.props.onChange) {
 			this.props.onChange(event.target.value);
 		}
 	}
 	// 失去焦点事件
-	public onInputBlur = (event: any) => {
-		if (this.props.onBlur) {
-			this.props.onBlur(event.target.value);
-		}		
-		this.setState({
-			isFocus:false
-		})
+	public onInputBlur = (ev: React.FocusEvent<HTMLInputElement>) => {
+		const value = ev.target.value;
+		this.timer = window.setTimeout(() => {
+			if (this.props.onBlur) {
+				this.props.onBlur(value);
+			}		
+			this.setState({
+				isFocus:false
+			})
+		}, 200)
 	}
 	// 监控焦点
 	public onFocus = () => {
+		if(this.timer !== 0) {
+			clearTimeout(this.timer);
+		}
 		if (this.props.onFocus) {
 			this.props.onFocus();
 		}
@@ -53,7 +60,7 @@ export default class Input extends React.Component<IProps, any> {
 		})
 	}
 	// 回车事件
-	public onKeyDown = (event: any) => {
+	public onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
 		if (event.keyCode === 13) {
 			if (this.props.onEnter) {
 				this.props.onEnter();
@@ -86,7 +93,7 @@ export default class Input extends React.Component<IProps, any> {
 					ref={this.inputRef}
 				/>
 				{
-					this.state.isFocus?<img src={require('@/img/close.png')} onClick={this.onClearInput} className="search-icon" alt="close.png"/>
+					(this.state.isFocus || this.props.value )?<img src={require('@/img/close.png')} onClick={this.onClearInput} className="search-icon" alt="close.png"/>
 					:<img src={require('@/img/search.png')} className="search-icon" alt="search.png"/>
 				}
 				

@@ -25,7 +25,13 @@ class Mydomain implements IMydomainStore
             return false;
         }
         this.domainListCount = result[0].count || 0;
-        this.domainList = result[0].list || null;
+        this.domainList = result[0].list || [];
+        this.domainList = this.domainList.map((item:IDomainList) => {
+            return {
+                ...item,
+                active:false
+            }
+        })
         console.log(result[0])
         return true; 
     }

@@ -11,14 +11,7 @@ import { Contract } from '@/utils/contract';
 
 @observer
 class CancelSale extends React.Component<ISaleInfoProps, any> {
-    // 取消挂单
-    public onCancelDeity = async ()=>{
-        const auctionId = this.props.saleinfo.saleData ?this.props.saleinfo.saleData.auctionid:'';
-        console.log(this.props.common.address+"---"+auctionId)
-        const res = await Contract.cancelSellDomain(auctionId)
-        console.log(res)
-        this.props.history.go(-1);
-    }
+
     public render()
     {
         return (
@@ -30,6 +23,15 @@ class CancelSale extends React.Component<ISaleInfoProps, any> {
                 </div>
             </React.Fragment>
         );
+    }
+    // 取消挂单
+    private onCancelDeity = async () =>
+    {
+        const auctionId = this.props.saleinfo.saleData ? this.props.saleinfo.saleData.auctionid : '';
+        console.log(this.props.common.address + "---" + auctionId)
+        const res = await Contract.cancelSellDomain(auctionId)
+        console.log(res)
+        this.props.history.go(-1);
     }
 }
 

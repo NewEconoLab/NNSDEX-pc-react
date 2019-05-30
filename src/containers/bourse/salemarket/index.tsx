@@ -11,8 +11,9 @@ import Select from '@/components/select';
 import Card from '@/components/card';
 import Slider from '@/components/slider';
 import { ISaleMarketProps, ISaleList } from '../interface/salemarket.interface';
+import { when } from 'mobx';
 
-@inject('salemarket')
+@inject('salemarket','common')
 @observer
 class SaleMarket extends React.Component<ISaleMarketProps, any> {
   public state = {
@@ -21,11 +22,10 @@ class SaleMarket extends React.Component<ISaleMarketProps, any> {
     saleOrderBy: 'MortgagePayments_High',// 筛选排序方式
     saleAsset: 'All',   // 筛选币种
     saleStar: 'All', // 是否只看关注
-    saleLoading: true, // 是否正在加载
     saleFistLoad:true // 是否初次加载
   }
   // 筛选条件
-  public saleOrder = [
+  private saleOrder = [
     {
       id: 'MortgagePayments_High',
       name: '默认',
@@ -48,7 +48,7 @@ class SaleMarket extends React.Component<ISaleMarketProps, any> {
     }
   ]
   // 筛选条件二
-  public saleAssetOpt = [
+  private saleAssetOpt = [
     {
       id: 'All',
       name: '全部',
@@ -66,88 +66,6 @@ class SaleMarket extends React.Component<ISaleMarketProps, any> {
   {
     this.props.salemarket.saleList = [];
     this.props.salemarket.saleListCount = 0;
-  }
-  // 获取数据
-  public getSaleData = async() =>
-  {
-    await this.props.salemarket.getSaleList(this.state.salePage, this.state.saleSize, this.state.saleOrderBy, this.state.saleAsset, this.state.saleStar);
-    this.setState({
-      saleLoading: false
-    })
-  }
-  // 排序显示
-  public onSaleOrderBy = (item) =>
-  {
-    this.setState({
-      salePage: 1,
-      saleOrderBy: item.id,
-      saleLoading: true,
-    }, async () =>
-      {
-        this.getSaleData();
-      })
-  }
-  // 筛选条件待定
-  public onSaleAssetSelect = (item) =>
-  {
-    this.setState({
-      salePage: 1,
-      saleAsset: item.id,
-      saleLoading: true
-    }, async () =>
-      {
-        if(!this.state.saleFistLoad){
-          this.getSaleData();    
-        }else{
-          this.setState({
-            saleFistLoad:false
-          })
-        }
-      })
-  }
-  // 只看关注 todo
-  public onSaleMyAttention = (flag: boolean) =>
-  {
-    console.log('flag:' + flag+','+typeof(flag))
-    const starFlag = flag? 'Mine' : 'All';
-    console.log(starFlag)
-    this.setState({
-      saleStar: starFlag
-    }, async () =>
-    {
-      this.getSaleData();
-    })
-  }
-  // 翻页
-  public onChangeSalePage = (index: number) =>
-  {
-    this.setState({
-      salePage: index,
-      saleLoading: true
-    }, async () =>
-      {
-        this.getSaleData();
-      })
-  }
-  // 跳转到详情页
-  public onGoDomainInfo = (domain: string) =>
-  {
-    this.props.history.push('/saleinfo/' + domain)
-    // 出售类型：0表示降价出售，1表示一口价
-    // if(type === 0){
-    //   this.props.history.push('/saleinfo/' + domain+'?selltype=reduce')
-    // }
-    // else{
-    //   this.props.history.push('/saleinfo/' + domain+'?selltype=onceprice')
-    // }    
-  }
-  // 关注或取消关注
-  public onStarClick = (domain: string, event: any) =>
-  {
-    console.log(domain);
-    event.preventDefault();
-    event.stopPropagation();
-    event.nativeEvent.stopImmediatePropagation();
   }
   public render()
   {
@@ -205,6 +123,86 @@ class SaleMarket extends React.Component<ISaleMarketProps, any> {
         </div>
       </div>
     );
+  }
+  
+  // 获取数据
+  private getSaleData = async() =>
+  {
+    when(
+      () => !!this.props.common.address,
+      () => this.props.salemarket.getSaleList(this.props.common.address, this.state.salePage, this.state.saleSize, this.state.saleOrderBy, this.state.saleAsset, this.state.saleStar)
+    )    
+  }
+  // 排序显示
+  private onSaleOrderBy = (item) =>
+  {
+    this.setState({
+      salePage: 1,
+      saleOrderBy: item.id
+    }, async () =>
+      {
+        this.getSaleData();
+      })
+  }
+  // 筛选条件待定
+  private onSaleAssetSelect = (item) =>
+  {
+    this.setState({
+      salePage: 1,
+      saleAsset: item.id
+    }, async () =>
+      {
+        if(!this.state.saleFistLoad){
+          this.getSaleData();    
+        }else{
+          this.setState({
+            saleFistLoad:false
+          })
+        }
+      })
+  }
+  // 只看关注 todo
+  private onSaleMyAttention = (flag: boolean) =>
+  {
+    console.log('flag:' + flag+','+typeof(flag))
+    const starFlag = flag? 'Mine' : 'All';
+    console.log(starFlag)
+    this.setState({
+      saleStar: starFlag
+    }, async () =>
+    {
+      this.getSaleData();
+    })
+  }
+  // 翻页
+  private onChangeSalePage = (index: number) =>
+  {
+    this.setState({
+      salePage: index
+    }, async () =>
+      {
+        this.getSaleData();
+      })
+  }
+  // 跳转到详情页
+  private onGoDomainInfo = (domain: string) =>
+  {
+    this.props.history.push('/saleinfo/' + domain)
+    // 出售类型：0表示降价出售，1表示一口价
+    // if(type === 0){
+    //   this.props.history.push('/saleinfo/' + domain+'?selltype=reduce')
+    // }
+    // else{
+    //   this.props.history.push('/saleinfo/' + domain+'?selltype=onceprice')
+    // }    
+  }
+  // 关注或取消关注
+  private onStarClick = (domain: string, event: any) =>
+  {
+    console.log(domain);
+    event.preventDefault();
+    event.stopPropagation();
+    event.nativeEvent.stopImmediatePropagation();
   }
 }
 

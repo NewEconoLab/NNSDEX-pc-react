@@ -13,29 +13,11 @@ import { HASH_CONFIG } from '@/config';
 
 @observer
 class BalanceInfo extends React.Component<ISaleInfoProps, any> {
-    public componentDidMount(){
+    public componentDidMount()
+    {
         this.props.common.getContract();
     }
-    // 我要出价 
-    public onMakePrice = ()=>{
-        this.props.history.push('/askbuytable/' + this.props.saleinfo.saleDomain)
-    }
-    // 购买域名 todo
-    public onBuyDomain = async()=> {
-        console.log('todo')
-        const assetName = this.props.saleinfo.saleData ? this.props.saleinfo.saleData.assetName : 'CGAS';
-        const assetId = assetName === 'CGAS' ? HASH_CONFIG.ID_CGAS : HASH_CONFIG.ID_NNC;
-        const amount = this.props.saleinfo.saleData ?parseFloat(this.props.saleinfo.saleData.nowPrice) :0;
-        if(amount === 0){
-            return 
-        }
-        const auctionId = this.props.saleinfo.saleData ?this.props.saleinfo.saleData.auctionid:'';
-        console.log(this.props.common.address + "---" + auctionId + "---" + assetId+'---'+amount)
-        const res = await Contract.betDomain(this.props.common.address, auctionId, assetId, amount);
-        console.log(res)
-        this.props.history.go(-1);
-        return true;
-    }
+
     public render()
     {
         return (
@@ -44,14 +26,14 @@ class BalanceInfo extends React.Component<ISaleInfoProps, any> {
                     <div className="account-title">
                         <div className="account-text">账户余额：</div>
                         <div className="account-number">
+                            {
+                                (this.props.saleinfo.saleData && this.props.saleinfo.saleData.assetName === 'CGAS')
+                                    ? this.props.common.balances.contractcgas : this.props.common.balances.contractnnc
+                            }
+                            &nbsp;
                         {
-                            (this.props.saleinfo.saleData&& this.props.saleinfo.saleData.assetName === 'CGAS')
-                            ?this.props.common.balances.contractcgas:this.props.common.balances.contractnnc
-                        }
-                        &nbsp;
-                        {
-                            this.props.saleinfo.saleData&& this.props.saleinfo.saleData.assetName
-                        }
+                                this.props.saleinfo.saleData && this.props.saleinfo.saleData.assetName
+                            }
                         </div>
                         <Link to="/myaccount/balance" className="link-text">立即充值</Link>
                     </div>
@@ -62,6 +44,29 @@ class BalanceInfo extends React.Component<ISaleInfoProps, any> {
                 </div>
             </React.Fragment>
         );
+    }
+    // 我要出价 
+    private onMakePrice = () =>
+    {
+        this.props.history.push('/askbuytable/' + this.props.saleinfo.saleDomain)
+    }
+    // 购买域名 todo
+    private onBuyDomain = async () =>
+    {
+        console.log('todo')
+        const assetName = this.props.saleinfo.saleData ? this.props.saleinfo.saleData.assetName : 'CGAS';
+        const assetId = assetName === 'CGAS' ? HASH_CONFIG.ID_CGAS : HASH_CONFIG.ID_NNC;
+        const amount = this.props.saleinfo.saleData ? parseFloat(this.props.saleinfo.saleData.nowPrice) : 0;
+        if (amount === 0)
+        {
+            return
+        }
+        const auctionId = this.props.saleinfo.saleData ? this.props.saleinfo.saleData.auctionid : '';
+        console.log(this.props.common.address + "---" + auctionId + "---" + assetId + '---' + amount)
+        const res = await Contract.betDomain(this.props.common.address, auctionId, assetId, amount);
+        console.log(res)
+        this.props.history.go(-1);
+        return true;
     }
 }
 

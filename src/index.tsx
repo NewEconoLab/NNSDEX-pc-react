@@ -29,25 +29,29 @@ window.addEventListener('Teemo.NEO.NETWORK_CHANGED',(data:CustomEvent)=>{
   const base = data.detail.networks[0]==='MainNet'?'':'/test';
   const locations = window.location;
   // console.log(`${location.origin}${base || ''}${locations.pathname}${locations.search}${locations.hash}`)
-
-  window.location.href = `${location.origin}${base || ''}${locations.pathname}${locations.search}${locations.hash}`
-  // window.location.reload();
+  window.location.replace(`${location.origin}${base || ''}${locations.pathname.replace('/test', '')}${locations.search}${locations.hash}`);
 })
 // 账户变更
 window.addEventListener('Teemo.NEO.ACCOUNT_CHANGED',(data:CustomEvent)=>{
   console.log("inject ACCOUNT_CHANGED ");
-  console.log(data.detail);
+  console.log(data.detail.address);
+  // common.address=data.detail.address;
+  sessionStorage.setItem('dexLogin', data.detail.address);
+  window.location.reload();
 })
 // 链接
 window.addEventListener('Teemo.NEO.CONNECTED',(data:CustomEvent)=>{
   console.log("inject CONNECTED ");
   console.log(data.detail);
+  window.location.reload();
 })
 // 断开链接
 window.addEventListener('Teemo.NEO.DISCONNECTED',(data:CustomEvent)=>{
   console.log("inject DISCONNECTED ");
   console.log(data.detail);
   sessionStorage.removeItem('dexLogin');
+  common.address='';
+  window.location.reload();
 })
 // 交易成功通知
 // window.addEventListener('Teemo.NEO.TRANSACTION_CONFIRMED',(data:CustomEvent)=>{

@@ -12,7 +12,7 @@ import store from "@/store";
 import './index.less';
 import { observer } from 'mobx-react';
 import { IHomeStore } from '../home/interface/home.interface';
-import {getQueryString} from 'utils/function'
+import { getQueryString } from 'utils/function'
 import { ICommonStore } from '@/store/interface/common.interface';
 
 interface IState
@@ -26,18 +26,18 @@ interface IState
   languageImg: ImageData,
   isShowOther: boolean, // 是否显示其他功能设置
   isShowMenu: boolean,
-  loginText:string, // 登陆显示
+  loginText: string, // 登陆显示
 }
 interface IProps
 {
   home: IHomeStore,
   history: History,
   locale: any,
-  common:ICommonStore,
+  common: ICommonStore,
   btn: any,
   input: any,
   onChangeLanguage: (lang: string) => void;
-  onSearch:(flag:boolean)=>void;// 是否在搜索中
+  onSearch: (flag: boolean) => void;// 是否在搜索中
 }
 @observer
 export default class Header extends React.Component<IProps, IState>{
@@ -51,9 +51,9 @@ export default class Header extends React.Component<IProps, IState>{
     languageImg: store['common'].language === 'en' ? en : zh,
     isShowOther: false,
     isShowMenu: false,
-    loginText:'Login'
+    loginText: 'Login'
   }
-  public searchRef:React.RefObject<any> = React.createRef()
+  private searchRef: React.RefObject<any> = React.createRef()
   // public prop = this.props.intl.messages;
   public componentDidMount()
   {
@@ -86,24 +86,6 @@ export default class Header extends React.Component<IProps, IState>{
     EventHandler.add(this.globalClick);
   }
 
-  public globalClick = () =>
-  {
-    this.setState({
-      isShowLanguage: false,
-      isShowOther: false
-    })
-  }
-  
-  // 是否显示语言
-  public toggleLanguage = (e) =>
-  {
-    this.setState({
-      isShowLanguage: !this.state.isShowLanguage,
-      isShowOther: false
-    })
-    e.stopPropagation();
-  }
- 
   // 销毁
   public componentWillUnmount()
   {
@@ -112,102 +94,6 @@ export default class Header extends React.Component<IProps, IState>{
       isShowLanguage: false,
       isShowOther: false
     })
-  }
-  public getPath = (base) =>
-  {
-    const locations = this.props.history.location;
-    window.location.href = `${location.origin}${base || ''}${locations.pathname}${locations.search}${locations.hash}`
-  }
-  // 切换英文
-  public onClickEnglish = () =>
-  {
-    store['common'].setLanguage('en');
-    this.setState({
-      languageText: "En",
-      languageImg: en
-    })
-    sessionStorage.setItem('language', 'en');
-  }
-  // 切换中文
-  public onClickChinese = () =>
-  {
-    store['common'].setLanguage('zh');
-    this.setState({
-      languageText: "中",
-      languageImg: zh
-    })
-    sessionStorage.setItem('language', 'zh');
-  }
-  // 登录与登出
-  public onGoLogin = () =>
-  {
-    this.props.common.login();
-  }
-  // // 登录与登出
-  // public onLogout = () =>
-  // {
-  //   this.props.common.loginOut();
-  // }
-
-  // 输入搜索内容
-  public onChangeSearch = (value: string) =>
-  {
-    this.setState({
-      inputValue: value
-    })
-  }
-  // 获取焦点
-  public onFocus = () =>
-  {
-    this.setState({
-      isNormalSearch: false
-    })
-    this.props.onSearch(true);
-  }
-  // 取消搜索
-  public onCancelSearch = () =>
-  {
-    this.setState({
-      inputValue: '',
-      isNormalSearch: true
-    })
-    this.props.onSearch(false)
-  }
-  // 跳转到搜索页
-  public goSearch = ()=>{
-
-    window.open(window.location.origin+'/search?keywords='+ this.state.inputValue);
-    this.onCancelSearch();
-    // this.props.history.push('/search/'+this.state.inputValue)
-  }
-  // 一级菜单选择
-  public mapRouterUnderline = (path) =>
-  {
-    if (path instanceof Array)
-    {
-      for (const i in path)
-      {
-        if (new RegExp(path[i], 'i').test(this.props.history.location.pathname))
-        {
-          return "active"
-        }
-      }
-    }
-    if (path === this.props.history.location.pathname)
-    {
-      return "active"
-    }
-    return '';
-  }
-  // 标题样式显示
-  public headerClass = ()=>{
-    if(new RegExp('/bourse', 'i').test(this.props.history.location.pathname)){
-      return "header-wrap"
-    }
-    if(new RegExp('/myaccount', 'i').test(this.props.history.location.pathname)){
-      return "header-wrap"
-    }
-    return "header-wrap header-shadow"
   }
   public render()
   {
@@ -221,8 +107,8 @@ export default class Header extends React.Component<IProps, IState>{
                 <ul>
                   <li className={this.mapRouterUnderline('/')}><Link to="/">首页</Link></li>
                   <li className={this.mapRouterUnderline('/auction')}>域名竞拍</li>
-                  <li className={this.mapRouterUnderline(['/bourse/salemarket','/bourse/askbuymarket','/bourse/txhistory','/bourse/mydeity'])}><Link to="/bourse/salemarket">域名交易</Link></li>
-                  <li className={this.mapRouterUnderline(['/myaccount/balance','/myaccount/mydomain','/myaccount/bind','/myaccount/bonus','/myaccount/setting'])}><Link to="/myaccount/balance">我的账户</Link></li>
+                  <li className={this.mapRouterUnderline(['/bourse/salemarket', '/bourse/askbuymarket', '/bourse/txhistory', '/bourse/mydeity'])}><Link to="/bourse/salemarket">域名交易</Link></li>
+                  <li className={this.mapRouterUnderline(['/myaccount/balance', '/myaccount/mydomain', '/myaccount/bind', '/myaccount/bonus', '/myaccount/setting'])}><Link to="/myaccount/balance">我的账户</Link></li>
                 </ul>
               )
             }
@@ -268,7 +154,7 @@ export default class Header extends React.Component<IProps, IState>{
               <li>
                 {/* <img src={require('@/img/logout.png')} alt="" className="logout-icon" /> */}
                 {/* Logout */}
-                {this.props.common.address === '' ? <span onClick={this.onGoLogin}>Login</span>:<span>欢迎</span>}
+                {this.props.common.address === '' ? <span onClick={this.onGoLogin}>Login</span> : <span>欢迎</span>}
                 {/* {this.props.common.address !== '' && <span onClick={this.onLogout}>
                   <img src={require('@/img/logout.png')} alt="" className="logout-icon"  /><span>Logout</span>
                   </span>} */}
@@ -283,7 +169,126 @@ export default class Header extends React.Component<IProps, IState>{
     );
   }
 
-  private onSearchBlur = () => {
+  private globalClick = () =>
+  {
+    this.setState({
+      isShowLanguage: false,
+      isShowOther: false
+    })
+  }
+
+  // 是否显示语言
+  private toggleLanguage = (e) =>
+  {
+    this.setState({
+      isShowLanguage: !this.state.isShowLanguage,
+      isShowOther: false
+    })
+    e.stopPropagation();
+  }
+
+  // private getPath = (base) =>
+  // {
+  //   const locations = this.props.history.location;
+  //   window.location.href = `${location.origin}${base || ''}${locations.pathname}${locations.search}${locations.hash}`
+  // }
+  // 切换英文
+  private onClickEnglish = () =>
+  {
+    store['common'].setLanguage('en');
+    this.setState({
+      languageText: "En",
+      languageImg: en
+    })
+    sessionStorage.setItem('language', 'en');
+  }
+  // 切换中文
+  private onClickChinese = () =>
+  {
+    store['common'].setLanguage('zh');
+    this.setState({
+      languageText: "中",
+      languageImg: zh
+    })
+    sessionStorage.setItem('language', 'zh');
+  }
+  // 登录与登出
+  private onGoLogin = () =>
+  {
+    this.props.common.login();
+  }
+  // // 登录与登出
+  // public onLogout = () =>
+  // {
+  //   this.props.common.loginOut();
+  // }
+
+  // 输入搜索内容
+  private onChangeSearch = (value: string) =>
+  {
+    this.setState({
+      inputValue: value
+    })
+  }
+  // 获取焦点
+  private onFocus = () =>
+  {
+    this.setState({
+      isNormalSearch: false
+    })
+    this.props.onSearch(true);
+  }
+  // 取消搜索
+  private onCancelSearch = () =>
+  {
+    this.setState({
+      inputValue: '',
+      isNormalSearch: true
+    })
+    this.props.onSearch(false)
+  }
+  // 跳转到搜索页
+  private goSearch = () =>
+  {
+
+    window.open(window.location.origin + '/search?keywords=' + this.state.inputValue);
+    this.onCancelSearch();
+    // this.props.history.push('/search/'+this.state.inputValue)
+  }
+  // 一级菜单选择
+  private mapRouterUnderline = (path) =>
+  {
+    if (path instanceof Array)
+    {
+      for (const i in path)
+      {
+        if (new RegExp(path[i], 'i').test(this.props.history.location.pathname))
+        {
+          return "active"
+        }
+      }
+    }
+    if (path === this.props.history.location.pathname)
+    {
+      return "active"
+    }
+    return '';
+  }
+  // 标题样式显示
+  private headerClass = () =>
+  {
+    if (new RegExp('/bourse', 'i').test(this.props.history.location.pathname))
+    {
+      return "header-wrap"
+    }
+    if (new RegExp('/myaccount', 'i').test(this.props.history.location.pathname))
+    {
+      return "header-wrap"
+    }
+    return "header-wrap header-shadow"
+  }
+  private onSearchBlur = () =>
+  {
     this.setState({
       isNormalSearch: true
     })

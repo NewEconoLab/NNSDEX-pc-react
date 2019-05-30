@@ -10,8 +10,9 @@ import Page from '@/components/Page';
 import Select from '@/components/select';
 import Card from '@/components/card';
 import { IAskBuyMarketProps, IAskBuyList } from '../interface/askbuymarket.interface';
+import { when } from 'mobx';
 
-@inject('askbuymarket')
+@inject('askbuymarket','common')
 @observer
 class AskBuyMarket extends React.Component<IAskBuyMarketProps, any> {
   public state = {
@@ -21,10 +22,10 @@ class AskBuyMarket extends React.Component<IAskBuyMarketProps, any> {
     askbuyAsset: 'All',   // 筛选币种
     askbuyStar: 'All', // 是否只看关注
     // askbuyLoading: true, // 是否正在加载
-    askbuyFistLoad:true // 是否初次加载
+    askbuyFistLoad: true // 是否初次加载
   }
   // 求购市场排序方式
-  public askbuyOrder = [
+  private askbuyOrder = [
     {
       id: 'MortgagePayments_High',
       name: '默认',
@@ -47,7 +48,7 @@ class AskBuyMarket extends React.Component<IAskBuyMarketProps, any> {
     }
   ]
   // 币种
-  public askbuyAssetOpt = [
+  private askbuyAssetOpt = [
     {
       id: 'All',
       name: '全部',
@@ -65,81 +66,6 @@ class AskBuyMarket extends React.Component<IAskBuyMarketProps, any> {
   {
     this.props.askbuymarket.askbuyList = [];
     this.props.askbuymarket.askbuyListCount = 0;
-  }
-   // 获取数据
-   public getAskbuyData = () =>
-   {
-     this.props.askbuymarket.getAskBuyList(this.state.askbuyPage, this.state.askbuySize, this.state.askbuyOrderBy, this.state.askbuyAsset, this.state.askbuyStar);
-    //  this.setState({
-    //    askbuyLoading: false
-    //  })
-   }
-  // 排序显示
-  public onAskbuyOrderBy = (item) =>
-  {
-    this.setState({
-      askbuyPage: 1,
-      askbuyOrderBy: item.id,
-      // askbuyLoading: true,
-    }, () =>
-      {
-        this.getAskbuyData();
-      })
-  }
-  // 筛选条件待定
-  public onAskbuyAssetSelect = (item) =>
-  {
-    this.setState({
-      askbuyPage: 1,
-      askbuyAsset: item.id,
-      // askbuyLoading: true
-    }, () =>
-      {
-        if(!this.state.askbuyFistLoad){
-          this.getAskbuyData();    
-        }else{
-          this.setState({
-            askbuyFistLoad:false
-          })
-        }
-      })
-  }
-  // 只看关注 todo
-  public onAskbuyMyAttention = (flag: boolean) =>
-  {
-    console.log('flag:' + flag+','+typeof(flag))
-    const starFlag = flag? 'Mine' : 'All';
-    console.log(starFlag)
-    this.setState({
-      askbuyStar: starFlag
-    }, () =>
-    {
-      this.getAskbuyData();
-    })
-  }
-  // 翻页
-  public onChangeAskbuyPage = (index: number) =>
-  {
-    this.setState({
-      askbuyPage: index,
-      // askbuyLoading: true
-    }, () =>
-      {
-        this.getAskbuyData();
-      })
-  }
-  // 跳转到详情页
-  public onGoDomainInfo = (domain: string,addr:string) =>
-  {
-    this.props.history.push('/askbuyinfo/' + domain+'?addr='+addr)
-  }
-  // 关注或取消关注
-  public onStarClick = (domain: string, event: any) =>
-  {
-    console.log(domain);
-    event.preventDefault();
-    event.stopPropagation();
-    event.nativeEvent.stopImmediatePropagation();
   }
   public render()
   {
@@ -167,7 +93,7 @@ class AskBuyMarket extends React.Component<IAskBuyMarketProps, any> {
               this.props.askbuymarket.askbuyListCount > 0 && this.props.askbuymarket.askbuyList.map((item: IAskBuyList, index: number) =>
               {
                 return (
-                  <li className="table-td" key={index} onClick={this.onGoDomainInfo.bind(this, item.fullDomain,item.buyer)} >
+                  <li className="table-td" key={index} onClick={this.onGoDomainInfo.bind(this, item.fullDomain, item.buyer)} >
                     <ul className="td-ul">
                       <li className="td-li">
                         <span>{item.fullDomain}</span>
@@ -200,6 +126,84 @@ class AskBuyMarket extends React.Component<IAskBuyMarketProps, any> {
 
       </div>
     );
+  }
+
+  // 获取数据
+  private getAskbuyData = () =>
+  {
+    when(
+      () => !!this.props.common.address,
+      () => this.props.askbuymarket.getAskBuyList(this.props.common.address,this.state.askbuyPage, this.state.askbuySize, this.state.askbuyOrderBy, this.state.askbuyAsset, this.state.askbuyStar)
+    )
+  }
+  // 排序显示
+  private onAskbuyOrderBy = (item) =>
+  {
+    this.setState({
+      askbuyPage: 1,
+      askbuyOrderBy: item.id,
+      // askbuyLoading: true,
+    }, () =>
+      {
+        this.getAskbuyData();
+      })
+  }
+  // 筛选条件待定
+  private onAskbuyAssetSelect = (item) =>
+  {
+    this.setState({
+      askbuyPage: 1,
+      askbuyAsset: item.id,
+      // askbuyLoading: true
+    }, () =>
+      {
+        if (!this.state.askbuyFistLoad)
+        {
+          this.getAskbuyData();
+        } else
+        {
+          this.setState({
+            askbuyFistLoad: false
+          })
+        }
+      })
+  }
+  // 只看关注 todo
+  private onAskbuyMyAttention = (flag: boolean) =>
+  {
+    console.log('flag:' + flag + ',' + typeof (flag))
+    const starFlag = flag ? 'Mine' : 'All';
+    console.log(starFlag)
+    this.setState({
+      askbuyStar: starFlag
+    }, () =>
+      {
+        this.getAskbuyData();
+      })
+  }
+  // 翻页
+  private onChangeAskbuyPage = (index: number) =>
+  {
+    this.setState({
+      askbuyPage: index,
+      // askbuyLoading: true
+    }, () =>
+      {
+        this.getAskbuyData();
+      })
+  }
+  // 跳转到详情页
+  private onGoDomainInfo = (domain: string, addr: string) =>
+  {
+    this.props.history.push('/askbuyinfo/' + domain + '?addr=' + addr)
+  }
+  // 关注或取消关注
+  private onStarClick = (domain: string, event: any) =>
+  {
+    console.log(domain);
+    event.preventDefault();
+    event.stopPropagation();
+    event.nativeEvent.stopImmediatePropagation();
   }
 }
 

@@ -1,7 +1,6 @@
 import { observable, action } from 'mobx';
 import * as Api from '../api/bourse.api'
 import { IAskBuyMarketStore, IAskBuyList } from '../interface/askbuymarket.interface';
-import common from '@/store/common'
 
 class AskBuyMarket implements IAskBuyMarketStore
 {
@@ -13,12 +12,12 @@ class AskBuyMarket implements IAskBuyMarketStore
      * @param page 当前页码
      * @param size 每页条数
      */
-    @action public async getAskBuyList(page: number, size: number, orderby: string, asset: string, star: string)
+    @action public async getAskBuyList(addr:string,page: number, size: number, orderby: string, asset: string, star: string)
     {
         let result: any = null;
         try
         {
-            result = await Api.getakybuylist(common.address, page, size, orderby, asset, star);
+            result = await Api.getakybuylist(addr, page, size, orderby, asset, star);
         } catch (error)
         {
             this.askbuyListCount = 0;

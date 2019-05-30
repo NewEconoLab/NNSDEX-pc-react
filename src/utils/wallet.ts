@@ -12,6 +12,10 @@ import Toast from "@/components/Toast";
  */
 export function getAccount()
 {
+  if(!window['Teemo']) {
+    alert('请登陆Teemo');
+    return;
+  }
   return new Promise((resolve, reject) =>
   {
     Teemo.NEO.getAccount()
@@ -32,6 +36,10 @@ export function getAccount()
  */
 export function getBalance()
 {
+  if(!window['Teemo']) {
+    alert('请登陆Teemo');
+    return;
+  }
   const params: BalanceRequest = {
     address: common.address,   // 你要查询的地址
     assets: [hashConfig.ID_NNC.toString(), hashConfig.ID_CGAS.toString()], // 不填则默认查四个资产 NEO　GAS　NNC NNK 可能之后要改一下
@@ -59,6 +67,10 @@ export function getBalance()
 
 export function invoke(params: InvokeArgs)
 {
+  if(!window['Teemo']) {
+    alert('请登陆Teemo');
+    return;
+  }
   return new Promise((resolve, reject) =>
   {
     Teemo.NEO.invoke(params)
@@ -86,6 +98,10 @@ export function invoke(params: InvokeArgs)
 
 export function invokeGroup(params: InvokeGroup)
 {
+  if(!window['Teemo']) {
+    alert('请登陆Teemo');
+    return;
+  }
   return new Promise((resolve, reject) =>
   {
     Teemo.NEO.invokeGroup(params)
@@ -118,6 +134,10 @@ export function invokeGroup(params: InvokeGroup)
  */
 export function getApplicationLog(params:string)
     {
+      if(!window['Teemo']) {
+        alert('请登陆Teemo');
+        return;
+      }
         const data:GetApplicationLogArgs={
             // network:"TestNet",
             txid:params

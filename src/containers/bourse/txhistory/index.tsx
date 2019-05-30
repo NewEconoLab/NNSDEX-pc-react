@@ -9,8 +9,9 @@ import Button from '@/components/Button';
 import Page from '@/components/Page';
 import Select from '@/components/select';
 import { ITxHistoryProps, ITxHistoryList } from '../interface/txhistory.interface';
+import { when } from 'mobx';
 
-@inject('txhistory')
+@inject('txhistory','common')
 @observer
 class TXHistory extends React.Component<ITxHistoryProps, any> {
   public state = {
@@ -18,11 +19,10 @@ class TXHistory extends React.Component<ITxHistoryProps, any> {
     txhistorySize: 15,
     txhistoryOrderBy: 'MortgagePayments_High',// 筛选排序方式
     txhistoryAsset: 'All',   // 筛选币种
-    txhistoryLoading: true, // 是否正在加载
     txhistoryFistLoad: true // 是否初次加载
   }
   // 筛选条件
-  public txhistoryOrder = [
+  private txhistoryOrder = [
     {
       id: 'MortgagePayments_High',
       name: '默认',
@@ -45,7 +45,7 @@ class TXHistory extends React.Component<ITxHistoryProps, any> {
     }
   ]
   // 筛选条件二
-  public txhistoryAssetOpt = [
+  private txhistoryAssetOpt = [
     {
       id: 'All',
       name: '全部',
@@ -63,57 +63,6 @@ class TXHistory extends React.Component<ITxHistoryProps, any> {
   {
     this.props.txhistory.txhistoryList = [];
     this.props.txhistory.txhistoryListCount = 0;
-  }
-  // 获取数据
-  public getTxHistoryData = async () =>
-  {
-    await this.props.txhistory.getTxHistoryList(this.state.txhistoryPage, this.state.txhistorySize, this.state.txhistoryOrderBy, this.state.txhistoryAsset);
-    this.setState({
-      txhistoryLoading: false
-    })
-  }
-  // 排序显示
-  public onTxOrderBy = (item) =>
-  {
-    this.setState({
-      txhistoryPage: 1,
-      txhistoryOrderBy: item.id,
-      txhistoryLoading: true,
-    }, async () =>
-      {
-        this.getTxHistoryData();
-      })
-  }
-  // 筛选条件待定
-  public onTxAssetSelect = (item) =>
-  {
-    this.setState({
-      txhistoryPage: 1,
-      txhistoryAsset: item.id,
-      txhistoryLoading: true
-    }, async () =>
-      {
-        if (!this.state.txhistoryFistLoad)
-        {
-          this.getTxHistoryData();
-        } else
-        {
-          this.setState({
-            txhistoryFistLoad: false
-          })
-        }
-      })
-  }
-  // 翻页
-  public onChangeTxPage = (index: number) =>
-  {
-    this.setState({
-      txhistoryPage: index,
-      txhistoryLoading: true
-    }, async () =>
-      {
-        this.getTxHistoryData();
-      })
   }
   public render()
   {
@@ -161,6 +110,56 @@ class TXHistory extends React.Component<ITxHistoryProps, any> {
         </div>
       </div>
     );
+  }
+
+  // 获取数据
+  private getTxHistoryData = () =>
+  {
+    when(
+      () => !!this.props.common.address,
+      () => this.props.txhistory.getTxHistoryList(this.props.common.address,this.state.txhistoryPage, this.state.txhistorySize, this.state.txhistoryOrderBy, this.state.txhistoryAsset)
+    )
+    
+  }
+  // 排序显示
+  private onTxOrderBy = (item) =>
+  {
+    this.setState({
+      txhistoryPage: 1,
+      txhistoryOrderBy: item.id
+    }, async () =>
+      {
+        this.getTxHistoryData();
+      })
+  }
+  // 筛选条件待定
+  private onTxAssetSelect = (item) =>
+  {
+    this.setState({
+      txhistoryPage: 1,
+      txhistoryAsset: item.id
+    }, async () =>
+      {
+        if (!this.state.txhistoryFistLoad)
+        {
+          this.getTxHistoryData();
+        } else
+        {
+          this.setState({
+            txhistoryFistLoad: false
+          })
+        }
+      })
+  }
+  // 翻页
+  private onChangeTxPage = (index: number) =>
+  {
+    this.setState({
+      txhistoryPage: index
+    }, async () =>
+      {
+        this.getTxHistoryData();
+      })
   }
 }
 

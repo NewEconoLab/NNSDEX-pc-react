@@ -32,47 +32,6 @@ class AskBuyInfo extends React.Component<IAskbuyInfoProps, any> {
         this.props.askbuyinfo.getDomainOwner(domain, this.props.common.address);
         console.log(JSON.stringify(this.props.askbuyinfo));
     }
-    // 取消挂单
-    public onCancelAskbuy = async () =>
-    {
-        const assetName = this.props.askbuyinfo.askbuyData ? this.props.askbuyinfo.askbuyData.assetName : 'CGAS';
-        const assetId = assetName === 'CGAS' ? HASH_CONFIG.ID_CGAS : HASH_CONFIG.ID_NNC;
-        console.log(this.props.common.address + "---" + this.props.askbuyinfo.askbuyDomain + "---" + assetId)
-        const res = await Contract.cancelAskbuy(this.props.common.address, this.props.askbuyinfo.askbuyDomain, assetId)
-        console.log(res)
-        this.props.history.go(-1);
-    }
-    // 返回上一页
-    public onGoBack = () =>
-    {
-        this.props.history.go(-1);
-    }
-    // 跳转到详情页
-    public onGoInfo = (type: string, addr: string, selltype: number) =>
-    {
-        // selltype出售类型：0表示降价出售，1表示一口价
-        if (type === 'Buying')
-        {
-            this.props.history.push('/askbuyinfo/' + this.props.askbuyinfo.askbuyDomain + '?addr=' + addr)
-        }
-        else if (type === 'Selling' && selltype === 0)
-        {
-            this.props.history.push('/saleinfo/' + this.props.askbuyinfo.askbuyDomain + '?selltype=reduce')
-        } else if (type === 'Selling' && selltype === 1)
-        {
-            this.props.history.push('/saleinfo/' + this.props.askbuyinfo.askbuyDomain + '?selltype=onceprice')
-        }
-    }
-    // 出售域名给某人
-    public sellDomainToHim = async ()=>{
-        console.log("todo")
-        const assetName = this.props.askbuyinfo.askbuyData ? this.props.askbuyinfo.askbuyData.assetName : 'CGAS';
-        const assetId = assetName === 'CGAS' ? HASH_CONFIG.ID_CGAS : HASH_CONFIG.ID_NNC;
-        console.log(this.state.askBuyer + "---" + this.props.askbuyinfo.askbuyDomain + "---" + assetId)
-        const res = await Contract.sellDomainToWho(this.state.askBuyer, this.props.askbuyinfo.askbuyDomain, assetId)
-        console.log(res)
-        this.props.history.go(-1);
-    }
     public render()
     {
         return (
@@ -204,6 +163,48 @@ class AskBuyInfo extends React.Component<IAskbuyInfoProps, any> {
                 }
             </div>
         );
+    }
+    
+    // 取消挂单
+    private onCancelAskbuy = async () =>
+    {
+        const assetName = this.props.askbuyinfo.askbuyData ? this.props.askbuyinfo.askbuyData.assetName : 'CGAS';
+        const assetId = assetName === 'CGAS' ? HASH_CONFIG.ID_CGAS : HASH_CONFIG.ID_NNC;
+        console.log(this.props.common.address + "---" + this.props.askbuyinfo.askbuyDomain + "---" + assetId)
+        const res = await Contract.cancelAskbuy(this.props.common.address, this.props.askbuyinfo.askbuyDomain, assetId)
+        console.log(res)
+        this.props.history.go(-1);
+    }
+    // 返回上一页
+    private onGoBack = () =>
+    {
+        this.props.history.go(-1);
+    }
+    // 跳转到详情页
+    private onGoInfo = (type: string, addr: string, selltype: number) =>
+    {
+        // selltype出售类型：0表示降价出售，1表示一口价
+        if (type === 'Buying')
+        {
+            this.props.history.push('/askbuyinfo/' + this.props.askbuyinfo.askbuyDomain + '?addr=' + addr)
+        }
+        else if (type === 'Selling' && selltype === 0)
+        {
+            this.props.history.push('/saleinfo/' + this.props.askbuyinfo.askbuyDomain + '?selltype=reduce')
+        } else if (type === 'Selling' && selltype === 1)
+        {
+            this.props.history.push('/saleinfo/' + this.props.askbuyinfo.askbuyDomain + '?selltype=onceprice')
+        }
+    }
+    // 出售域名给某人
+    private sellDomainToHim = async ()=>{
+        console.log("todo")
+        const assetName = this.props.askbuyinfo.askbuyData ? this.props.askbuyinfo.askbuyData.assetName : 'CGAS';
+        const assetId = assetName === 'CGAS' ? HASH_CONFIG.ID_CGAS : HASH_CONFIG.ID_NNC;
+        console.log(this.state.askBuyer + "---" + this.props.askbuyinfo.askbuyDomain + "---" + assetId)
+        const res = await Contract.sellDomainToWho(this.state.askBuyer, this.props.askbuyinfo.askbuyDomain, assetId)
+        console.log(res)
+        this.props.history.go(-1);
     }
 }
 

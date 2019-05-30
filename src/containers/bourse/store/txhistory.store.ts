@@ -1,6 +1,5 @@
 import { observable, action } from 'mobx';
 import * as Api from '../api/bourse.api'
-import common from '@/store/common'
 import { ITxHistoryStore, ITxHistoryList } from '../interface/txhistory.interface';
 
 class TxHistory implements ITxHistoryStore
@@ -13,12 +12,12 @@ class TxHistory implements ITxHistoryStore
      * @param page 当前页码
      * @param size 每页条数
      */
-    @action public async getTxHistoryList(page: number, size: number, orderby: string, asset: string)
+    @action public async getTxHistoryList(addr:string,page: number, size: number, orderby: string, asset: string)
     {
         let result: any = null;
         try
         {
-            result = await Api.gethistorylist(common.address, page, size, orderby, asset);
+            result = await Api.gethistorylist(addr, page, size, orderby, asset);
         } catch (error)
         {
             this.txhistoryListCount = 0;

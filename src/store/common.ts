@@ -122,8 +122,7 @@ class Common
       }
       this.address = loginFlag.address;
       sessionStorage.setItem('dexLogin', this.address);
-      this.initAccountBalance();
-      
+      this.initAccountBalance();      
     } else
     {
       this.address = '';

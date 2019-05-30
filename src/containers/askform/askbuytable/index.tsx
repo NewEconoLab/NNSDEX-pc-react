@@ -18,12 +18,6 @@ class AskBuyTable extends React.Component<IAskBuyProps, any> {
         const domain =params["domain"];
         this.props.askbuy.askBuyDomain = domain;
     }
-    // 返回上一页
-    public onGoBack = () =>
-    {
-        this.props.askbuy.askBuyStep = 1;
-        this.props.history.go(-1);
-    }
 
     public render()
     {
@@ -58,6 +52,12 @@ class AskBuyTable extends React.Component<IAskBuyProps, any> {
                 </div>
             </div>
         );
+    }
+    // 返回上一页
+    private onGoBack = () =>
+    {
+        this.props.askbuy.askBuyStep = 1;
+        this.props.history.go(-1);
     }
     // 步骤显示样式
     private stepShow = (num: number) =>

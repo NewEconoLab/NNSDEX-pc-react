@@ -17,25 +17,7 @@ interface IProps
 }
 
 export default class MyaccountLayout extends React.Component<IProps> {
-  // 二级菜单选择
-  public mapChildUnderline = (path) =>
-  {
-    if (path instanceof Array)
-    {
-      for (const i in path)
-      {
-        if (new RegExp(path[i], 'i').test(this.props.history.location.pathname))
-        {
-          return true;
-        }
-      }
-    }
-    if (path === this.props.history.location.pathname)
-    {
-      return true;
-    }
-    return false;
-  }
+  
   public render()
   {
     return (
@@ -105,5 +87,24 @@ export default class MyaccountLayout extends React.Component<IProps> {
         </div>
       </div>
     )
+  }
+  // 二级菜单选择
+  private mapChildUnderline = (path) =>
+  {
+    if (path instanceof Array)
+    {
+      for (const i in path)
+      {
+        if (new RegExp(path[i], 'i').test(this.props.history.location.pathname))
+        {
+          return true;
+        }
+      }
+    }
+    if (path === this.props.history.location.pathname)
+    {
+      return true;
+    }
+    return false;
   }
 }

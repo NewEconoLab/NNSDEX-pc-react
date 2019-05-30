@@ -28,10 +28,7 @@ class SaleInfo extends React.Component<ISaleInfoProps, any> {
         this.props.saleinfo.getSaleInfo(domain,this.state.addr);
         this.props.saleinfo.getSaleOtherList(domain);
     }
-    // 返回上一页
-    public onGoBack = () => {
-        this.props.history.go(-1);
-    }
+    
     public render()
     {
         return (
@@ -57,6 +54,10 @@ class SaleInfo extends React.Component<ISaleInfoProps, any> {
                 }
             </div>
         );
+    }
+    // 返回上一页
+    private onGoBack = () => {
+        this.props.history.go(-1);
     }
 }
 

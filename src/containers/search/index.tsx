@@ -23,44 +23,6 @@ class SearchPage extends React.Component<ISearchProps, any> {
     this.props.search.getSearchInfo(this.state.searchDomain);
     this.getLikeList();
   }
-  public getLikeList = () =>
-  {
-    this.props.search.getLikeList(this.props.common.address,this.state.searchDomain, this.state.searchPage, this.state.searchSize)
-  }
-  // 翻页
-  public onChangeSearchPage = (index: number) =>
-  {
-    this.setState({
-      searchPage: index
-    }, async () =>
-      {
-        this.getLikeList();
-      })
-  }
-  // 跳转到详情页
-  public onGoDomainInfo = (domain: string) =>
-  {
-    this.props.history.push('/saleinfo/' + domain)
-  }
-  // 关注或取消关注
-  public onStarClick = (domain: string, event: any) =>
-  {
-    console.log(domain);
-    event.preventDefault();
-    event.stopPropagation();
-    event.nativeEvent.stopImmediatePropagation();
-  }
-  public onGoAuction = ()=>{
-    if(process.env.REACT_APP_SERVER_ENV === 'DEV')
-    {
-      window.open("https://testwallet.nel.group/");
-    }else{
-      window.open("https://wallet.nel.group/")
-    }
-  }
-  public onGoAskbuy = ()=>{
-    this.props.history.push('/askbuytable/' + this.state.searchDomain)
-  }
   public render()
   {
     return (
@@ -83,8 +45,8 @@ class SearchPage extends React.Component<ISearchProps, any> {
             <span>{this.state.searchDomain}</span>
           </div>
           <div className="right-side">
-            <span className="price-text">{this.props.search.searchInfo&&this.props.search.searchInfo.price!=='0'?this.props.search.searchInfo.price:''}</span>
-            
+            <span className="price-text">{this.props.search.searchInfo && this.props.search.searchInfo.price !== '0' ? this.props.search.searchInfo.price : ''}</span>
+
             {
               (this.props.search.searchInfo && this.props.search.searchInfo.state === 'CanAuction') && <Button text="立即开标" onClick={this.onGoAuction} />
             }
@@ -95,7 +57,7 @@ class SearchPage extends React.Component<ISearchProps, any> {
               (this.props.search.searchInfo && this.props.search.searchInfo.state === 'NotSelling') && <Button text="求购" onClick={this.onGoAskbuy} />
             }
             {
-              (this.props.search.searchInfo && this.props.search.searchInfo.state === 'YesSelling') && <Button text="查看详情" onClick={this.onGoDomainInfo.bind(this,this.state.searchDomain)} style={{ 'marginLeft': '30px' }} />
+              (this.props.search.searchInfo && this.props.search.searchInfo.state === 'YesSelling') && <Button text="查看详情" onClick={this.onGoDomainInfo.bind(this, this.state.searchDomain)} style={{ 'marginLeft': '30px' }} />
             }
           </div>
         </div>
@@ -137,6 +99,49 @@ class SearchPage extends React.Component<ISearchProps, any> {
         </div>
       </div>
     );
+  }
+
+  // 获取数据
+  private getLikeList = () =>
+  {
+    this.props.search.getLikeList(this.props.common.address, this.state.searchDomain, this.state.searchPage, this.state.searchSize)
+  }
+  // 翻页
+  // private onChangeSearchPage = (index: number) =>
+  // {
+  //   this.setState({
+  //     searchPage: index
+  //   }, async () =>
+  //     {
+  //       this.getLikeList();
+  //     })
+  // }
+  // 跳转到详情页
+  private onGoDomainInfo = (domain: string) =>
+  {
+    this.props.history.push('/saleinfo/' + domain)
+  }
+  // 关注或取消关注
+  private onStarClick = (domain: string, event: any) =>
+  {
+    console.log(domain);
+    event.preventDefault();
+    event.stopPropagation();
+    event.nativeEvent.stopImmediatePropagation();
+  }
+  private onGoAuction = () =>
+  {
+    if (process.env.REACT_APP_SERVER_ENV === 'DEV')
+    {
+      window.open("https://testwallet.nel.group/");
+    } else
+    {
+      window.open("https://wallet.nel.group/")
+    }
+  }
+  private onGoAskbuy = () =>
+  {
+    this.props.history.push('/askbuytable/' + this.state.searchDomain)
   }
 }
 

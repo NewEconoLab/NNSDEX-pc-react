@@ -1,12 +1,14 @@
 import { RouteComponentProps } from "react-router";
+import { ICommonStore } from "@/store/interface/common.interface";
 
 export interface ISaleMarketStore{
     saleList:ISaleList[],
     saleListCount:number,
-    getSaleList:(page:number,size:number,orderby:string,asset:string,star:string)=>Promise<boolean>,
+    getSaleList:(addr:string,page:number,size:number,orderby:string,asset:string,star:string)=>Promise<boolean>,
 }
 export interface ISaleMarketProps extends RouteComponentProps{
     salemarket:ISaleMarketStore,
+    common:ICommonStore,
     intl:any
 }
 export interface ISaleList{

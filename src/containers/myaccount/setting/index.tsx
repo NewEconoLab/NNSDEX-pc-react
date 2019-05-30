@@ -14,12 +14,7 @@ class Setting extends React.Component<any, any> {
   public state = {
     emailFlag: false
   }
-  public onChangeEmailFlag = () =>
-  {
-    this.setState({
-      emailFlag: !this.state.emailFlag
-    })
-  }
+  
   public render()
   {
     return (
@@ -56,6 +51,12 @@ class Setting extends React.Component<any, any> {
         </div>
       </div>
     );
+  }
+  private onChangeEmailFlag = () =>
+  {
+    this.setState({
+      emailFlag: !this.state.emailFlag
+    })
   }
 }
 

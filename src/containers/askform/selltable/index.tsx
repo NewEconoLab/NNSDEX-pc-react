@@ -16,13 +16,7 @@ import { ISellFormProps } from '../interface/sellform.interface';
 
 @inject('sellform', 'common')
 @observer
-class SellTable extends React.Component<ISellFormProps, any> {
-    // 返回上一页
-    public onGoBack = () =>
-    {
-
-        this.props.history.go(-1);
-    }
+class SellTable extends React.Component<ISellFormProps, any> {    
     // 销毁
     public componentWillUnmount()
     {
@@ -111,6 +105,12 @@ class SellTable extends React.Component<ISellFormProps, any> {
                 </div>
             </div>
         );
+    }
+    // 返回上一页
+    private onGoBack = () =>
+    {
+
+        this.props.history.go(-1);
     }
     // 步骤显示样式
     private stepShow = (num: number) =>

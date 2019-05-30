@@ -10,6 +10,7 @@ import Select from '@/components/select';
 import Card from '@/components/card';
 import Slider from '@/components/slider';
 import { IMyDeityProps, IMyDeityList } from '../interface/mydeity.interface';
+import { when } from 'mobx';
 
 @inject('mydeity', 'common')
 @observer
@@ -18,10 +19,9 @@ class Mydeity extends React.Component<IMyDeityProps, any> {
     mydeityPage: 1,
     mydeitySize: 15,
     mydeityOrderBy: '0',// 筛选排序方式
-    mydeityLoading: true, // 是否正在加载
   }
   // 筛选
-  public mydeityOptions = [
+  private mydeityOptions = [
     {
       id: '0',
       name: '未成交',
@@ -35,66 +35,6 @@ class Mydeity extends React.Component<IMyDeityProps, any> {
   {
     this.props.mydeity.mydeityList = [];
     this.props.mydeity.mydeityListCount = 0;
-  }
-  // 获取数据
-  public getMyDeityData = async () =>
-  {
-    await this.props.mydeity.getMyDeityList(this.props.common.address, parseInt(this.state.mydeityOrderBy, 10), this.state.mydeityPage, this.state.mydeitySize);
-    this.setState({
-      mydeityLoading: false
-    })
-  }
-  // 选择筛选条件
-  public onMyDeityCallback = (item) =>
-  {
-    this.setState({
-      mydeityPage: 1,
-      mydeityOrderBy: item.id,
-      mydeityLoading: true,
-    }, async () =>
-      {
-        if(this.props.common.address!==''){
-          this.getMyDeityData();
-        }        
-      })
-  }
-  // 翻页
-  public onMydeityPage = (index: number) =>
-  {
-    this.setState({
-      mydeityPage: index,
-      mydeityLoading: true
-    }, async () =>
-      {
-        this.getMyDeityData();
-      })
-  }
-  // 列表显示样式
-  public dealClassname = (deal: boolean) =>
-  {
-    if (deal)
-    {
-      return 'td-ul gray-ul'
-    } else
-    {
-      return 'td-ul'
-    }
-  }
-  // 跳转到详情页
-  public onGoDomainInfo = (domain: string, isDeal: boolean, orderType: string) =>
-  {
-    if (isDeal)
-    {
-      return
-    }
-    if (orderType === 'Buying')
-    {
-      this.props.history.push('/askbuyinfo/' + domain + '?addr=' + this.props.common.address+'&opt=cancel')
-    }// 出售类型：0表示降价出售，1表示一口价
-    else if (orderType === 'Selling')
-    {
-      this.props.history.push('/saleinfo/' + domain + '?opt=cancel'+'&addr='+ this.props.common.address)
-    }
   }
   public render()
   {
@@ -150,6 +90,66 @@ class Mydeity extends React.Component<IMyDeityProps, any> {
         </div>
       </div>
     );
+  }
+
+  // 获取数据
+  private getMyDeityData = () =>
+  {
+    when(
+      () => !!this.props.common.address,
+      () => this.props.mydeity.getMyDeityList(this.props.common.address, parseInt(this.state.mydeityOrderBy, 10), this.state.mydeityPage, this.state.mydeitySize)
+    )
+  }
+  // 选择筛选条件
+  private onMyDeityCallback = (item) =>
+  {
+    this.setState({
+      mydeityPage: 1,
+      mydeityOrderBy: item.id
+    }, async () =>
+      {
+        if (this.props.common.address !== '')
+        {
+          this.getMyDeityData();
+        }
+      })
+  }
+  // 翻页
+  private onMydeityPage = (index: number) =>
+  {
+    this.setState({
+      mydeityPage: index
+    }, async () =>
+      {
+        this.getMyDeityData();
+      })
+  }
+  // 列表显示样式
+  private dealClassname = (deal: boolean) =>
+  {
+    if (deal)
+    {
+      return 'td-ul gray-ul'
+    } else
+    {
+      return 'td-ul'
+    }
+  }
+  // 跳转到详情页
+  private onGoDomainInfo = (domain: string, isDeal: boolean, orderType: string) =>
+  {
+    if (isDeal)
+    {
+      return
+    }
+    if (orderType === 'Buying')
+    {
+      this.props.history.push('/askbuyinfo/' + domain + '?addr=' + this.props.common.address + '&opt=cancel')
+    }// 出售类型：0表示降价出售，1表示一口价
+    else if (orderType === 'Selling')
+    {
+      this.props.history.push('/saleinfo/' + domain + '?opt=cancel' + '&addr=' + this.props.common.address)
+    }
   }
 }
 

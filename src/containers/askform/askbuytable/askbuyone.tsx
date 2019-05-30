@@ -19,7 +19,7 @@ class AskBuyStepOne extends React.Component<IAskBuyProps, any> {
         nncCheck: true // 拥有的nnc金额是否够支付 true为够，false为不够
     }
     // 支付币种
-    public typeOptions = [
+    private typeOptions = [
         {
             id: 'cgas',
             name: 'CGAS',

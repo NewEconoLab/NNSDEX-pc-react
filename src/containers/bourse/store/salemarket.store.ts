@@ -1,7 +1,6 @@
 import { observable, action } from 'mobx';
 import * as Api from '../api/bourse.api'
 import { ISaleMarketStore, ISaleList } from '../interface/salemarket.interface';
-import common from '@/store/common'
 
 class Salemarket implements ISaleMarketStore
 {
@@ -13,12 +12,12 @@ class Salemarket implements ISaleMarketStore
      * @param page 当前页码
      * @param size 每页条数
      */
-    @action public async getSaleList(page: number, size: number, orderby: string, asset: string, star: string)
+    @action public async getSaleList(addr:string,page: number, size: number, orderby: string, asset: string, star: string)
     {
         let result: any = null;
         try
         {
-            result = await Api.getselllist(common.address, page, size, orderby, asset, star);
+            result = await Api.getselllist(addr, page, size, orderby, asset, star);
         } catch (error)
         {
             this.saleListCount = 0;

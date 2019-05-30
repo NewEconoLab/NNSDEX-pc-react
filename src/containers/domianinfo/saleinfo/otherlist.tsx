@@ -12,11 +12,7 @@ import * as formatTime from '@/utils/formatTime';
 
 @observer
 class OtherList extends React.Component<ISaleInfoProps, any> {
-    // 跳转到详情页
-    public onGoAskbuyInfo = (addr:string) =>
-    {
-        this.props.history.push('/askbuyinfo/' + this.props.saleinfo.saleDomain+'?addr='+addr)
-    }
+
     public render()
     {
         return (
@@ -36,7 +32,7 @@ class OtherList extends React.Component<ISaleInfoProps, any> {
                             this.props.saleinfo.saleOtherList.length > 0 && this.props.saleinfo.saleOtherList.map((item: ISaleOtherList, index: number) =>
                             {
                                 return (
-                                    <li className="table-td" key={index} onClick={this.onGoAskbuyInfo.bind(this,item.address)}>
+                                    <li className="table-td" key={index} onClick={this.onGoAskbuyInfo.bind(this, item.address)}>
                                         <ul className="td-ul">
                                             <li className="td-li">
                                                 {
@@ -62,6 +58,11 @@ class OtherList extends React.Component<ISaleInfoProps, any> {
                 </div>
             </>
         );
+    }
+    // 跳转到详情页
+    private onGoAskbuyInfo = (addr: string) =>
+    {
+        this.props.history.push('/askbuyinfo/' + this.props.saleinfo.saleDomain + '?addr=' + addr)
     }
 }
 

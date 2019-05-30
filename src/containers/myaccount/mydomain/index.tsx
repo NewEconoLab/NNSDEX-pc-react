@@ -3,6 +3,7 @@
  */
 import * as React from 'react';
 import { observer, inject } from 'mobx-react';
+import classnames from 'classnames';
 import './index.less';
 import { injectIntl } from 'react-intl';
 import Button from '@/components/Button';
@@ -12,6 +13,7 @@ import Input from '@/components/Input/Input';
 import Card from '@/components/card';
 import * as formatTime from '@/utils/formatTime';
 import { IMydomainProps, IDomainList } from '../interface/mydomain.interface';
+import { when } from 'mobx';
 
 @inject('mydomain', 'common')
 @observer
@@ -26,7 +28,7 @@ class Mydomain extends React.Component<IMydomainProps, any> {
     showInfoList: []
   }
   // 筛选条件
-  public orderOptions = [
+  private orderOptions = [
     {
       id: 'fulldomain',
       name: '字母顺序',
@@ -37,7 +39,7 @@ class Mydomain extends React.Component<IMydomainProps, any> {
     }
   ]
   // 筛选条件二
-  public selectOptions = [
+  private selectOptions = [
     {
       id: '',
       name: '全部',
@@ -63,112 +65,6 @@ class Mydomain extends React.Component<IMydomainProps, any> {
   {
     this.props.mydomain.domainList = [];
     this.props.mydomain.domainListCount = 0;
-  }
-  public getListData = () =>
-  {
-    this.props.mydomain.getDomainList(this.props.common.address, this.state.inputSearchValue, this.state.fillterType, this.state.orderbyType, this.state.mydomainPage, this.state.mydomainSize)
-  }
-  // todo
-  public onFillterBack = (item) =>
-  {
-    console.log(item.id);
-    this.setState({
-      mydomainPage: 1,
-      fillterType: item.id
-    }, () =>
-      {
-        if (!this.state.mydomainFistLoad)
-        {
-          this.getListData();
-        } else
-        {
-          this.setState({
-            mydomainFistLoad: false
-          })
-        }
-      })
-  }
-  public onOrderbyBack = (item) =>
-  {
-    console.log(item.id);
-    this.setState({
-      mydomainPage: 1,
-      orderbyType: item.id
-    }, () =>
-      {
-        this.getListData();
-      })
-  }
-  // 翻页
-  public onTransPage = (index: number) =>
-  {
-    this.setState({
-      mydomainPage: index
-    }, async () =>
-      {
-        this.getListData();
-      })
-  }
-  // 输入搜索内容
-  public onChangeSearch = (value: string) =>
-  {
-    this.setState({
-      inputSearchValue: value
-    })
-  }
-  // 取消搜索
-  public onCancelSearch = () =>
-  {
-    console.log('cancel')
-    this.setState({
-      inputSearchValue: '',
-    })
-  }
-  // 跳转到搜索页
-  public doSearchDomain = () =>
-  {
-    this.setState({
-      mydomainPage: 1
-    }, () =>
-      {
-        this.getListData();
-      })
-  }
-
-  // 计算是否即将到期
-  public computeExpireTime = (time: number) =>
-  {
-    // true 为即将到期，反之为false
-    const nowTime = new Date().getTime();
-    console.log(nowTime);
-    if (time - nowTime > 0)
-    {
-      console.log('todo')
-    }
-    const timestamp = new Date().getTime();
-    const copare = (new Neo.BigInteger(time).multiply(1000)).subtract(new Neo.BigInteger(timestamp));
-    const oneMonth = (24 * 60 * 60 * 1000) * 30;
-    return copare.compareTo(oneMonth) < 0 ? true : false;    // 小于oneMonth即将过期true
-  }
-  // 点击展开或关闭
-  public onClickOpenInfo = (domain: string, isSelling: boolean) =>
-  {
-    if (isSelling)
-    {
-      return
-    }
-
-    // this.state.showInfoList.push(domain)
-  }
-
-  // 跳转到详情页
-  public onGoDomainInfo = (domain: string) =>
-  {
-    this.props.history.push('/saleinfo/' + domain + '?addr=' + this.props.common.address)
-  }
-  // 跳转到出售域名
-  public onGoSentDeity = () => {
-    this.props.history.push('/selltable')
   }
   public render()
   {
@@ -203,8 +99,8 @@ class Mydomain extends React.Component<IMydomainProps, any> {
               this.props.mydomain.domainListCount > 0 && this.props.mydomain.domainList.map((item: IDomainList, index: number) =>
               {
                 return (
-                  <li className="table-td open-td" key={index} onClick={this.onClickOpenInfo.bind(this, item.fulldomain, item.isSelling)}>
-                    <ul className="td-ul">
+                  <li className={classnames("table-td", { 'open-td': item.active })} key={index}>
+                    <ul className="td-ul" onClick={this.onClickOpenInfo.bind(this, item)}>
                       <li className="td-li">
                         <span className={item.isSelling ? "gray-text" : ""}>{item.fulldomain}</span>
                       </li>
@@ -237,7 +133,7 @@ class Mydomain extends React.Component<IMydomainProps, any> {
                         </div>
                         {
                           item.isSelling && (<div className="li-lookinfo">
-                            <Button text="查看挂单" onClick={this.onGoDomainInfo.bind(this,item.fulldomain)} />
+                            <Button text="查看挂单" onClick={this.onGoDomainInfo.bind(this, item.fulldomain)} />
                           </div>)
                         }
 
@@ -252,7 +148,7 @@ class Mydomain extends React.Component<IMydomainProps, any> {
                             </li>
                             <li className="open-li">
                               <span>
-                              {formatTime.format('yyyy/MM/dd | hh:mm:ss', item.ttl.toString(), this.props.intl.locale)}
+                                {formatTime.format('yyyy/MM/dd | hh:mm:ss', item.ttl.toString(), this.props.intl.locale)}
                               </span>
                               {
                                 this.computeExpireTime(item.ttl) && (
@@ -268,7 +164,7 @@ class Mydomain extends React.Component<IMydomainProps, any> {
                               <span className="gray-text">映射地址</span>
                             </li>
                             <li className="open-li">
-                              <span>{item.data!==''?item.data:'-'}</span>
+                              <span>{item.data !== '' ? item.data : '-'}</span>
                               <div className="li-btn">
                                 <Button text="修改" />
                               </div>
@@ -290,6 +186,119 @@ class Mydomain extends React.Component<IMydomainProps, any> {
         </div>
       </div>
     );
+  }
+
+  private getListData = () =>
+  {
+    when(
+      () => !!this.props.common.address,
+      () => this.props.mydomain.getDomainList(this.props.common.address, this.state.inputSearchValue, this.state.fillterType, this.state.orderbyType, this.state.mydomainPage, this.state.mydomainSize)
+    )
+  }
+  // todo
+  private onFillterBack = (item) =>
+  {
+    console.log(item.id);
+    this.setState({
+      mydomainPage: 1,
+      fillterType: item.id
+    }, () =>
+      {
+        if (!this.state.mydomainFistLoad)
+        {
+          this.getListData();
+        } else
+        {
+          this.setState({
+            mydomainFistLoad: false
+          })
+        }
+      })
+  }
+  private onOrderbyBack = (item) =>
+  {
+    console.log(item.id);
+    this.setState({
+      mydomainPage: 1,
+      orderbyType: item.id
+    }, () =>
+      {
+        this.getListData();
+      })
+  }
+  // 翻页
+  private onTransPage = (index: number) =>
+  {
+    this.setState({
+      mydomainPage: index
+    }, async () =>
+      {
+        this.getListData();
+      })
+  }
+  // 输入搜索内容
+  private onChangeSearch = (value: string) =>
+  {
+    this.setState({
+      inputSearchValue: value
+    })
+  }
+  // 取消搜索
+  private onCancelSearch = () =>
+  {
+    console.log('cancel')
+    this.setState({
+      inputSearchValue: '',
+    })
+  }
+  // 跳转到搜索页
+  private doSearchDomain = () =>
+  {
+    this.setState({
+      mydomainPage: 1
+    }, () =>
+      {
+        this.getListData();
+      })
+  }
+
+  // 计算是否即将到期
+  private computeExpireTime = (time: number) =>
+  {
+    // true 为即将到期，反之为false
+    const nowTime = new Date().getTime();
+    console.log(nowTime);
+    if (time - nowTime > 0)
+    {
+      console.log('todo')
+    }
+    const timestamp = new Date().getTime();
+    const copare = (new Neo.BigInteger(time).multiply(1000)).subtract(new Neo.BigInteger(timestamp));
+    const oneMonth = (24 * 60 * 60 * 1000) * 30;
+    return copare.compareTo(oneMonth) < 0 ? true : false;    // 小于oneMonth即将过期true
+  }
+  // 点击展开或关闭
+  private onClickOpenInfo = (domain: IDomainList) =>
+  {
+    if (domain.isSelling)
+    {
+      return
+    }
+
+    domain.active = !domain.active;
+
+    // this.state.showInfoList.push(domain)
+  }
+
+  // 跳转到详情页
+  private onGoDomainInfo = (domain: string) =>
+  {
+    this.props.history.push('/saleinfo/' + domain + '?addr=' + this.props.common.address)
+  }
+  // 跳转到出售域名
+  private onGoSentDeity = () =>
+  {
+    this.props.history.push('/selltable')
   }
 }
 export default injectIntl(Mydomain);

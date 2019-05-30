@@ -19,4 +19,5 @@ export interface IDomainList{
     isSelling:boolean, // 是否正在出售
     isBind:boolean, // 是否绑定
     isTTL:boolean // 是否过期
+    active:boolean // 是否展开
 }
