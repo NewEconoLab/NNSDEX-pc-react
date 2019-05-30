@@ -125,7 +125,7 @@ class Mydomain extends React.Component<IMydomainProps, any> {
                             (!item.isSelling && !item.isBind) && (
                               <>
                                 <Button text="转让域名" btnColor="white-btn" />
-                                <Button text="出售域名" style={{ 'marginLeft': '15px' }} onClick={this.onGoSentDeity} />
+                                <Button text="出售域名" style={{ 'marginLeft': '15px' }} onClick={this.onGoSentDeity.bind(this,item)} />
                               </>
                             )
                           }
@@ -296,9 +296,9 @@ class Mydomain extends React.Component<IMydomainProps, any> {
     this.props.history.push('/saleinfo/' + domain + '?addr=' + this.props.common.address)
   }
   // 跳转到出售域名
-  private onGoSentDeity = () =>
+  private onGoSentDeity = (item:IDomainList) =>
   {
-    this.props.history.push('/selltable')
+    this.props.history.push('/selltable?selldomain='+item.fulldomain+'&extime='+item.ttl);
   }
 }
 export default injectIntl(Mydomain);

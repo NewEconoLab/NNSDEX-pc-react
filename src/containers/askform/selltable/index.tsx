@@ -12,11 +12,25 @@ import StepThree from './stepthree';
 import StepFour from './stepfour';
 import ReStepThree from './restepthree';
 import ReStepFour from './restepfour';
+import {getQueryString} from '@/utils/function'
 import { ISellFormProps } from '../interface/sellform.interface';
 
 @inject('sellform', 'common')
 @observer
 class SellTable extends React.Component<ISellFormProps, any> {    
+
+    public componentDidMount(){
+        const domain = getQueryString('selldomain') || '';
+        const time = getQueryString('extime')||'0';
+        if(domain!==''){
+            this.props.sellform.readySellDomainName = domain;
+            this.props.sellform.readySellItem = {
+                fulldomain:domain,
+                TTL:parseInt(time,10)
+            }
+            this.props.sellform.stepNumber = 2;
+        }
+    }
     // 销毁
     public componentWillUnmount()
     {

@@ -21,7 +21,7 @@ class StepThree extends React.Component<ISellFormProps, any> {
         reduceValue: '', // 出售每天减价价格
         reSelectType: '',  // 支付资产的选择
         reCanDoNext: false, // 是否可下一步操作
-        reNNCCheck: true, // 拥有的nnc金额是否够支付 true为够，false为不够
+        reNNCCheck: (this.props.common.balances.contractnnc === 0|| this.props.common.balances.contractnnc < 100)?false:true, // 拥有的nnc金额是否够支付 true为够，false为不够
         showAdd: false, // 是否显示追加抵押
         reAddNNCNum: 0, // 追加抵押的nnc
         reMaxNNCFlag: false, // 追加抵押最大
@@ -119,13 +119,13 @@ class StepThree extends React.Component<ISellFormProps, any> {
                             this.state.showAdd && (
                                 <div className="line-text">
                                     {
-                                        (parseFloat(this.state.reAddNNCNum.toString()) === 0 || this.state.reStartValue === '') ? <img className="number-btn number-un-btn" src={require("@/img/minus-un.png")} alt="" />
+                                        (parseFloat(this.state.reAddNNCNum.toString()===''?'0':this.state.reAddNNCNum.toString()) === 0 || this.state.reStartValue === '') ? <img className="number-btn number-un-btn" src={require("@/img/minus-un.png")} alt="" />
                                             : <img className="number-btn" src={require("@/img/minus.png")} alt="" onClick={this.onReMinusNNC} />
                                     }
                                     <span className="plus-text">+</span>
                                     <input type="text" className="number-input" value={this.state.reAddNNCNum} onChange={this.onReNNCAdd} onBlur={this.onBlurReNNCInput} />
                                     {
-                                        (this.state.reMaxNNCFlag || this.state.reStartValue === '') ? <img className="number-btn number-un-btn" src={require("@/img/plus-un.png")} alt="" />
+                                        (this.props.common.balances.contractnnc === 0||this.state.reMaxNNCFlag || this.state.reStartValue === '') ? <img className="number-btn number-un-btn" src={require("@/img/plus-un.png")} alt="" />
                                             : <img className="number-btn" src={require("@/img/plus.png")} alt="" onClick={this.onRePlusNNC} />
                                     }
                                 </div>
@@ -135,7 +135,7 @@ class StepThree extends React.Component<ISellFormProps, any> {
                 </div>
                 <div className="step-btn">
                     <Button text="上一步" btnColor="white-btn" onClick={this.onGoPrevious} />
-                    <Button text="下一步" onClick={this.onGoNext} btnColor={this.state.reCanDoNext ? '' : 'gray-btn'} />
+                    <Button text="下一步" onClick={this.onGoNext} btnColor={(this.state.reCanDoNext && this.state.reNNCCheck)  ? '' : 'gray-btn'} />
                 </div>
             </div>
         );
@@ -154,6 +154,9 @@ class StepThree extends React.Component<ISellFormProps, any> {
     // 下一步 todo
     private onGoNext = () =>
     {
+        if(!this.state.reCanDoNext || !this.state.reNNCCheck){
+            return
+        }
         this.props.sellform.sellAssetName = this.state.reSelectType;
         this.props.sellform.sellStartPrice = parseFloat(this.state.reStartValue);
         this.props.sellform.sellEndPrice = parseFloat(this.state.reEndValue);
@@ -338,6 +341,10 @@ class StepThree extends React.Component<ISellFormProps, any> {
     // 增加抵押NNC
     private onReNNCAdd = (e: any) =>
     {
+        // 抵押都不都100nnc
+        if(!this.state.reNNCCheck){
+            return
+        }
         const value = e.target.value;
         // 判断是否是数字
         if (isNaN(value))
@@ -401,7 +408,7 @@ class StepThree extends React.Component<ISellFormProps, any> {
         console.log(parseFloat(this.state.reAddNNCNum.toString()) + '---' + costPrice)
 
         this.setState({
-            reAddNNCNum: parseFloat(this.state.reAddNNCNum.toString()) + 10
+            reAddNNCNum: parseFloat(this.state.reAddNNCNum.toString()===''?'0':this.state.reAddNNCNum.toString()) + 10
         }, () =>
             {
                 // 最大不超过存储值

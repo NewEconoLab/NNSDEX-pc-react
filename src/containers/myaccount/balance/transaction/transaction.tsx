@@ -288,22 +288,6 @@ class TransactionBalance extends React.Component<any, any> {
                 canDoWithdraw: false
             })
         }
-        if (this.state.selectId === 'cgas')
-        {
-            // 精确到一位
-            if (/\./.test(value) && value.split('.')[1].length >= 2)
-            {
-                return false;
-            }
-
-        } else // nnc的
-        {
-            // 精确到两位
-            if (/\./.test(value) && value.split('.')[1].length >= 3)
-            {
-                return false;
-            }
-        }
 
         // 大于1000000000
         if (parseFloat(value) > 1000000000)

@@ -90,3 +90,21 @@ export const getmydeitylist = (addr:string,type:number,page:number,size:number) 
   }
   return request(opts);
 }
+/**
+ * 关注发送接口
+ * @param addr 当前地址
+ * @param domain 关注的域名
+ * @param type 关注状态 0为取消，1为关注
+ */
+export const stardomain = (addr:string,domain:string,type:number) =>
+{
+  const opts = {
+    method: 'starDexDomain',
+    params: [
+      addr,
+      domain,
+      type
+    ]
+  }
+  return request(opts);
+}

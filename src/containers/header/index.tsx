@@ -154,7 +154,7 @@ export default class Header extends React.Component<IProps, IState>{
               <li>
                 {/* <img src={require('@/img/logout.png')} alt="" className="logout-icon" /> */}
                 {/* Logout */}
-                {this.props.common.address === '' ? <span onClick={this.onGoLogin}>Login</span> : <span>欢迎</span>}
+                {this.props.common.address === '' ? <span className="point-login" onClick={this.onGoLogin}>Login</span> : <span className="logined-text"><span className="yuan-box" /> {this.props.common.address.replace(/^(.{4})(.*)(.{4})$/, '$1...$3')}</span>}
                 {/* {this.props.common.address !== '' && <span onClick={this.onLogout}>
                   <img src={require('@/img/logout.png')} alt="" className="logout-icon"  /><span>Logout</span>
                   </span>} */}

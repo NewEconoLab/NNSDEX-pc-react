@@ -114,7 +114,7 @@ class StepOne extends React.Component<ISellFormProps, any> {
     // 输入搜索域名
     private onSearchMydomain = (value: string) =>
     {
-        this.setState({
+        this.setState({ 
             inputValue: value
         })
     }

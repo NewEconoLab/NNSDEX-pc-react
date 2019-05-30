@@ -19,7 +19,7 @@ class StepThree extends React.Component<ISellFormProps, any> {
         sellValue: '', // 出售价格
         selectType: '',  // 支付资产的选择
         canDoNext: false, // 是否可下一步操作
-        nncCheck: true, // 拥有的nnc金额是否够支付 true为够，false为不够
+        nncCheck: (this.props.common.balances.contractnnc === 0|| this.props.common.balances.contractnnc < 100)?false:true, // 拥有的nnc金额是否够支付 true为够，false为不够
         showAdd: false, // 是否显示追加抵押
         addNNCNum: 0, // 追加抵押的nnc
         maxNNCFlag: false, // 追加抵押最大
@@ -102,13 +102,13 @@ class StepThree extends React.Component<ISellFormProps, any> {
                             this.state.showAdd && (
                                 <div className="line-text">
                                     {
-                                        (parseFloat(this.state.addNNCNum.toString()) === 0 || this.state.sellValue === '') ? <img className="number-btn number-un-btn" src={require("@/img/minus-un.png")} alt="" />
+                                        (parseFloat(this.state.addNNCNum.toString()===''?'0':this.state.addNNCNum.toString()) === 0 || this.state.sellValue === '') ? <img className="number-btn number-un-btn" src={require("@/img/minus-un.png")} alt="" />
                                             : <img className="number-btn" src={require("@/img/minus.png")} alt="" onClick={this.onMinusNNC} />
                                     }
                                     <span className="plus-text">+</span>
                                     <input type="text" className="number-input" value={this.state.addNNCNum} onChange={this.onNNCAdd} onBlur={this.onBlurNNCInput} />
                                     {
-                                        (this.state.maxNNCFlag || this.state.sellValue === '') ? <img className="number-btn number-un-btn" src={require("@/img/plus-un.png")} alt="" />
+                                        (this.props.common.balances.contractnnc === 0 || this.state.maxNNCFlag || this.state.sellValue === '') ? <img className="number-btn number-un-btn" src={require("@/img/plus-un.png")} alt="" />
                                             : <img className="number-btn" src={require("@/img/plus.png")} alt="" onClick={this.onPlusNNC} />
                                     }
                                 </div>
@@ -118,7 +118,7 @@ class StepThree extends React.Component<ISellFormProps, any> {
                 </div>
                 <div className="step-btn">
                     <Button text="上一步" btnColor="white-btn" onClick={this.onGoPrevious} />
-                    <Button text="下一步" onClick={this.onGoNext} btnColor={this.state.canDoNext ? '' : 'gray-btn'} />
+                    <Button text="下一步" onClick={this.onGoNext} btnColor={(this.state.canDoNext && this.state.nncCheck) ? '' : 'gray-btn'} />
                 </div>
             </div>
         );
@@ -134,6 +134,9 @@ class StepThree extends React.Component<ISellFormProps, any> {
     // 下一步
     private onGoNext = () =>
     {
+        if(!this.state.canDoNext || !this.state.nncCheck){
+            return
+        }
         this.props.sellform.sellAssetName = this.state.selectType;
         this.props.sellform.sellStartPrice = parseFloat(this.state.sellValue);
         this.props.sellform.endNNCPrice = parseFloat(this.state.addNNCNum.toString()) + 100;
@@ -216,6 +219,10 @@ class StepThree extends React.Component<ISellFormProps, any> {
 
     private onNNCAdd = (e: any) =>
     {
+        // 抵押都不都100nnc
+        if(!this.state.nncCheck){
+            return
+        }
         const value = e.target.value;
         // 判断是否是数字
         if (isNaN(value))
@@ -255,6 +262,7 @@ class StepThree extends React.Component<ISellFormProps, any> {
         })
         // 如果大于可用金额
         const num = this.props.common.balances.contractnnc;
+
         if (parseFloat(value) > num)
         {
             this.setState({
@@ -276,9 +284,8 @@ class StepThree extends React.Component<ISellFormProps, any> {
         // 可花费的抵押
         const costPrice = this.props.common.balances.contractnnc - 100;
         console.log(parseFloat(this.state.addNNCNum.toString()) + '---' + costPrice)
-
         this.setState({
-            addNNCNum: parseFloat(this.state.addNNCNum.toString()) + 10
+            addNNCNum: parseFloat(this.state.addNNCNum.toString()===''?'0':this.state.addNNCNum.toString()) + 10
         }, () =>
         {
             // 最大不超过存储值
