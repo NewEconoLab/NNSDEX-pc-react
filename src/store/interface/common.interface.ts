@@ -10,6 +10,7 @@ export interface ICommonStore {
   // setFeeFlag: boolean, // 设置手续费
   // // login: WalletApi.App, // 登陆页插件
   address: string, // 当前地址
+  isSetedAddress:boolean; // 已经set 过address （有没有值不一定， 只是做过这个操作了）
   // pubkey: Uint8Array; // 当前公钥
   balances: IAccountBalanceStore,  // 账户余额的信息
   // diceConfig: IDiceConfig,

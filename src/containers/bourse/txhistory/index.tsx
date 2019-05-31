@@ -9,8 +9,6 @@ import Button from '@/components/Button';
 import Page from '@/components/Page';
 import Select from '@/components/select';
 import { ITxHistoryProps, ITxHistoryList } from '../interface/txhistory.interface';
-import { when } from 'mobx';
-
 @inject('txhistory','common')
 @observer
 class TXHistory extends React.Component<ITxHistoryProps, any> {
@@ -115,11 +113,7 @@ class TXHistory extends React.Component<ITxHistoryProps, any> {
   // 获取数据
   private getTxHistoryData = () =>
   {
-    when(
-      () => !!this.props.common.address,
-      () => this.props.txhistory.getTxHistoryList(this.props.common.address,this.state.txhistoryPage, this.state.txhistorySize, this.state.txhistoryOrderBy, this.state.txhistoryAsset)
-    )
-    
+    this.props.txhistory.getTxHistoryList(this.props.common.address,this.state.txhistoryPage, this.state.txhistorySize, this.state.txhistoryOrderBy, this.state.txhistoryAsset)
   }
   // 排序显示
   private onTxOrderBy = (item) =>

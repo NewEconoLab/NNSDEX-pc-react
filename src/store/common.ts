@@ -3,19 +3,20 @@ import { observable, action } from 'mobx';
 import { en_US, zh_CN } from '@/language';
 import * as Wallet from '@/utils/wallet';
 import * as Api from './api/common.api'
-import { IAccountBalanceStore } from './interface/common.interface';
+import { IAccountBalanceStore, ICommonStore } from './interface/common.interface';
 import hashConfig from '@/config/hash.config';
 // import { ICommonStore } from './interface/common.interface';
 
 let lang = navigator.language;
 lang = lang.substr(0, 2);
-class Common
+class Common implements ICommonStore
 {
   @observable public isLoadTeemo: boolean = false; // 检测是否有Teemo钱包
   @observable public language: string = lang;  // 当前语言
   @observable public message: any | null = null;// 当前显示内容
   @observable public network: 'TestNet'|'MainNet' = process.env.REACT_APP_SERVER_ENV === 'DEV' ? 'TestNet':'MainNet';  // 当前网络
   @observable public address:string = ''; // 当前地址
+  @observable public isSetedAddress:boolean = false;
   @observable public balances: IAccountBalanceStore =
   { contractnnc: 0, contractcgas: 0, cgas: 0, nnc: 0 };  // 初始化账户余额的信息
   @observable public fee: Neo.Fixed8 = Neo.Fixed8.Zero;

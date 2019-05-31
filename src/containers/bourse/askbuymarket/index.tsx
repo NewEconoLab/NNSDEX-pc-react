@@ -10,7 +10,6 @@ import Page from '@/components/Page';
 import Select from '@/components/select';
 import Card from '@/components/card';
 import { IAskBuyMarketProps, IAskBuyList } from '../interface/askbuymarket.interface';
-import { when } from 'mobx';
 
 @inject('askbuymarket','common')
 @observer
@@ -131,10 +130,7 @@ class AskBuyMarket extends React.Component<IAskBuyMarketProps, any> {
   // 获取数据
   private getAskbuyData = () =>
   {
-    when(
-      () => !!this.props.common.address,
-      () => this.props.askbuymarket.getAskBuyList(this.props.common.address,this.state.askbuyPage, this.state.askbuySize, this.state.askbuyOrderBy, this.state.askbuyAsset, this.state.askbuyStar)
-    )
+    this.props.askbuymarket.getAskBuyList(this.props.common.address,this.state.askbuyPage, this.state.askbuySize, this.state.askbuyOrderBy, this.state.askbuyAsset, this.state.askbuyStar)
   }
   // 排序显示
   private onAskbuyOrderBy = (item) =>

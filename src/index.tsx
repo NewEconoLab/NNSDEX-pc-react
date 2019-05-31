@@ -12,15 +12,24 @@ import { LocaleProvider } from 'antd';
 import storeCommon from '@/store/common';
 import Intl from 'intl';
 import common from '@/store/common'; 
+import { observer } from 'mobx-react';
 
 global.Intl = Intl;
 window['Intl'] = Intl;
 // common.setTimeGetBlock();
+
 window.addEventListener('Teemo.NEO.READY',()=>{
   common.isLoadTeemo = true;
   common.getSessionAddress();
+  common.isSetedAddress = true;
   // common.initAccountBalance();
 });
+
+setTimeout(() => {
+  if(!window['Teemo']) {
+    common.isSetedAddress = true;
+  }
+},1000)
 
 // 网络切换
 window.addEventListener('Teemo.NEO.NETWORK_CHANGED',(data:CustomEvent)=>{
@@ -64,12 +73,23 @@ window.addEventListener('Teemo.NEO.DISCONNECTED',(data:CustomEvent)=>{
 //   console.log(data.detail);
 // })
 
+
+const ObserverRender = observer(() => {
+  if(!common.isSetedAddress) {
+    return <div />
+  }
+
+  return (
+    <App />
+  )
+})
+
 if (process.env.NODE_ENV === "development") {    
     // common.initLoginInfo(document.getElementById("test")as HTMLElement);
     ReactDOM.render(
       <AppContainer>
         <LocaleProvider locale={storeCommon.language === 'en' ? en_US : zh_CN}>
-          <App />
+          <ObserverRender/>
         </LocaleProvider>
       </AppContainer>,
       document.getElementById('root') as HTMLElement
@@ -87,7 +107,7 @@ if (process.env.NODE_ENV === "production") {
     // common.initLoginInfo(document.getElementById("root")as HTMLElement);
     ReactDOM.render(
       <LocaleProvider locale={zh_CN}>
-        <App />
+        <ObserverRender/>
       </LocaleProvider>,
       document.getElementById('root') as HTMLElement
     );

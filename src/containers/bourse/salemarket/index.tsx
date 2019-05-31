@@ -11,7 +11,6 @@ import Select from '@/components/select';
 import Card from '@/components/card';
 import Slider from '@/components/slider';
 import { ISaleMarketProps, ISaleList } from '../interface/salemarket.interface';
-import { when } from 'mobx';
 
 @inject('salemarket','common')
 @observer
@@ -128,10 +127,7 @@ class SaleMarket extends React.Component<ISaleMarketProps, any> {
   // 获取数据
   private getSaleData = async() =>
   {
-    when(
-      () => !!this.props.common.address,
-      () => this.props.salemarket.getSaleList(this.props.common.address, this.state.salePage, this.state.saleSize, this.state.saleOrderBy, this.state.saleAsset, this.state.saleStar)
-    )    
+    this.props.salemarket.getSaleList(this.props.common.address, this.state.salePage, this.state.saleSize, this.state.saleOrderBy, this.state.saleAsset, this.state.saleStar)  
   }
   // 排序显示
   private onSaleOrderBy = (item) =>
