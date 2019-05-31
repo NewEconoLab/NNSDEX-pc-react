@@ -12,6 +12,7 @@ export interface IMyDeityProps extends RouteComponentProps{
     intl:any
 }
 export interface IMyDeityList{
+    orderid:string, // 订单号
     orderType:string, // 类型
     sellType:number, // 出售类型，0为降价，1为一口价，-1为已成交或求购状态
     fullDomain:string, // 域名

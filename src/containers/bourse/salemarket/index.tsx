@@ -92,7 +92,7 @@ class SaleMarket extends React.Component<ISaleMarketProps, any> {
               this.props.salemarket.saleListCount > 0 && this.props.salemarket.saleList.map((item: ISaleList, index: number) =>
               {
                 return (
-                  <li className="table-td" key={index} onClick={this.onGoDomainInfo.bind(this, item.fullDomain)} >
+                  <li className="table-td" key={index} onClick={this.onGoDomainInfo.bind(this, item)} >
                     <ul className="td-ul">
                       <li className="td-li">
                         <span>{item.fullDomain}</span>
@@ -103,7 +103,7 @@ class SaleMarket extends React.Component<ISaleMarketProps, any> {
                       </li>
                       <li className="td-li"><span>{item.nowPrice + ' ' + item.assetName}</span></li>
                       <li className="td-li" >
-                        <span className="star-icon" onClick={this.onStarClick.bind(this, item.fullDomain)}>
+                        <span className="star-icon" onClick={this.onStarClick.bind(this, item)}>
                           {item.isStar ? <img src={require('@/img/star.png')} alt="" /> : <img src={require('@/img/star-un.png')} alt="" />}
                         </span>
                       </li>
@@ -181,24 +181,21 @@ class SaleMarket extends React.Component<ISaleMarketProps, any> {
       })
   }
   // 跳转到详情页
-  private onGoDomainInfo = (domain: string) =>
+  private onGoDomainInfo = (item: ISaleList) =>
   {
-    this.props.history.push('/saleinfo/' + domain)
-    // 出售类型：0表示降价出售，1表示一口价
-    // if(type === 0){
-    //   this.props.history.push('/saleinfo/' + domain+'?selltype=reduce')
-    // }
-    // else{
-    //   this.props.history.push('/saleinfo/' + domain+'?selltype=onceprice')
-    // }    
+    this.props.history.push('/saleinfo/' + item.orderid)  
   }
   // 关注或取消关注
-  private onStarClick = (domain: string, event: any) =>
+  private onStarClick = async (item: ISaleList, event: any) =>
   {
-    console.log(domain);
     event.preventDefault();
     event.stopPropagation();
     event.nativeEvent.stopImmediatePropagation();
+    const isStar = item.isStar?0:1;
+    await this.props.salemarket.setStarDomain(this.props.common.address,0,item.orderid,isStar)
+    if(this.props.salemarket.resStar){
+      item.isStar = !item.isStar
+    }
   }
 }
 

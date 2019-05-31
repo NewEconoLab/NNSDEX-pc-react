@@ -133,7 +133,7 @@ class Mydomain extends React.Component<IMydomainProps, any> {
                         </div>
                         {
                           item.isSelling && (<div className="li-lookinfo">
-                            <Button text="查看挂单" onClick={this.onGoDomainInfo.bind(this, item.fulldomain)} />
+                            <Button text="查看挂单" onClick={this.onGoDomainInfo.bind(this, item)} />
                           </div>)
                         }
 
@@ -291,9 +291,9 @@ class Mydomain extends React.Component<IMydomainProps, any> {
   }
 
   // 跳转到详情页
-  private onGoDomainInfo = (domain: string) =>
+  private onGoDomainInfo = (item:IDomainList) =>
   {
-    this.props.history.push('/saleinfo/' + domain + '?addr=' + this.props.common.address)
+    this.props.history.push('/saleinfo/' + item.orderid + '?addr=' + this.props.common.address)
   }
   // 跳转到出售域名
   private onGoSentDeity = (item:IDomainList) =>

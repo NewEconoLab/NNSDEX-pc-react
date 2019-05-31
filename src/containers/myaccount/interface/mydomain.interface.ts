@@ -12,6 +12,7 @@ export interface IMydomainProps extends RouteComponentProps{
     intl:any
 }
 export interface IDomainList{
+    orderid:string, // 订单号
     fulldomain:string,  // 域名
     ttl:number, // 过期时间
     data:string,// 映射地址

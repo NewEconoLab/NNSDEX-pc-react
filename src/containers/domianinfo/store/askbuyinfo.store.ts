@@ -10,14 +10,14 @@ class AskbuyInfo implements IAskBuyInfoStore
     @observable public ownerInfo:IOwnerInfo|null = null; // 域名拥有详情
     /**
      * 查询该域名求购详情
-     * @param domain 域名
+     * @param orderid 订单号
      */
-    @action public async getAskbuyInfo(domain:string,addr:string)
+    @action public async getAskbuyInfo(orderid:string)
     {
         let result: any = null;
         try
         {
-            result = await Api.getaskbuydetail(domain,addr);
+            result = await Api.getaskbuydetail(orderid);
         } catch (error)
         {
             this.askbuyData = null;

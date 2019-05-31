@@ -2,15 +2,14 @@ import request from 'utils/request';
 
 /**
  * 查询该域名出售详情
- * @param domain 域名
+ * @param orderid 订单
  */
-export const getselldetail = (domain:string,addr:string) =>
+export const getselldetail = (orderid:string) =>
 {
   const opts = {
     method: 'getDexDomainSellDetail',
     params: [
-      domain,
-      addr
+      orderid
     ]
   }
   return request(opts);
@@ -24,22 +23,23 @@ export const getsellother = (domain:string) =>
   const opts = {
     method: 'getDexDomainSellOther',
     params: [
-      domain
+      domain,
+      1,
+      15
     ]
   }
   return request(opts);
 }
 /**
  * 获取该域名的求购详情
- * @param domain 域名
+ * @param orderid 订单
  */
-export const getaskbuydetail = (domain:string,addr:string) =>
+export const getaskbuydetail = (orderid:string) =>
 {
   const opts = {
     method: 'getDexDomainBuyDetail',
     params: [
-      domain,
-      addr
+      orderid
     ]
   }
   return request(opts);

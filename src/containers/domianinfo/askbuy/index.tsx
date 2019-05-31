@@ -12,7 +12,6 @@ import * as formatTime from '@/utils/formatTime';
 import Hint from '@/components/hint'
 import { getQueryString } from '@/utils/function'
 import { Contract } from '@/utils/contract';
-import { HASH_CONFIG } from '@/config';
 
 @inject('askbuyinfo', 'common')
 @observer
@@ -22,14 +21,17 @@ class AskBuyInfo extends React.Component<IAskbuyInfoProps, any> {
         opt: getQueryString('opt') || '',
     }
 
-    public componentDidMount()
+    public async componentDidMount()
     {
         const params = this.props.match.params;
-        const domain = params["domain"];
-        this.props.askbuyinfo.askbuyDomain = domain;
-        this.props.askbuyinfo.getAskbuyInfo(domain, this.state.askBuyer);
-        this.props.askbuyinfo.getAskbuyOtherList(domain, this.state.askBuyer);
-        this.props.askbuyinfo.getDomainOwner(domain, this.props.common.address);
+        const orderid = params["orderid"];        
+        await this.props.askbuyinfo.getAskbuyInfo(orderid);
+        if(this.props.askbuyinfo.askbuyData){
+            this.props.askbuyinfo.askbuyDomain = this.props.askbuyinfo.askbuyData.fullDomain;
+            this.props.askbuyinfo.getAskbuyOtherList(this.props.askbuyinfo.askbuyData.fullDomain, this.state.askBuyer);
+            this.props.askbuyinfo.getDomainOwner(this.props.askbuyinfo.askbuyData.fullDomain, this.props.common.address);
+        }
+        
         console.log(JSON.stringify(this.props.askbuyinfo));
     }
     public render()
@@ -134,7 +136,7 @@ class AskBuyInfo extends React.Component<IAskbuyInfoProps, any> {
                                         this.props.askbuyinfo.askbuyOtherList.map((item: IAskbuyOtherList, index: number) =>
                                         {
                                             return (
-                                                <li className="table-td" key={index} onClick={this.onGoInfo.bind(this, item.orderType, item.address, item.sellType)} >
+                                                <li className="table-td" key={index} onClick={this.onGoInfo.bind(this, item)} >
                                                     <ul className="td-ul">
                                                         <li className="td-li">
                                                             {
@@ -168,10 +170,12 @@ class AskBuyInfo extends React.Component<IAskbuyInfoProps, any> {
     // 取消挂单
     private onCancelAskbuy = async () =>
     {
-        const assetName = this.props.askbuyinfo.askbuyData ? this.props.askbuyinfo.askbuyData.assetName : 'CGAS';
-        const assetId = assetName === 'CGAS' ? HASH_CONFIG.ID_CGAS : HASH_CONFIG.ID_NNC;
-        console.log(this.props.common.address + "---" + this.props.askbuyinfo.askbuyDomain + "---" + assetId)
-        const res = await Contract.cancelAskbuy(this.props.common.address, this.props.askbuyinfo.askbuyDomain, assetId)
+        const orderid = this.props.askbuyinfo.askbuyData ? this.props.askbuyinfo.askbuyData.orderid : '';
+        console.log(orderid)
+        if(!orderid){
+            return
+        }
+        const res = await Contract.cancelAskbuy(orderid)
         console.log(res)
         this.props.history.go(-1);
     }
@@ -181,28 +185,26 @@ class AskBuyInfo extends React.Component<IAskbuyInfoProps, any> {
         this.props.history.go(-1);
     }
     // 跳转到详情页
-    private onGoInfo = (type: string, addr: string, selltype: number) =>
+    private onGoInfo = (item:IAskbuyOtherList) =>
     {
         // selltype出售类型：0表示降价出售，1表示一口价
-        if (type === 'Buying')
+        if (item.orderType === 'Buying')
         {
-            this.props.history.push('/askbuyinfo/' + this.props.askbuyinfo.askbuyDomain + '?addr=' + addr)
+            this.props.history.push('/askbuyinfo/' + item.orderid + '?addr=' + item.address)
         }
-        else if (type === 'Selling' && selltype === 0)
+        else if (item.orderType === 'Selling')
         {
-            this.props.history.push('/saleinfo/' + this.props.askbuyinfo.askbuyDomain + '?selltype=reduce')
-        } else if (type === 'Selling' && selltype === 1)
-        {
-            this.props.history.push('/saleinfo/' + this.props.askbuyinfo.askbuyDomain + '?selltype=onceprice')
-        }
+            this.props.history.push('/saleinfo/' + item.orderid)
+        } 
     }
     // 出售域名给某人
     private sellDomainToHim = async ()=>{
-        console.log("todo")
-        const assetName = this.props.askbuyinfo.askbuyData ? this.props.askbuyinfo.askbuyData.assetName : 'CGAS';
-        const assetId = assetName === 'CGAS' ? HASH_CONFIG.ID_CGAS : HASH_CONFIG.ID_NNC;
-        console.log(this.state.askBuyer + "---" + this.props.askbuyinfo.askbuyDomain + "---" + assetId)
-        const res = await Contract.sellDomainToWho(this.state.askBuyer, this.props.askbuyinfo.askbuyDomain, assetId)
+        const orderid = this.props.askbuyinfo.askbuyData ? this.props.askbuyinfo.askbuyData.orderid : '';
+        console.log(orderid)
+        if(!orderid){
+            return
+        }
+        const res = await Contract.sellDomainToWho(orderid)
         console.log(res)
         this.props.history.go(-1);
     }

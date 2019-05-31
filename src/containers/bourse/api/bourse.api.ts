@@ -93,16 +93,18 @@ export const getmydeitylist = (addr:string,type:number,page:number,size:number) 
 /**
  * 关注发送接口
  * @param addr 当前地址
- * @param domain 关注的域名
+ * @param asktype 关注类型，0表示出售类型的，1表示求购类型的
+ * @param orderid 订单
  * @param type 关注状态 0为取消，1为关注
  */
-export const stardomain = (addr:string,domain:string,type:number) =>
+export const stardomain = (addr:string,asktype:number,orderid:string,type:number) =>
 {
   const opts = {
     method: 'starDexDomain',
     params: [
       addr,
-      domain,
+      asktype,
+      orderid,
       type
     ]
   }

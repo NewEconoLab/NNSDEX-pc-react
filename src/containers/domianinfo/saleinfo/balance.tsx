@@ -50,7 +50,7 @@ class BalanceInfo extends React.Component<ISaleInfoProps, any> {
     {
         this.props.history.push('/askbuytable/' + this.props.saleinfo.saleDomain)
     }
-    // 购买域名 todo
+    // 购买域名
     private onBuyDomain = async () =>
     {
         console.log('todo')
@@ -61,7 +61,7 @@ class BalanceInfo extends React.Component<ISaleInfoProps, any> {
         {
             return
         }
-        const auctionId = this.props.saleinfo.saleData ? this.props.saleinfo.saleData.auctionid : '';
+        const auctionId = this.props.saleinfo.saleData ? this.props.saleinfo.saleData.orderid : '';
         console.log(this.props.common.address + "---" + auctionId + "---" + assetId + '---' + amount)
         const res = await Contract.betDomain(this.props.common.address, auctionId, assetId, amount);
         console.log(res)

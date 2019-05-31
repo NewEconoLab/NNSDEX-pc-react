@@ -42,10 +42,10 @@ class SearchPage extends React.Component<ISearchProps, any> {
             {
               (this.props.search.searchInfo && this.props.search.searchInfo.state === 'YesSelling') && <Card text="出售中" style={{ 'marginRight': '20px' }} cardsize="big-card" colortype="c-red" />
             }
-            <span>{this.state.searchDomain}</span>
+            <span>{this.state.searchDomain.toLowerCase()}</span>
           </div>
           <div className="right-side">
-            <span className="price-text">{this.props.search.searchInfo && this.props.search.searchInfo.price !== '0' ? this.props.search.searchInfo.price : ''}</span>
+            <span className="price-text">{this.props.search.searchInfo && this.props.search.searchInfo.price !== '0' ? (this.props.search.searchInfo.price+' '+this.props.search.searchInfo.assetName ): ''}</span>
 
             {
               (this.props.search.searchInfo && this.props.search.searchInfo.state === 'CanAuction') && <Button text="立即开标" onClick={this.onGoAuction} />
@@ -57,7 +57,7 @@ class SearchPage extends React.Component<ISearchProps, any> {
               (this.props.search.searchInfo && this.props.search.searchInfo.state === 'NotSelling') && <Button text="求购" onClick={this.onGoAskbuy} />
             }
             {
-              (this.props.search.searchInfo && this.props.search.searchInfo.state === 'YesSelling') && <Button text="查看详情" onClick={this.onGoDomainInfo.bind(this, this.state.searchDomain)} style={{ 'marginLeft': '30px' }} />
+              (this.props.search.searchInfo && this.props.search.searchInfo.state === 'YesSelling') && <Button text="查看详情" onClick={this.onGoDomainInfo} style={{ 'marginLeft': '30px' }} />
             }
           </div>
         </div>
@@ -75,7 +75,7 @@ class SearchPage extends React.Component<ISearchProps, any> {
               this.props.search.likeCount > 0 && this.props.search.likeList.map((item: ILikeList, index: number) =>
               {
                 return (
-                  <li className="table-td" key={index} onClick={this.onGoDomainInfo.bind(this, item.fullDomain)} >
+                  <li className="table-td" key={index} onClick={this.onGoOtherDomainInfo.bind(this, item)} >
                     <ul className="td-ul">
                       <li className="td-li">
                         <span>{item.fullDomain}</span>
@@ -86,7 +86,7 @@ class SearchPage extends React.Component<ISearchProps, any> {
                       </li>
                       <li className="td-li"><span>{item.nowPrice + ' ' + item.assetName}</span></li>
                       <li className="td-li" >
-                        <span className="star-icon" onClick={this.onStarClick.bind(this, item.fullDomain)}>
+                        <span className="star-icon" onClick={this.onStarClick.bind(this, item)}>
                           {item.isStar ? <img src={require('@/img/star.png')} alt="" /> : <img src={require('@/img/star-un.png')} alt="" />}
                         </span>
                       </li>
@@ -117,18 +117,28 @@ class SearchPage extends React.Component<ISearchProps, any> {
   //     })
   // }
   // 跳转到详情页
-  private onGoDomainInfo = (domain: string) =>
+  private onGoDomainInfo = () =>
   {
-    this.props.history.push('/saleinfo/' + domain)
+    const orderid = this.props.search.searchInfo?this.props.search.searchInfo.orderid:'';
+    this.props.history.push('/saleinfo/' + orderid)
+  }
+  private onGoOtherDomainInfo = (item:ILikeList) =>
+  {
+    this.props.history.push('/saleinfo/' + item.orderid)
   }
   // 关注或取消关注
-  private onStarClick = (domain: string, event: any) =>
+  private onStarClick = async(item: ILikeList, event: any) =>
   {
-    console.log(domain);
     event.preventDefault();
     event.stopPropagation();
     event.nativeEvent.stopImmediatePropagation();
+    const isStar = item.isStar?0:1;
+    await this.props.search.setSearchStar(this.props.common.address,0,item.orderid,isStar)
+    if(this.props.search.searchStar){
+      item.isStar = !item.isStar
+    }
   }
+  // 跳转到网页钱包
   private onGoAuction = () =>
   {
     if (process.env.REACT_APP_SERVER_ENV === 'DEV')
@@ -139,6 +149,7 @@ class SearchPage extends React.Component<ISearchProps, any> {
       window.open("https://wallet.nel.group/")
     }
   }
+  // 跳转到请求挂单
   private onGoAskbuy = () =>
   {
     this.props.history.push('/askbuytable/' + this.state.searchDomain)

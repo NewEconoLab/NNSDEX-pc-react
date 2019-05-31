@@ -92,7 +92,7 @@ class AskBuyMarket extends React.Component<IAskBuyMarketProps, any> {
               this.props.askbuymarket.askbuyListCount > 0 && this.props.askbuymarket.askbuyList.map((item: IAskBuyList, index: number) =>
               {
                 return (
-                  <li className="table-td" key={index} onClick={this.onGoDomainInfo.bind(this, item.fullDomain, item.buyer)} >
+                  <li className="table-td" key={index} onClick={this.onGoDomainInfo.bind(this, item)} >
                     <ul className="td-ul">
                       <li className="td-li">
                         <span>{item.fullDomain}</span>
@@ -105,7 +105,7 @@ class AskBuyMarket extends React.Component<IAskBuyMarketProps, any> {
                       </li>
                       <li className="td-li"><span>{item.price + ' ' + item.assetName}</span></li>
                       <li className="td-li" >
-                        <span className="star-icon" onClick={this.onStarClick.bind(this, item.fullDomain)}>
+                        <span className="star-icon" onClick={this.onStarClick.bind(this, item)}>
                           {item.isStar ? <img src={require('@/img/star.png')} alt="" /> : <img src={require('@/img/star-un.png')} alt="" />}
                         </span>
                       </li>
@@ -189,17 +189,21 @@ class AskBuyMarket extends React.Component<IAskBuyMarketProps, any> {
       })
   }
   // 跳转到详情页
-  private onGoDomainInfo = (domain: string, addr: string) =>
+  private onGoDomainInfo = (item:IAskBuyList) =>
   {
-    this.props.history.push('/askbuyinfo/' + domain + '?addr=' + addr)
+    this.props.history.push('/askbuyinfo/' + item.orderid + '?addr=' + item.buyer)
   }
   // 关注或取消关注
-  private onStarClick = (domain: string, event: any) =>
+  private  onStarClick = async (item: IAskBuyList, event: any) =>
   {
-    console.log(domain);
     event.preventDefault();
     event.stopPropagation();
     event.nativeEvent.stopImmediatePropagation();
+    const isStar = item.isStar?0:1;
+    await this.props.askbuymarket.setAskbuyStarDomain(this.props.common.address,1,item.orderid,isStar)
+    if(this.props.askbuymarket.askbuyStar){
+      item.isStar = !item.isStar
+    }
   }
 }
 

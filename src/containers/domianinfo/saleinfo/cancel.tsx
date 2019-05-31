@@ -27,8 +27,12 @@ class CancelSale extends React.Component<ISaleInfoProps, any> {
     // 取消挂单
     private onCancelDeity = async () =>
     {
-        const auctionId = this.props.saleinfo.saleData ? this.props.saleinfo.saleData.auctionid : '';
+        const auctionId = this.props.saleinfo.saleData ? this.props.saleinfo.saleData.orderid : '';
         console.log(this.props.common.address + "---" + auctionId)
+        if(!auctionId)
+        {
+            return
+        }
         const res = await Contract.cancelSellDomain(auctionId)
         console.log(res)
         this.props.history.go(-1);

@@ -173,20 +173,15 @@ export class Contract
 
     /**
      * 取消求购某个域名
-     * @param addr 求购者
-     * @param domain 取消求购的域名
-     * @param assetid 求购所花费的资产id
+     * @param offerid 求购的场次
      */
-    public static async cancelAskbuy(addr: string, domain: string, assetid: Neo.Uint160)
+    public static async cancelAskbuy(offerid:string)
     {
-        const domainHash = this.nameHashArray(domain.split("."));
         const params: InvokeArgs = {
             scriptHash: HASH_CONFIG.DEX_HASH.toString(),
             operation: "discontinueOfferToBuy",
             arguments: [
-                { type: "Address", value: addr },
-                { type: "Hash256", value: domainHash.toString() },
-                { type: "Hash160", value: assetid.toString() },
+                { type: "Hash256", value: offerid }
             ],
             fee: '0',
             network: common.network,
@@ -198,18 +193,15 @@ export class Contract
      * 出售某个域名给求购者
      * @param addr 求购者
      * @param domain 求购的域名
-     * @param assetid 求购所花费的资产id
+     * @param offerid 求购的场次
      */
-    public static async sellDomainToWho(who: string, domain: string, assetid: Neo.Uint160)
+    public static async sellDomainToWho(offerid:string)
     {
-        const domainHash = this.nameHashArray(domain.split("."));
         const params: InvokeArgs = {
             scriptHash: HASH_CONFIG.DEX_HASH.toString(),
             operation: "sell",
             arguments: [
-                { type: "Address", value: who },
-                { type: "Hash256", value: domainHash.toString() },
-                { type: "Hash160", value: assetid.toString() },
+                { type: "Hash256", value: offerid }
             ],
             fee: '0',
             sys_fee:'6',

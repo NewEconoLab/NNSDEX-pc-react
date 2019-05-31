@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import Input from '@/components/Input/Input';
 import { History } from 'history'
 import EventHandler from 'utils/event';
-import zh from '@/img/ch.png';
+import zh from '@/img/zh.png';
 import en from '@/img/en.png';
 import store from "@/store";
 import './index.less';
@@ -129,7 +129,8 @@ export default class Header extends React.Component<IProps, IState>{
             <ul>
               <li>
                 <div className="language-toggle" id="language">
-                  <label onClick={this.toggleLanguage}>
+                  <img src={this.state.languageImg} alt="zh.png"  onClick={this.toggleLanguage} />
+                  {/* <label>
                     <div className="language-content">
                       <span className="lang-text">{this.state.languageText}</span>
                       <img src={this.state.languageImg} alt="ch.png" />
@@ -138,7 +139,7 @@ export default class Header extends React.Component<IProps, IState>{
                     <div className="triangle-wrap">
                       <div className="triangle" />
                     </div>
-                  </label>
+                  </label> */}
                   {
                     this.state.isShowLanguage && (
                       <div className="select-wrap" id="selectlang" onClick={this.toggleLanguage}>
@@ -152,12 +153,7 @@ export default class Header extends React.Component<IProps, IState>{
                 </div>
               </li>
               <li>
-                {/* <img src={require('@/img/logout.png')} alt="" className="logout-icon" /> */}
-                {/* Logout */}
                 {this.props.common.address === '' ? <span className="point-login" onClick={this.onGoLogin}>Login</span> : <span className="logined-text"><span className="yuan-box" /> {this.props.common.address.replace(/^(.{4})(.*)(.{4})$/, '$1...$3')}</span>}
-                {/* {this.props.common.address !== '' && <span onClick={this.onLogout}>
-                  <img src={require('@/img/logout.png')} alt="" className="logout-icon"  /><span>Logout</span>
-                  </span>} */}
               </li>
             </ul>
           </div>
@@ -247,11 +243,42 @@ export default class Header extends React.Component<IProps, IState>{
     })
     this.props.onSearch(false)
   }
+  // 检测输入域名是否合法
+  private checkDomainname(domainname: string)
+  {
+    let domain = domainname;
+    if (/\.neo$/.test(domainname))
+    {
+      domain = domain.substring(0, domain.length - 4);
+    }
+    else if (/\.test$/.test(domainname))
+    {
+      domain = domain.substring(0, domain.length - 5);
+    }
+    else
+    {
+      return false;
+    }
+    if (domain.length >= 2 && domain.length <= 32)
+    {
+      return true;
+    } else
+    {
+      return false;
+    }
+  }
   // 跳转到搜索页
   private goSearch = () =>
   {
-
-    window.open(window.location.origin + '/search?keywords=' + this.state.inputValue);
+    const checked = this.checkDomainname(this.state.inputValue);
+    if(!checked){
+      return
+    }
+    const base = this.props.common.network === 'MainNet'?'':'/test';
+    // const locations = window.location;
+    // console.log(`${location.origin}${base || ''}${locations.pathname}${locations.search}${locations.hash}`)
+    // window.location.replace(`${location.origin}${base || ''}${locations.pathname.replace('/test', '')}${locations.search}${locations.hash}`);
+    window.open(`${location.origin}${base || ''}/search?keywords=${this.state.inputValue}`);
     this.onCancelSearch();
     // this.props.history.push('/search/'+this.state.inputValue)
   }

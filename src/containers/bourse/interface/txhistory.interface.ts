@@ -12,6 +12,7 @@ export interface ITxHistoryProps extends RouteComponentProps{
     intl:any
 }
 export interface ITxHistoryList{
+    orderid:string, // 订单号
     fullDomain:string, // 域名
     assetName:string, // 资产名称
     price:string, // 资产价格

@@ -4,7 +4,7 @@ export default {
   baseContract : Neo.Uint160.parse("348387116c4a75e420663277d9c02049907128c7"),
   ID_GAS:"0x602c79718b16e442de58778e148d0b1084e3b2dffd5de6b7b16cee7969282de7",
   ID_NEO:"0xc56f33fc6ecfcd0c225c4ab356fee59390af8560be0e930faebe74a6daff7c9b",
-  DEX_HASH:Neo.Uint160.parse("52d4762d043204031cd9ef3e4a2153063c58dabe"),
+  DEX_HASH:Neo.Uint160.parse("afc0a0954e343b705e9e4360c99f3ce2351581f4"),
   assetDecimal:
   {
     "74f2dc36a68fdc4682034178eb2220729231db76":8, // CGAS 小数位数8位

@@ -6,6 +6,7 @@ class AskBuyMarket implements IAskBuyMarketStore
 {
     @observable public askbuyList: IAskBuyList[] = []; // 所有交易列表
     @observable public askbuyListCount: number = 0; // 所有交易总数
+    @observable public askbuyStar:boolean = false;
 
     /**
      * 获取Nep5交易列表（默认获取所有交易）
@@ -27,6 +28,28 @@ class AskBuyMarket implements IAskBuyMarketStore
         this.askbuyListCount = result[0].count || 0;
         this.askbuyList = result ? result[0].list : [];
         console.log(result[0].list)
+        return true; 
+    }
+    /**
+     * 关注与取消关注的发送
+     * @param addr 当前地址
+     * @param asktype 关注类型，0表示出售类型的，1表示求购类型的
+     * @param orderid 订单
+     * @param type 关注状态 0为取消，1为关注
+     */
+    @action public async setAskbuyStarDomain(addr:string,asktype:number,orderid:string,startype:number)
+    {
+        let result: any = null;
+        try
+        {
+            result = await Api.stardomain(addr,asktype,orderid,startype);
+        } catch (error)
+        {
+            this.askbuyStar = false;
+            return false;
+        }
+        console.log(result)
+        this.askbuyStar = result[0].res||false;
         return true; 
     }
 }

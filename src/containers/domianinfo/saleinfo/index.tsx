@@ -21,12 +21,14 @@ class SaleInfo extends React.Component<ISaleInfoProps, any> {
         opt:getQueryString('opt') || '',
         addr:getQueryString('addr') || '',
     }
-    public componentDidMount(){
+    public async componentDidMount(){
         const params = this.props.match.params;
-        const domain =params["domain"];
-        this.props.saleinfo.saleDomain = domain;
-        this.props.saleinfo.getSaleInfo(domain,this.state.addr);
-        this.props.saleinfo.getSaleOtherList(domain);
+        const orderid =params["orderid"];
+        await this.props.saleinfo.getSaleInfo(orderid);
+        if(this.props.saleinfo.saleData){
+            this.props.saleinfo.saleDomain = this.props.saleinfo.saleData.fullDomain;        
+            this.props.saleinfo.getSaleOtherList(this.props.saleinfo.saleData.fullDomain);
+        }        
     }
     
     public render()

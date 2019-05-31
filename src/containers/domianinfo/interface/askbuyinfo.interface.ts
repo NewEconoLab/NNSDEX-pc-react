@@ -6,7 +6,7 @@ export interface IAskBuyInfoStore{
     askbuyData:IAskbuyInfo|null,
     askbuyOtherList:IAskbuyOtherList[],
     ownerInfo:IOwnerInfo|null,
-    getAskbuyInfo:(domain:string,addr:string)=>Promise<boolean>,
+    getAskbuyInfo:(orderid:string)=>Promise<boolean>,
     getAskbuyOtherList:(domain:string,addr:string)=>Promise<boolean>,
     getDomainOwner:(domain:string,addr:string)=>Promise<boolean>
 }
@@ -16,6 +16,7 @@ export interface IAskbuyInfoProps extends RouteComponentProps{
     intl:any
 }
 export interface IAskbuyInfo{
+    orderid:string, // 订单号
     fullDomain:string, // 域名    
     ttl:number, // 到期时间
     buyer:string, // 求购人
@@ -24,6 +25,7 @@ export interface IAskbuyInfo{
     assetName:string, // 资产类型
 }
 export interface IAskbuyOtherList{
+    orderid:string, // 订单号
     assetHash:string,
     assetName:string,
     time:number,

@@ -42,11 +42,11 @@ export default [
   },
   {
     component: asyncComponent(() => import('../containers/domianinfo/askbuy')),
-    path: '/askbuyinfo/:domain',
+    path: '/askbuyinfo/:orderid',
   },
   {
     component: asyncComponent(() => import('../containers/domianinfo/saleinfo')),
-    path: '/saleinfo/:domain',
+    path: '/saleinfo/:orderid',
   },
   {
     component: asyncComponent(() => import('../containers/bourse/layout')),
