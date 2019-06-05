@@ -89,6 +89,9 @@ class AskBuyMarket extends React.Component<IAskBuyMarketProps, any> {
               </ul>
             </li>
             {
+              this.props.askbuymarket.askbuyListCount === 0 && <li className="table-td li-no-data">没有相关数据</li>
+            }
+            {
               this.props.askbuymarket.askbuyListCount > 0 && this.props.askbuymarket.askbuyList.map((item: IAskBuyList, index: number) =>
               {
                 return (
@@ -199,6 +202,11 @@ class AskBuyMarket extends React.Component<IAskBuyMarketProps, any> {
     event.preventDefault();
     event.stopPropagation();
     event.nativeEvent.stopImmediatePropagation();
+    if (!this.props.common.address)
+    {
+      this.props.common.login();
+      return
+    }
     const isStar = item.isStar?0:1;
     await this.props.askbuymarket.setAskbuyStarDomain(this.props.common.address,1,item.orderid,isStar)
     if(this.props.askbuymarket.askbuyStar){

@@ -10,6 +10,7 @@ import Transaction from './transaction/transaction';
 import { ICommonStore } from '@/store/interface/common.interface';
 interface IBalanceProps{
     common:ICommonStore,
+    history:History,
     intl:any
 }
 @inject('common')

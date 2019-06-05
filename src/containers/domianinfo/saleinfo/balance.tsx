@@ -7,7 +7,7 @@ import '../index.less';
 import { injectIntl } from 'react-intl';
 import Button from '@/components/Button';
 import { ISaleInfoProps } from '../interface/saleinfo.interface';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import { Contract } from '@/utils/contract';
 import { HASH_CONFIG } from '@/config';
 
@@ -35,7 +35,7 @@ class BalanceInfo extends React.Component<ISaleInfoProps, any> {
                                 this.props.saleinfo.saleData && this.props.saleinfo.saleData.assetName
                             }
                         </div>
-                        <Link to="/myaccount/balance" className="link-text">立即充值</Link>
+                        <span className="link-text" onClick={this.onGoTopup} >立即充值</span>
                     </div>
                     <div className="account-btn">
                         <Button text="我要出价" btnColor="white-btn" onClick={this.onMakePrice} />
@@ -46,14 +46,33 @@ class BalanceInfo extends React.Component<ISaleInfoProps, any> {
         );
     }
     // 我要出价 
+    private onGoTopup = () =>
+    {
+        if (!this.props.common.address)
+        {
+            this.props.common.login();
+            return
+        }
+        this.props.history.push('/myaccount/balance')
+    }
+    // 我要出价 
     private onMakePrice = () =>
     {
+        if (!this.props.common.address)
+        {
+            this.props.common.login();
+            return
+        }
         this.props.history.push('/askbuytable/' + this.props.saleinfo.saleDomain)
     }
     // 购买域名
     private onBuyDomain = async () =>
     {
-        console.log('todo')
+        if (!this.props.common.address)
+        {
+            this.props.common.login();
+            return
+        }
         const assetName = this.props.saleinfo.saleData ? this.props.saleinfo.saleData.assetName : 'CGAS';
         const assetId = assetName === 'CGAS' ? HASH_CONFIG.ID_CGAS : HASH_CONFIG.ID_NNC;
         const amount = this.props.saleinfo.saleData ? parseFloat(this.props.saleinfo.saleData.nowPrice) : 0;

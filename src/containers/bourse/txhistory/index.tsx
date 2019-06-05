@@ -84,6 +84,9 @@ class TXHistory extends React.Component<ITxHistoryProps, any> {
               </ul>
             </li>
             {
+              this.props.txhistory.txhistoryListCount === 0 && <li className="table-td li-no-data">没有相关数据</li>
+            }
+            {
               this.props.txhistory.txhistoryListCount > 0 && this.props.txhistory.txhistoryList.map((item: ITxHistoryList, index: number) =>
               {
                 return (

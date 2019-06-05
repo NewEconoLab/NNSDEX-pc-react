@@ -45,7 +45,7 @@ class SearchPage extends React.Component<ISearchProps, any> {
             <span>{this.state.searchDomain.toLowerCase()}</span>
           </div>
           <div className="right-side">
-            <span className="price-text">{this.props.search.searchInfo && this.props.search.searchInfo.price !== '0' ? (this.props.search.searchInfo.price+' '+this.props.search.searchInfo.assetName ): ''}</span>
+            <span className="price-text">{this.props.search.searchInfo && this.props.search.searchInfo.price !== '0' ? (this.props.search.searchInfo.price + ' ' + this.props.search.searchInfo.assetName) : ''}</span>
 
             {
               (this.props.search.searchInfo && this.props.search.searchInfo.state === 'CanAuction') && <Button text="立即开标" onClick={this.onGoAuction} />
@@ -71,6 +71,9 @@ class SearchPage extends React.Component<ISearchProps, any> {
                 <li className="th-li">关注</li>
               </ul>
             </li>
+            {
+              this.props.search.likeCount === 0 && <li className="table-td li-no-data">没有相关数据</li>
+            }
             {
               this.props.search.likeCount > 0 && this.props.search.likeList.map((item: ILikeList, index: number) =>
               {
@@ -119,22 +122,28 @@ class SearchPage extends React.Component<ISearchProps, any> {
   // 跳转到详情页
   private onGoDomainInfo = () =>
   {
-    const orderid = this.props.search.searchInfo?this.props.search.searchInfo.orderid:'';
+    const orderid = this.props.search.searchInfo ? this.props.search.searchInfo.orderid : '';
     this.props.history.push('/saleinfo/' + orderid)
   }
-  private onGoOtherDomainInfo = (item:ILikeList) =>
+  private onGoOtherDomainInfo = (item: ILikeList) =>
   {
     this.props.history.push('/saleinfo/' + item.orderid)
   }
   // 关注或取消关注
-  private onStarClick = async(item: ILikeList, event: any) =>
+  private onStarClick = async (item: ILikeList, event: any) =>
   {
     event.preventDefault();
     event.stopPropagation();
     event.nativeEvent.stopImmediatePropagation();
-    const isStar = item.isStar?0:1;
-    await this.props.search.setSearchStar(this.props.common.address,0,item.orderid,isStar)
-    if(this.props.search.searchStar){
+    if (!this.props.common.address)
+    {
+      this.props.common.login();
+      return
+    }
+    const isStar = item.isStar ? 0 : 1;
+    await this.props.search.setSearchStar(this.props.common.address, 0, item.orderid, isStar)
+    if (this.props.search.searchStar)
+    {
       item.isStar = !item.isStar
     }
   }
@@ -152,6 +161,11 @@ class SearchPage extends React.Component<ISearchProps, any> {
   // 跳转到请求挂单
   private onGoAskbuy = () =>
   {
+    if (!this.props.common.address)
+    {
+      this.props.common.login();
+      return
+    }
     this.props.history.push('/askbuytable/' + this.state.searchDomain)
   }
 }

@@ -7,17 +7,27 @@ import { Link } from 'react-router-dom';
 import { History } from 'history'
 // import Button from '@/components/Button';
 import './index.less';
+import { ICommonStore } from '@/store/interface/common.interface';
+import { observer, inject } from 'mobx-react';
 
 interface IProps
 {
   route: {
     [key: string]: any
   };
-  history:History
+  history:History,
+  common:ICommonStore
 }
-
+@inject('common')
+@observer
 export default class MyaccountLayout extends React.Component<IProps> {
-  
+  public componentDidMount(){
+    if(!this.props.common.address)
+    {
+      this.props.common.login();
+      this.props.history.goBack();
+    }
+  }
   public render()
   {
     return (

@@ -89,6 +89,9 @@ class SaleMarket extends React.Component<ISaleMarketProps, any> {
               </ul>
             </li>
             {
+              this.props.salemarket.saleListCount === 0 && <li className="table-td li-no-data">没有相关数据</li>
+            }
+            {
               this.props.salemarket.saleListCount > 0 && this.props.salemarket.saleList.map((item: ISaleList, index: number) =>
               {
                 return (
@@ -191,6 +194,11 @@ class SaleMarket extends React.Component<ISaleMarketProps, any> {
     event.preventDefault();
     event.stopPropagation();
     event.nativeEvent.stopImmediatePropagation();
+    if (!this.props.common.address)
+    {
+      this.props.common.login();
+      return
+    }
     const isStar = item.isStar?0:1;
     await this.props.salemarket.setStarDomain(this.props.common.address,0,item.orderid,isStar)
     if(this.props.salemarket.resStar){

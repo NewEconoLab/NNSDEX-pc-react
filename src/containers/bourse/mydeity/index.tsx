@@ -54,6 +54,9 @@ class Mydeity extends React.Component<IMyDeityProps, any> {
               </ul>
             </li>
             {
+              this.props.mydeity.mydeityListCount === 0 && <li className="table-td li-no-data">没有相关数据</li>
+            }
+            {
               this.props.mydeity.mydeityListCount > 0 && this.props.mydeity.mydeityList.map((item: IMyDeityList, index: number) =>
               {
                 return (
