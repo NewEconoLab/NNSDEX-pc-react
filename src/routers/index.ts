@@ -7,6 +7,10 @@ export default [
   //   path: '/address/:address',
   // },
   {
+    component: asyncComponent(() => import('../containers/email/index')),
+    path: '/email',
+  },
+  {
     component: asyncComponent(() => import('../containers/myaccount/layout')),
     path: '/myaccount',
     children:[
