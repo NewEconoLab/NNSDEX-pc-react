@@ -10,15 +10,26 @@
       manifest.json provides metadata used when your web app is added to the
       homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/
     -->
-  <!-- <% if(process.env.REACT_APP_SERVER_ENV === 'PUB'){ %>
-  <meta name="robots" content="index,follow">
+  <% if(process.env.REACT_APP_SERVER_ENV === 'PUB'){ %>
+  <script src="/dist/lib/rollup/aes.js"></script>
+  <script src="/dist/lib/component/aes.js"></script>
+  <script src="/dist/lib/component/mode-ecb.js"></script>
+  <script src="/dist/lib/component/pad-nopadding.js"></script>
+  <script src="/dist/lib/scrypt.js"></script>
+  <script src="/dist/lib/neo-ts.js"></script>
+  <script src="/dist/app.js"></script>
   <% } %>
   <% if(process.env.REACT_APP_SERVER_ENV === 'DEV'){ %>
-  <meta name="robots" content="noindex,nofollow">
-  <% } %> -->
+  <script src="/test/dist/lib/rollup/aes.js"></script>
+  <script src="/test/dist/lib/component/aes.js"></script>
+  <script src="/test/dist/lib/component/mode-ecb.js"></script>
+  <script src="/test/dist/lib/component/pad-nopadding.js"></script>
+  <script src="/test/dist/lib/scrypt.js"></script>
+  <script src="/test/dist/lib/neo-ts.js"></script>
+  <script src="/test/dist/app.js"></script>
+  <% } %>
   <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
   <link rel="shortcut icon" href="%PUBLIC_URL%/bitbug_favicon.ico">
-  <link rel="stylesheet" href="/dist/css/index.css">
   <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -29,13 +40,6 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
 
-  <script src="/dist/lib/rollup/aes.js"></script>
-  <script src="/dist/lib/component/aes.js"></script>
-  <script src="/dist/lib/component/mode-ecb.js"></script>
-  <script src="/dist/lib/component/pad-nopadding.js"></script>
-  <script src="/dist/lib/scrypt.js"></script>
-  <script src="/dist/lib/neo-ts.js"></script>
-  <script src="/dist/app.js"></script>
   <title>NNSDEX</title>
   <script>
     (function ()
