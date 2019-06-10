@@ -105,7 +105,7 @@ export default class Header extends React.Component<IProps, IState>{
             {
               this.state.isNormalSearch && (
                 <ul>
-                  <li className={this.mapRouterUnderline('/')}><Link to="/">首页</Link></li>
+                  <li className={this.mapRouterUnderline('/')}><Link to="/bourse/salemarket">首页</Link></li>
                   <li className={this.mapRouterUnderline('/auction')}>域名竞拍</li>
                   <li className={this.mapRouterUnderline(['/bourse/salemarket', '/bourse/askbuymarket', '/bourse/txhistory', '/bourse/mydeity'])}><Link to="/bourse/salemarket">域名交易</Link></li>
                   <li className={this.mapRouterUnderline(['/myaccount/balance', '/myaccount/mydomain', '/myaccount/bind', '/myaccount/bonus', '/myaccount/setting'])}><Link to="/myaccount/balance">我的账户</Link></li>
@@ -222,7 +222,7 @@ export default class Header extends React.Component<IProps, IState>{
   // 输入搜索内容
   private onChangeSearch = (value: string) =>
   {
-    this.setState({
+    this.setState({  
       inputValue: value
     })
   }
@@ -270,17 +270,15 @@ export default class Header extends React.Component<IProps, IState>{
   // 跳转到搜索页
   private goSearch = () =>
   {
-    const checked = this.checkDomainname(this.state.inputValue);
+    let search: string = this.state.inputValue;
+    search = search.trim();
+    const checked = this.checkDomainname(search);
     if(!checked){
       return
     }
     const base = this.props.common.network === 'MainNet'?'':'/test';
-    // const locations = window.location;
-    // console.log(`${location.origin}${base || ''}${locations.pathname}${locations.search}${locations.hash}`)
-    // window.location.replace(`${location.origin}${base || ''}${locations.pathname.replace('/test', '')}${locations.search}${locations.hash}`);
-    window.open(`${location.origin}${base || ''}/search?keywords=${this.state.inputValue}`);
+    window.open(`${location.origin}${base || ''}/search?keywords=${search}`);
     this.onCancelSearch();
-    // this.props.history.push('/search/'+this.state.inputValue)
   }
   // 一级菜单选择
   private mapRouterUnderline = (path) =>

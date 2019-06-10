@@ -45,11 +45,12 @@ class StepOne extends React.Component<ISellFormProps, any> {
         return (
             <div className="step-one" ref={this.listRef} >
                 <Input
-                    placeholder="请搜索您想要的域名"
+                    placeholder="搜索我的域名"
                     value={this.state.inputValue}
                     onChange={this.onSearchMydomain}
                     type='text'
                     styleType='domain'
+                    style={{'padding':'0 30px 0 15px'}}
                     onCancelSearch={this.onCancelSearch}
                     onEnter={this.doSearch}
                 />

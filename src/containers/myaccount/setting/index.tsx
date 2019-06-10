@@ -135,7 +135,7 @@ class Setting extends React.Component<ISettingProps, any> {
   }
   // 邮箱验证
   private checkEmail = (str:string) => {
-    const re = /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,4}$/; 
+    const re = /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,10}$/; 
     if (re.test(str)) {
       this.setState({
         isCanSendEmail:true

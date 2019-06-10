@@ -34,7 +34,7 @@ export default class EmailCheck extends React.Component<ISettingProps> {
                             <p>{this.state.addr}</p>
                             <img src={require('@/img/to.png')} className="to-icon" alt="" />
                             <p>{this.state.email}</p>
-                            <Link to="/" className="back-home">返回首页</Link>
+                            <Link to="/bourse/salemarket" className="back-home">返回首页</Link>
                         </div>
                     )
                 }

@@ -6,8 +6,8 @@ import { observer } from 'mobx-react';
 import '../index.less';
 import { injectIntl } from 'react-intl';
 import Hint from '@/components/hint';
-import Button from '@/components/Button';
-import Select from '@/components/select';
+// import Button from '@/components/Button';
+// import Select from '@/components/select';
 
 @observer
 class AuctionBalance extends React.Component<any, any> {
@@ -36,7 +36,7 @@ class AuctionBalance extends React.Component<any, any> {
             <div className="balance-warpper">
                 <div className="balance-title"><span className="wtitle">竞拍账户</span><Hint text="资金必须充值到竞拍账户后才能在竞拍域名时使用" /></div>
                 <div className="balance-content">
-                    <div className="bcontent-title"> 账户余额</div>
+                    {/* <div className="bcontent-title"> 账户余额</div>
                     <div className="bcontent-middle abalance">
                         <div className="balance-name">CGAS</div>
                         <div className="balance-number">10</div>
@@ -61,14 +61,15 @@ class AuctionBalance extends React.Component<any, any> {
                                 <span className="tips-text">（100可用）</span>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                     <div className="bcontent-middle abalance">
-                        <div className="bsuccess">充值成功！资金将在交易确认后到账！</div>
+                    {/* 充值成功！资金将在交易确认后到账！ */}
+                        <div className="bsuccess">敬请期待</div>
                     </div>
-                    <div className="bcontent-btn">
+                    {/* <div className="bcontent-btn">
                         <Button text="提现" btnColor="white-btn" />
                         <Button text="充值" />
-                    </div>
+                    </div> */}
                 </div>
             </div>
         );

@@ -118,13 +118,13 @@ class Mydomain extends React.Component<IMydomainProps, any> {
                           item.isSelling && <Card text="出售中" style={{ 'marginLeft': '15px' }} cardsize="md-card" colortype="cb-gray" />
                         }
                         {
-                          this.computeExpireTime(item.ttl) && <Card text="即将到期" cardsize="md-card" style={{ 'marginLeft': '15px' }} colortype="cb-red" />
+                          this.computeExpireTime(item) && <Card text="即将到期" cardsize="md-card" style={{ 'marginLeft': '15px' }} colortype="cb-red" />
                         }
                         <div className="li-btn">
                           {
                             (!item.isSelling && !item.isBind) && (
                               <>
-                                <Button text="转让域名" btnColor="white-btn" />
+                                {/* <Button text="转让域名" btnColor="white-btn" /> */}
                                 <Button text="出售域名" style={{ 'marginLeft': '15px' }} onClick={this.onGoSentDeity.bind(this,item)} />
                               </>
                             )
@@ -150,13 +150,13 @@ class Mydomain extends React.Component<IMydomainProps, any> {
                               <span>
                                 {formatTime.format('yyyy/MM/dd | hh:mm:ss', item.ttl.toString(), this.props.intl.locale)}
                               </span>
-                              {
-                                this.computeExpireTime(item.ttl) && (
+                              {/* {
+                                this.computeExpireTime(item) && (
                                   <div className="li-btn">
                                     <Button text="续约" />
                                   </div>
                                 )
-                              }
+                              } */}
                             </li>
                           </ul>
                           <ul className="open-ul">
@@ -165,9 +165,9 @@ class Mydomain extends React.Component<IMydomainProps, any> {
                             </li>
                             <li className="open-li">
                               <span>{item.data !== '' ? item.data : '-'}</span>
-                              <div className="li-btn">
+                              {/* <div className="li-btn">
                                 <Button text="修改" />
-                              </div>
+                              </div> */}
                             </li>
                           </ul>
                         </>
@@ -263,18 +263,22 @@ class Mydomain extends React.Component<IMydomainProps, any> {
   }
 
   // 计算是否即将到期
-  private computeExpireTime = (time: number) =>
+  private computeExpireTime = (item: IDomainList) =>
   {
     // true 为即将到期，反之为false
     const nowTime = new Date().getTime();
     console.log(nowTime);
-    if (time - nowTime > 0)
+    if (item.ttl - nowTime > 0)
     {
       console.log('todo')
     }
     const timestamp = new Date().getTime();
-    const copare = (new Neo.BigInteger(time).multiply(1000)).subtract(new Neo.BigInteger(timestamp));
-    const oneMonth = (24 * 60 * 60 * 1000) * 30;
+    const copare = (new Neo.BigInteger(item.ttl).multiply(1000)).subtract(new Neo.BigInteger(timestamp));
+    let oneMonth = (24 * 60 * 60 * 1000) * 30;
+    if(item.fulldomain.includes('.test')){
+      oneMonth = (5 * 60 * 1000) * 90;
+    }
+    
     return copare.compareTo(oneMonth) < 0 ? true : false;    // 小于oneMonth即将过期true
   }
   // 点击展开或关闭

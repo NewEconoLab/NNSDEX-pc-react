@@ -70,7 +70,7 @@ export default class BourseLayout extends React.Component<IProps> {
               </li>
               <li>
                 <Link to="/selltable">
-                  <Button text="发起挂单" />
+                  <Button text="我要出售" />
                 </Link>
               </li>
             </ul>
