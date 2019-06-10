@@ -21,13 +21,6 @@ interface IProps
 @inject('common')
 @observer
 export default class MyaccountLayout extends React.Component<IProps> {
-  public componentDidMount(){
-    if(!this.props.common.address)
-    {
-      this.props.common.login();
-      this.props.history.goBack();
-    }
-  }
   public render()
   {
     return (

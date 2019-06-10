@@ -108,7 +108,10 @@ export default class Header extends React.Component<IProps, IState>{
                   <li className={this.mapRouterUnderline('/')}><Link to="/bourse/salemarket">首页</Link></li>
                   <li className={this.mapRouterUnderline('/auction')}>域名竞拍</li>
                   <li className={this.mapRouterUnderline(['/bourse/salemarket', '/bourse/askbuymarket', '/bourse/txhistory', '/bourse/mydeity'])}><Link to="/bourse/salemarket">域名交易</Link></li>
-                  <li className={this.mapRouterUnderline(['/myaccount/balance', '/myaccount/mydomain', '/myaccount/bind', '/myaccount/bonus', '/myaccount/setting'])}><Link to="/myaccount/balance">我的账户</Link></li>
+                  <li className={this.mapRouterUnderline(['/myaccount/balance', '/myaccount/mydomain', '/myaccount/bind', '/myaccount/bonus', '/myaccount/setting'])}>
+                    {/* <Link to="/myaccount/balance">我的账户</Link> */}
+                    <a href="javascript:;" onClick={this.toMyaccount}>我的账户</a>
+                  </li>
                 </ul>
               )
             }
@@ -279,6 +282,17 @@ export default class Header extends React.Component<IProps, IState>{
     const base = this.props.common.network === 'MainNet'?'':'/test';
     window.open(`${location.origin}${base || ''}/search?keywords=${search}`);
     this.onCancelSearch();
+  }
+  // 跳转到我的账户
+  private toMyaccount = ()=>{
+    // const base = this.props.common.network === 'MainNet'?'':'/test';
+    if(!this.props.common.address)
+    {
+      this.props.common.login();
+      // this.props.history.goBack();
+      return
+    }
+    this.props.history.push('/myaccount/balance');
   }
   // 一级菜单选择
   private mapRouterUnderline = (path) =>

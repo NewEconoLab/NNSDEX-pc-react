@@ -21,11 +21,11 @@ class SellTable extends React.Component<ISellFormProps, any> {
 
     public componentDidMount()
     {
-        if (!this.props.common.address)
-        {
-            this.props.common.login();
-            this.props.history.goBack();
-        }
+        // if (!this.props.common.address)
+        // {
+        //     this.props.common.login();
+        //     this.props.history.goBack();
+        // }
         const domain = getQueryString('selldomain') || '';
         const time = getQueryString('extime') || '0';
         if (domain !== '')

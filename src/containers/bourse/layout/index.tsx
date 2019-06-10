@@ -7,15 +7,19 @@ import { Link } from 'react-router-dom';
 import { History } from 'history'
 import Button from '@/components/Button';
 import './index.less';
+import { ICommonStore } from '@/store/interface/common.interface';
+import { inject, observer } from 'mobx-react';
 
 interface IProps
 {
   route: {
     [key: string]: any
   };
-  history: History
+  history: History,
+  common:ICommonStore
 }
-
+@inject('common')
+@observer
 export default class BourseLayout extends React.Component<IProps> {
 
   public render()
@@ -69,9 +73,9 @@ export default class BourseLayout extends React.Component<IProps> {
                 </Link>
               </li>
               <li>
-                <Link to="/selltable">
+                <a href="javascript:;" onClick={this.toSelltable}>
                   <Button text="我要出售" />
-                </Link>
+                </a>
               </li>
             </ul>
           </div>
@@ -83,6 +87,17 @@ export default class BourseLayout extends React.Component<IProps> {
         </div>
       </div>
     )
+  }
+  // 跳转到我要出售挂单
+  private toSelltable = ()=>{
+    // const base = this.props.common.network === 'MainNet'?'':'/test';
+    if(!this.props.common.address)
+    {
+      this.props.common.login();
+      // this.props.history.goBack();
+      return
+    }
+    this.props.history.push('/myaccount/balance');
   }
   // 二级菜单选择
   private mapChildUnderline = (path) =>
