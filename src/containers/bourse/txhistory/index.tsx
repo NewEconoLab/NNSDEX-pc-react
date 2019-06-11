@@ -25,10 +25,10 @@ class TXHistory extends React.Component<ITxHistoryProps, any> {
       id: 'MortgagePayments_High',
       name: '默认',
     },
-    {
-      id: 'LaunchTime_New',
-      name: '最新上架',
-    },
+    // {
+    //   id: 'LaunchTime_New',
+    //   name: '最新上架',
+    // },
     {
       id: 'Price_High',
       name: '价格最高',
@@ -36,11 +36,11 @@ class TXHistory extends React.Component<ITxHistoryProps, any> {
     {
       id: 'Price_Low',
       name: '价格最低',
-    },
-    {
-      id: 'StarCount_High',
-      name: '关注数量',
     }
+    // {
+    //   id: 'StarCount_High',
+    //   name: '关注数量',
+    // }
   ]
   // 筛选条件二
   private txhistoryAssetOpt = [

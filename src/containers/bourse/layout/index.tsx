@@ -97,7 +97,7 @@ export default class BourseLayout extends React.Component<IProps> {
       // this.props.history.goBack();
       return
     }
-    this.props.history.push('/myaccount/balance');
+    this.props.history.push('/selltable');
   }
   // 二级菜单选择
   private mapChildUnderline = (path) =>
