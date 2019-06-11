@@ -26,7 +26,7 @@ export function getAccount()
       .catch(error =>
       {
         console.log(error);
-        alert("测试：用户信息获取失败，请先重新获取");
+        common.isLoginFlag = 2;
         return false;
       })
   })

@@ -14,6 +14,7 @@ import { observer } from 'mobx-react';
 import { IHomeStore } from '../home/interface/home.interface';
 import { getQueryString } from 'utils/function'
 import { ICommonStore } from '@/store/interface/common.interface';
+import DownloadTeemo from '@/containers/download';
 
 interface IState
 {
@@ -161,9 +162,9 @@ export default class Header extends React.Component<IProps, IState>{
             </ul>
           </div>
         </div>
-        {/* <div className="second-menu">
-          
-        </div> */}
+        {
+          this.props.common.isLoginFlag !== 0 && <DownloadTeemo {...this.props} />
+        }        
       </header>
     );
   }

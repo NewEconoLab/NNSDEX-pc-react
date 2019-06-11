@@ -5,6 +5,7 @@ export interface ICommonStore {
   message: any,
   network: string,
   isLoadTeemo:boolean,// 检测是否有Teemo钱包
+  isLoginFlag:number,// 默认不显示,1表示未检查到teemo钱包,2为未登录钱包
   // recordtype: number,// 记录序号
   // alertNumber: number,// 弹窗序号
   // setFeeFlag: boolean, // 设置手续费

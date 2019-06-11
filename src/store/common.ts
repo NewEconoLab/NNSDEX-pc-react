@@ -20,6 +20,8 @@ class Common implements ICommonStore
   @observable public balances: IAccountBalanceStore =
   { contractnnc: 0, contractcgas: 0, cgas: 0, nnc: 0 };  // 初始化账户余额的信息
   @observable public fee: Neo.Fixed8 = Neo.Fixed8.Zero;
+  @observable public isLoginFlag:number = 0;// 默认不显示,1表示未检查到teemo钱包,2为未登录钱包
+  
 
   // 初始化语言
   @action public initLanguage = () =>
@@ -118,7 +120,7 @@ class Common implements ICommonStore
       if (!loginFlag)
       {
         this.address = '';
-        alert("测试：请打开插件钱包登陆并同意连接，谢谢");
+        this.isLoginFlag = 2;
         return
       }
       this.address = loginFlag.address;
@@ -127,7 +129,7 @@ class Common implements ICommonStore
     } else
     {
       this.address = '';
-      alert("测试：请安装打开插件钱包登陆并同意连接，然后刷新下页面，谢谢");
+      this.isLoginFlag = 1;
       return
     }
     // this.login.show();
