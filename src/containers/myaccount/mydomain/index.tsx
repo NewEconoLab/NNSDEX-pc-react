@@ -252,6 +252,8 @@ class Mydomain extends React.Component<IMydomainProps, any> {
     console.log('cancel')
     this.setState({
       inputSearchValue: '',
+    },()=>{
+      this.getListData();
     })
   }
   // 跳转到搜索页
