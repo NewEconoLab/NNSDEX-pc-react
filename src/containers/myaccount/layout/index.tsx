@@ -49,28 +49,24 @@ export default class MyaccountLayout extends React.Component<IProps> {
                   {/* <span className="trans-title">求购市场</span> */}
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link to="/myaccount/bind">
                   {
                     this.mapChildUnderline('/myaccount/bind') 
                     ? <><img className="trans-icon" src={require('@/img/bind.png')} alt="" /><span className="trans-title trans-active">绑定域名</span></>
                       : <><img className="trans-icon" src={require('@/img/bind-un.png')} alt="" /><span className="trans-title">绑定域名</span></>
                   }
-                  {/* <img className="trans-icon" src={require('@/img/history.png')} alt="" /> */}
-                  {/* <span className="trans-title">成交历史</span> */}
                 </Link>
-              </li>
-              <li>
+              </li> */}
+              {/* <li>
                 <Link to="/myaccount/bonus">
                   {
                     this.mapChildUnderline('/myaccount/bonus') 
                     ? <><img className="trans-icon" src={require('@/img/bonus.png')} alt="" /><span className="trans-title trans-active">NNS分红</span></>
                       : <><img className="trans-icon" src={require('@/img/bonus-un.png')} alt="" /><span className="trans-title">NNS分红</span></>
                   }
-                  {/* <img className="trans-icon" src={require('@/img/mylist.png')} alt="" /> */}
-                  {/* <span className="trans-title">我的挂单</span> */}
                 </Link>
-              </li>
+              </li> */}
               <li>
                 <Link to="/myaccount/setting">
                 {

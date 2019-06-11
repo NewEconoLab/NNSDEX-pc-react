@@ -106,8 +106,8 @@ export default class Header extends React.Component<IProps, IState>{
             {
               this.state.isNormalSearch && (
                 <ul>
-                  <li className={this.mapRouterUnderline('/')}><Link to="/bourse/salemarket">首页</Link></li>
-                  <li className={this.mapRouterUnderline('/auction')}>域名竞拍</li>
+                  {/* <li className={this.mapRouterUnderline('/')}><Link to="/bourse/salemarket">首页</Link></li> */}
+                  {/* <li className={this.mapRouterUnderline('/auction')}>域名竞拍</li> */}
                   <li className={this.mapRouterUnderline(['/bourse/salemarket', '/bourse/askbuymarket', '/bourse/txhistory', '/bourse/mydeity'])}><Link to="/bourse/salemarket">域名交易</Link></li>
                   <li className={this.mapRouterUnderline(['/myaccount/balance', '/myaccount/mydomain', '/myaccount/bind', '/myaccount/bonus', '/myaccount/setting'])}>
                     {/* <Link to="/myaccount/balance">我的账户</Link> */}

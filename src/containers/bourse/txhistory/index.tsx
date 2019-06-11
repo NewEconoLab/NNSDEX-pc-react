@@ -5,7 +5,7 @@ import * as React from 'react';
 import { observer, inject } from 'mobx-react';
 import './index.less';
 import { injectIntl } from 'react-intl';
-import Button from '@/components/Button';
+// import Button from '@/components/Button';
 import Page from '@/components/Page';
 import Select from '@/components/select';
 import { ITxHistoryProps, ITxHistoryList } from '../interface/txhistory.interface';
@@ -73,7 +73,7 @@ class TXHistory extends React.Component<ITxHistoryProps, any> {
           <div className="orderby-two">
             <Select defaultValue='All' options={this.txhistoryAssetOpt} text='筛选' onCallback={this.onTxAssetSelect} />
           </div>
-          <Button text="成交价格分布" btnSize='sm-btn' />
+          {/* <Button text="成交价格分布" btnSize='sm-btn' /> */}
         </div>
         <div className="history-table">
           <ul className="table-ul">

@@ -78,7 +78,7 @@ class Mydomain extends React.Component<IMydomainProps, any> {
             <Select defaultValue='' options={this.selectOptions} text='筛选' onCallback={this.onFillterBack} />
           </div>
           <Input
-            placeholder="请搜索您想要的域名"
+            placeholder="搜索我的域名"
             styleType="small"
             value={this.state.inputSearchValue}
             onChange={this.onChangeSearch}
