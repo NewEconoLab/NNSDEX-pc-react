@@ -275,7 +275,7 @@ export default class Header extends React.Component<IProps, IState>{
   private goSearch = () =>
   {
     let search: string = this.state.inputValue;
-    search = search.trim();
+    search = search.trim().toLowerCase();
     const checked = this.checkDomainname(search);
     if(!checked){
       return

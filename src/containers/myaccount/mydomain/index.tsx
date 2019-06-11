@@ -96,6 +96,9 @@ class Mydomain extends React.Component<IMydomainProps, any> {
               </ul>
             </li>
             {
+              this.props.mydomain.domainListCount === 0 && <li className="table-td li-no-data">没有相关数据</li>
+            }
+            {
               this.props.mydomain.domainListCount > 0 && this.props.mydomain.domainList.map((item: IDomainList, index: number) =>
               {
                 return (
