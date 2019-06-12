@@ -15,11 +15,6 @@ import { when } from 'mobx';
 @inject('mydeity', 'common')
 @observer
 class Mydeity extends React.Component<IMyDeityProps, any> {
-  public state = {
-    mydeityPage: 1,
-    mydeitySize: 15,
-    mydeityOrderBy: '0',// 筛选排序方式
-  }
   // 筛选
   private mydeityOptions = [
     {
@@ -33,6 +28,8 @@ class Mydeity extends React.Component<IMyDeityProps, any> {
   ]
   public componentWillUnmount()
   {
+    this.props.mydeity.mydeityPage = 1;
+    this.props.mydeity.mydeityOrderBy = '0';
     this.props.mydeity.mydeityList = [];
     this.props.mydeity.mydeityListCount = 0;
   }
@@ -86,8 +83,8 @@ class Mydeity extends React.Component<IMyDeityProps, any> {
           </ul>
           <Page
             totalCount={this.props.mydeity.mydeityListCount}
-            pageSize={this.state.mydeitySize}
-            currentPage={this.state.mydeityPage}
+            pageSize={this.props.mydeity.mydeitySize}
+            currentPage={this.props.mydeity.mydeityPage}
             onChange={this.onMydeityPage}
           />
         </div>
@@ -100,32 +97,25 @@ class Mydeity extends React.Component<IMyDeityProps, any> {
   {
     when(
       () => !!this.props.common.address,
-      () => this.props.mydeity.getMyDeityList(this.props.common.address, parseInt(this.state.mydeityOrderBy, 10), this.state.mydeityPage, this.state.mydeitySize)
+      () => this.props.mydeity.getMyDeityList(this.props.common.address)
     )
   }
   // 选择筛选条件
   private onMyDeityCallback = (item) =>
   {
-    this.setState({
-      mydeityPage: 1,
-      mydeityOrderBy: item.id
-    }, async () =>
-      {
-        if (this.props.common.address !== '')
-        {
-          this.getMyDeityData();
-        }
-      })
+    this.props.mydeity.mydeityPage = 1;
+    this.props.mydeity.mydeityOrderBy = item.id;
+
+    if (this.props.common.address !== '')
+    {
+      this.getMyDeityData();
+    }
   }
   // 翻页
   private onMydeityPage = (index: number) =>
   {
-    this.setState({
-      mydeityPage: index
-    }, async () =>
-      {
-        this.getMyDeityData();
-      })
+    this.props.mydeity.mydeityPage = index;
+    this.getMyDeityData();
   }
   // 列表显示样式
   private dealClassname = (deal: boolean) =>
@@ -139,7 +129,7 @@ class Mydeity extends React.Component<IMyDeityProps, any> {
     }
   }
   // 跳转到详情页
-  private onGoDomainInfo = (item:IMyDeityList) =>
+  private onGoDomainInfo = (item: IMyDeityList) =>
   {
     if (item.isDeal)
     {

@@ -80,7 +80,7 @@ class StepFour extends React.Component<ISellFormProps, any> {
     // 上一步
     private onGoPrevious = () =>
     {
-        this.props.sellform.stepNumber = 3;
+        this.props.sellform.stepNumber = 5;
     }
     // 下一步
     private onSendReduceDeity = async () =>

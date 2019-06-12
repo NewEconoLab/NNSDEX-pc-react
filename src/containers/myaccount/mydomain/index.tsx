@@ -19,13 +19,7 @@ import { when } from 'mobx';
 @observer
 class Mydomain extends React.Component<IMydomainProps, any> {
   public state = {
-    inputSearchValue: '',
-    fillterType: '',// 过滤条件
-    orderbyType: 'fulldomain', // 排序条件
-    mydomainPage: 1, // 页码
-    mydomainSize: 15, // 条数
     mydomainFistLoad: true, // 是否初次加载
-    showInfoList: []
   }
   // 筛选条件
   private orderOptions = [
@@ -63,6 +57,10 @@ class Mydomain extends React.Component<IMydomainProps, any> {
   ]
   public componentWillUnmount()
   {
+    this.props.mydomain.inputSearchValue = '';
+    this.props.mydomain.fillterType = '';// 过滤条件
+    this.props.mydomain.orderbyType = 'fulldomain'; // 排序条件
+    this.props.mydomain.mydomainPage = 1; // 页码
     this.props.mydomain.domainList = [];
     this.props.mydomain.domainListCount = 0;
   }
@@ -80,7 +78,7 @@ class Mydomain extends React.Component<IMydomainProps, any> {
           <Input
             placeholder="搜索我的域名"
             styleType="small"
-            value={this.state.inputSearchValue}
+            value={this.props.mydomain.inputSearchValue}
             onChange={this.onChangeSearch}
             type='text'
             onCancelSearch={this.onCancelSearch}
@@ -128,7 +126,7 @@ class Mydomain extends React.Component<IMydomainProps, any> {
                             (!item.isSelling && !item.isBind) && (
                               <>
                                 {/* <Button text="转让域名" btnColor="white-btn" /> */}
-                                <Button text="出售域名" style={{ 'marginLeft': '15px' }} onClick={this.onGoSentDeity.bind(this,item)} />
+                                <Button text="出售域名" style={{ 'marginLeft': '15px' }} onClick={this.onGoSentDeity.bind(this, item)} />
                               </>
                             )
                           }
@@ -182,8 +180,8 @@ class Mydomain extends React.Component<IMydomainProps, any> {
           </ul>
           <Page
             totalCount={this.props.mydomain.domainListCount}
-            pageSize={this.state.mydomainSize}
-            currentPage={this.state.mydomainPage}
+            pageSize={this.props.mydomain.mydomainSize}
+            currentPage={this.props.mydomain.mydomainPage}
             onChange={this.onTransPage}
           />
         </div>
@@ -195,95 +193,66 @@ class Mydomain extends React.Component<IMydomainProps, any> {
   {
     when(
       () => !!this.props.common.address,
-      () => this.props.mydomain.getDomainList(this.props.common.address, this.state.inputSearchValue, this.state.fillterType, this.state.orderbyType, this.state.mydomainPage, this.state.mydomainSize)
+      () => this.props.mydomain.getDomainList(this.props.common.address)
     )
   }
   // todo
   private onFillterBack = (item) =>
   {
-    console.log(item.id);
-    this.setState({
-      mydomainPage: 1,
-      fillterType: item.id
-    }, () =>
-      {
-        if (!this.state.mydomainFistLoad)
-        {
-          this.getListData();
-        } else
-        {
-          this.setState({
-            mydomainFistLoad: false
-          })
-        }
+    this.props.mydomain.mydomainPage = 1;
+    this.props.mydomain.fillterType = item.id;
+    if (!this.state.mydomainFistLoad)
+    {
+      this.getListData();
+    } else
+    {
+      this.setState({
+        mydomainFistLoad: false
       })
+    }
   }
   private onOrderbyBack = (item) =>
   {
-    console.log(item.id);
-    this.setState({
-      mydomainPage: 1,
-      orderbyType: item.id
-    }, () =>
-      {
-        this.getListData();
-      })
+    this.props.mydomain.mydomainPage = 1;
+    this.props.mydomain.orderbyType = item.id;
+    this.getListData();
   }
   // 翻页
   private onTransPage = (index: number) =>
   {
-    this.setState({
-      mydomainPage: index
-    }, async () =>
-      {
-        this.getListData();
-      })
+    this.props.mydomain.mydomainPage = index;
+    this.getListData();
   }
   // 输入搜索内容
   private onChangeSearch = (value: string) =>
   {
-    this.setState({
-      inputSearchValue: value
-    })
+    this.props.mydomain.inputSearchValue = value;
   }
   // 取消搜索
   private onCancelSearch = () =>
   {
-    console.log('cancel')
-    this.setState({
-      inputSearchValue: '',
-    },()=>{
-      this.getListData();
-    })
+    this.props.mydomain.inputSearchValue = '';
+    this.getListData();
   }
   // 跳转到搜索页
   private doSearchDomain = () =>
   {
-    this.setState({
-      mydomainPage: 1
-    }, () =>
-      {
-        this.getListData();
-      })
+    this.props.mydomain.mydomainPage = 1;
+    this.getListData();
   }
 
   // 计算是否即将到期
   private computeExpireTime = (item: IDomainList) =>
   {
     // true 为即将到期，反之为false
-    const nowTime = new Date().getTime();
-    console.log(nowTime);
-    if (item.ttl - nowTime > 0)
-    {
-      console.log('todo')
-    }
     const timestamp = new Date().getTime();
     const copare = (new Neo.BigInteger(item.ttl).multiply(1000)).subtract(new Neo.BigInteger(timestamp));
     let oneMonth = (24 * 60 * 60 * 1000) * 30;
-    if(item.fulldomain.includes('.test')){
+    if (item.fulldomain.includes('.test'))
+    {
       oneMonth = (5 * 60 * 1000) * 90;
     }
-    
+
     return copare.compareTo(oneMonth) < 0 ? true : false;    // 小于oneMonth即将过期true
   }
   // 点击展开或关闭
@@ -293,21 +262,18 @@ class Mydomain extends React.Component<IMydomainProps, any> {
     {
       return
     }
-
     domain.active = !domain.active;
-
-    // this.state.showInfoList.push(domain)
   }
 
   // 跳转到详情页
-  private onGoDomainInfo = (item:IDomainList) =>
+  private onGoDomainInfo = (item: IDomainList) =>
   {
     this.props.history.push('/saleinfo/' + item.orderid + '?addr=' + this.props.common.address)
   }
   // 跳转到出售域名
-  private onGoSentDeity = (item:IDomainList) =>
+  private onGoSentDeity = (item: IDomainList) =>
   {
-    this.props.history.push('/selltable?selldomain='+item.fulldomain+'&extime='+item.ttl);
+    this.props.history.push('/selltable?selldomain=' + item.fulldomain + '&extime=' + item.ttl);
   }
 }
 export default injectIntl(Mydomain);

@@ -40,7 +40,7 @@ class StepTwo extends React.Component<ISellFormProps, any> {
                         style={{ 'width': '3rem','minWidth':"300px" }}
                     />
                     <div className="two-text">
-                        {this.state.selectType === 'one' ? "以恒定价格出售您的域名。" : "降价拍卖需要您设置一个出售域名的最高价和最低价，订单以最高价挂出。如果没有卖掉每两天会降一次价，直到降到最低价。"}
+                        {this.state.selectType === 'one' ? "以恒定价格出售您的域名。" : "降价拍卖需要您设置一个出售域名的最高价和最低价，订单以最高价挂出。如果没有卖掉每天会降一次价，直到降到最低价。"}
                     </div>
                 </div>
                 <div className="step-btn">

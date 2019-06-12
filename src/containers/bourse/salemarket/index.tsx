@@ -12,16 +12,11 @@ import Card from '@/components/card';
 import Slider from '@/components/slider';
 import { ISaleMarketProps, ISaleList } from '../interface/salemarket.interface';
 
-@inject('salemarket','common')
+@inject('salemarket', 'common')
 @observer
 class SaleMarket extends React.Component<ISaleMarketProps, any> {
   public state = {
-    salePage: 1,
-    saleSize: 15,
-    saleOrderBy: 'MortgagePayments_High',// 筛选排序方式
-    saleAsset: 'All',   // 筛选币种
-    saleStar: 'All', // 是否只看关注
-    saleFistLoad:true // 是否初次加载
+    saleFistLoad: true // 是否初次加载
   }
   // 筛选条件
   private saleOrder = [
@@ -63,6 +58,10 @@ class SaleMarket extends React.Component<ISaleMarketProps, any> {
   ]
   public componentWillUnmount()
   {
+    this.props.salemarket.salePage = 1;
+    this.props.salemarket.saleOrderBy = 'MortgagePayments_High';
+    this.props.salemarket.saleAsset = 'All';
+    this.props.salemarket.saleStar = 'All';
     this.props.salemarket.saleList = [];
     this.props.salemarket.saleListCount = 0;
   }
@@ -99,7 +98,7 @@ class SaleMarket extends React.Component<ISaleMarketProps, any> {
                     <ul className="td-ul">
                       <li className="td-li">
                         <span>{item.fullDomain}</span>
-                        {(parseFloat(item.saleRate) !== 0 && item.sellType === 0)&& <Slider rate={parseFloat(item.saleRate) * 100} />}
+                        {(parseFloat(item.saleRate) !== 0 && item.sellType === 0) && <Slider rate={parseFloat(item.saleRate) * 100} />}
                         {
                           item.isMine && <Card text="我的" style={{ 'marginLeft': '15px' }} cardsize="sm-card" colortype="c-blue" />
                         }
@@ -118,75 +117,59 @@ class SaleMarket extends React.Component<ISaleMarketProps, any> {
           </ul>
           <Page
             totalCount={this.props.salemarket.saleListCount}
-            pageSize={this.state.saleSize}
-            currentPage={this.state.salePage}
+            pageSize={this.props.salemarket.saleSize}
+            currentPage={this.props.salemarket.salePage}
             onChange={this.onChangeSalePage}
           />
         </div>
       </div>
     );
   }
-  
+
   // 获取数据
-  private getSaleData = async() =>
+  public getSaleData = async () =>
   {
-    this.props.salemarket.getSaleList(this.props.common.address, this.state.salePage, this.state.saleSize, this.state.saleOrderBy, this.state.saleAsset, this.state.saleStar)  
+    this.props.salemarket.getSaleList(this.props.common.address)
   }
   // 排序显示
   private onSaleOrderBy = (item) =>
   {
-    this.setState({
-      salePage: 1,
-      saleOrderBy: item.id
-    }, async () =>
-      {
-        this.getSaleData();
-      })
+    this.props.salemarket.salePage = 1;
+    this.props.salemarket.saleOrderBy = item.id;
+    this.getSaleData();
   }
   // 筛选条件待定
   private onSaleAssetSelect = (item) =>
   {
-    this.setState({
-      salePage: 1,
-      saleAsset: item.id
-    }, async () =>
-      {
-        if(!this.state.saleFistLoad){
-          this.getSaleData();    
-        }else{
-          this.setState({
-            saleFistLoad:false
-          })
-        }
+    this.props.salemarket.salePage = 1;
+    this.props.salemarket.saleAsset = item.id;
+    if (!this.state.saleFistLoad)
+    {
+      this.getSaleData();
+    } else
+    {
+      this.setState({
+        saleFistLoad: false
       })
+    }
   }
   // 只看关注 todo
   private onSaleMyAttention = (flag: boolean) =>
   {
-    console.log('flag:' + flag+','+typeof(flag))
-    const starFlag = flag? 'Mine' : 'All';
-    console.log(starFlag)
-    this.setState({
-      saleStar: starFlag
-    }, async () =>
-    {
-      this.getSaleData();
-    })
+    const starFlag = flag ? 'Mine' : 'All';
+    this.props.salemarket.saleStar = starFlag;
+    this.getSaleData();
   }
   // 翻页
   private onChangeSalePage = (index: number) =>
   {
-    this.setState({
-      salePage: index
-    }, async () =>
-      {
-        this.getSaleData();
-      })
+    this.props.salemarket.salePage = index;
+    this.getSaleData();
   }
   // 跳转到详情页
   private onGoDomainInfo = (item: ISaleList) =>
   {
-    this.props.history.push('/saleinfo/' + item.orderid)  
+    this.props.history.push('/saleinfo/' + item.orderid)
   }
   // 关注或取消关注
   private onStarClick = async (item: ISaleList, event: any) =>
@@ -199,9 +182,10 @@ class SaleMarket extends React.Component<ISaleMarketProps, any> {
       this.props.common.login();
       return
     }
-    const isStar = item.isStar?0:1;
-    await this.props.salemarket.setStarDomain(this.props.common.address,0,item.orderid,isStar)
-    if(this.props.salemarket.resStar){
+    const isStar = item.isStar ? 0 : 1;
+    await this.props.salemarket.setStarDomain(this.props.common.address, 0, item.orderid, isStar)
+    if (this.props.salemarket.resStar)
+    {
       item.isStar = !item.isStar
     }
   }

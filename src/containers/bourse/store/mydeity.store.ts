@@ -4,6 +4,9 @@ import { IMyDeityStore, IMyDeityList } from '../interface/mydeity.interface';
 
 class Mydeity implements IMyDeityStore
 {
+    @observable public mydeityPage: number = 1;
+    @observable public mydeitySize: number = 15;
+    @observable public mydeityOrderBy: string = '0';// 筛选排序方式
     @observable public mydeityList: IMyDeityList[] = []; // 所有交易列表
     @observable public mydeityListCount: number = 0; // 所有交易总数
 
@@ -12,12 +15,12 @@ class Mydeity implements IMyDeityStore
      * @param page 当前页码
      * @param size 每页条数
      */
-    @action public async getMyDeityList(addr:string,type:number,page: number, size: number)
+    @action public async getMyDeityList(addr: string)
     {
         let result: any = null;
         try
         {
-            result = await Api.getmydeitylist(addr,type, page, size);
+            result = await Api.getmydeitylist(addr, parseInt(this.mydeityOrderBy, 10), this.mydeityPage, this.mydeitySize);
         } catch (error)
         {
             this.mydeityListCount = 0;
@@ -27,7 +30,7 @@ class Mydeity implements IMyDeityStore
         this.mydeityListCount = result[0].count || 0;
         this.mydeityList = result ? result[0].list : [];
         console.log(result)
-        return true; 
+        return true;
     }
 }
 export default new Mydeity();

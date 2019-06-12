@@ -24,14 +24,15 @@ class AskBuyInfo extends React.Component<IAskbuyInfoProps, any> {
     public async componentDidMount()
     {
         const params = this.props.match.params;
-        const orderid = params["orderid"];        
+        const orderid = params["orderid"];
         await this.props.askbuyinfo.getAskbuyInfo(orderid);
-        if(this.props.askbuyinfo.askbuyData){
+        if (this.props.askbuyinfo.askbuyData)
+        {
             this.props.askbuyinfo.askbuyDomain = this.props.askbuyinfo.askbuyData.fullDomain;
             this.props.askbuyinfo.getAskbuyOtherList(this.props.askbuyinfo.askbuyData.fullDomain, this.state.askBuyer);
             this.props.askbuyinfo.getDomainOwner(this.props.askbuyinfo.askbuyData.fullDomain, this.props.common.address);
         }
-        
+
         console.log(JSON.stringify(this.props.askbuyinfo));
     }
     public render()
@@ -51,9 +52,14 @@ class AskBuyInfo extends React.Component<IAskbuyInfoProps, any> {
                         <div className="line-name">求购价格</div>
                         <div className="line-text">
                             {this.props.askbuyinfo.askbuyData && (this.props.askbuyinfo.askbuyData.price + ' ' + this.props.askbuyinfo.askbuyData.assetName)}
-                            <div className="tips-text">
-                                （ 手续费：2%  <Hint text="使用CGAS成交的订单，合约会抽取2%成交额的手续费进入分红池。" />  ）
-                            </div>
+                            {
+                                (this.props.askbuyinfo.askbuyData && this.props.askbuyinfo.askbuyData.assetName === 'CGAS') && (
+                                    <div className="tips-text">
+                                        （ 手续费：2%  <Hint text="使用CGAS成交的订单，合约会抽取2%成交额的手续费进入分红池。" />  ）
+                                    </div>
+                                )
+                            }
+
                         </div>
                     </div>
                     <div className="line-wrapper">
@@ -68,7 +74,7 @@ class AskBuyInfo extends React.Component<IAskbuyInfoProps, any> {
                     </div>
                 </div>
                 {
-                    (this.state.opt === 'normal'|| this.state.askBuyer !== this.props.common.address) && (
+                    (this.state.opt === 'normal' || this.state.askBuyer !== this.props.common.address) && (
                         <div className="domain-account">
                             {
                                 (this.props.askbuyinfo.ownerInfo && !this.props.askbuyinfo.ownerInfo.isOwn) && (
@@ -110,7 +116,7 @@ class AskBuyInfo extends React.Component<IAskbuyInfoProps, any> {
                     )
                 }
                 {
-                    (this.state.opt === 'cancel'|| this.state.askBuyer === this.props.common.address) && (
+                    (this.state.opt === 'cancel' || this.state.askBuyer === this.props.common.address) && (
                         <div className="domain-account">
                             <div className="account-btn">
                                 <Button text="取消挂单" onClick={this.onCancelAskbuy} />
@@ -166,13 +172,14 @@ class AskBuyInfo extends React.Component<IAskbuyInfoProps, any> {
             </div>
         );
     }
-    
+
     // 取消挂单
     private onCancelAskbuy = async () =>
     {
         const orderid = this.props.askbuyinfo.askbuyData ? this.props.askbuyinfo.askbuyData.orderid : '';
         console.log(orderid)
-        if(!orderid){
+        if (!orderid)
+        {
             return
         }
         const res = await Contract.cancelAskbuy(orderid)
@@ -185,7 +192,7 @@ class AskBuyInfo extends React.Component<IAskbuyInfoProps, any> {
         this.props.history.go(-1);
     }
     // 跳转到详情页
-    private onGoInfo = (item:IAskbuyOtherList) =>
+    private onGoInfo = (item: IAskbuyOtherList) =>
     {
         // selltype出售类型：0表示降价出售，1表示一口价
         if (item.orderType === 'Buying')
@@ -195,13 +202,15 @@ class AskBuyInfo extends React.Component<IAskbuyInfoProps, any> {
         else if (item.orderType === 'Selling')
         {
             this.props.history.push('/saleinfo/' + item.orderid)
-        } 
+        }
     }
     // 出售域名给某人
-    private sellDomainToHim = async ()=>{
+    private sellDomainToHim = async () =>
+    {
         const orderid = this.props.askbuyinfo.askbuyData ? this.props.askbuyinfo.askbuyData.orderid : '';
         console.log(orderid)
-        if(!orderid){
+        if (!orderid)
+        {
             return
         }
         const res = await Contract.sellDomainToWho(orderid)

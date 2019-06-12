@@ -20,7 +20,17 @@ class SearchPage extends React.Component<ISearchProps, any> {
   }
   public componentDidMount()
   {
-    this.props.search.getSearchInfo(this.state.searchDomain);
+    // 截取域名
+    let domain = this.state.searchDomain;
+    if (/\.neo$/.test(this.state.searchDomain))
+    {
+      domain = this.state.searchDomain.substring(0, this.state.searchDomain.length - 4);
+    }
+    else if (/\.test$/.test(this.state.searchDomain))
+    {
+      domain = this.state.searchDomain.substring(0, this.state.searchDomain.length - 5);
+    }
+    this.props.search.getSearchInfo(domain);
     this.getLikeList();
   }
   public render()

@@ -12,7 +12,7 @@ addLocaleData([...en, ...zh]);
 // 初始化请求
 
 store['common'].initLanguage();
-
+store['common'].refreshCurrentPage();
 const ObserverRender = observer(() => {
   let locale = 'en';
   

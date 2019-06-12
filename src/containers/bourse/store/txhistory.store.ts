@@ -4,6 +4,10 @@ import { ITxHistoryStore, ITxHistoryList } from '../interface/txhistory.interfac
 
 class TxHistory implements ITxHistoryStore
 {
+    @observable public txhistoryPage: number = 1;
+    @observable public txhistorySize: number = 15;
+    @observable public txhistoryOrderBy: string = 'MortgagePayments_High';// 筛选排序方式
+    @observable public txhistoryAsset: string = 'All';   // 筛选币种
     @observable public txhistoryList: ITxHistoryList[] = []; // 所有交易列表
     @observable public txhistoryListCount: number = 0; // 所有交易总数
 
@@ -12,12 +16,12 @@ class TxHistory implements ITxHistoryStore
      * @param page 当前页码
      * @param size 每页条数
      */
-    @action public async getTxHistoryList(addr:string,page: number, size: number, orderby: string, asset: string)
+    @action public async getTxHistoryList(addr: string)
     {
         let result: any = null;
         try
         {
-            result = await Api.gethistorylist(addr, page, size, orderby, asset);
+            result = await Api.gethistorylist(addr, this.txhistoryPage, this.txhistorySize, this.txhistoryOrderBy, this.txhistoryAsset);
         } catch (error)
         {
             this.txhistoryListCount = 0;
@@ -27,7 +31,7 @@ class TxHistory implements ITxHistoryStore
         this.txhistoryListCount = result[0].count || 0;
         this.txhistoryList = result ? result[0].list : [];
         console.log(result[0].list)
-        return true; 
+        return true;
     }
 }
 export default new TxHistory();

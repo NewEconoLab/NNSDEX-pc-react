@@ -133,7 +133,7 @@ export default class Header extends React.Component<IProps, IState>{
             <ul>
               <li>
                 <div className="language-toggle" id="language">
-                  <img src={this.state.languageImg} alt="zh.png"  onClick={this.toggleLanguage} />
+                  <img src={this.state.languageImg} alt="zh.png" onClick={this.toggleLanguage} />
                   {/* <label>
                     <div className="language-content">
                       <span className="lang-text">{this.state.languageText}</span>
@@ -164,7 +164,7 @@ export default class Header extends React.Component<IProps, IState>{
         </div>
         {
           this.props.common.isLoginFlag !== 0 && <DownloadTeemo {...this.props} />
-        }        
+        }
       </header>
     );
   }
@@ -226,8 +226,9 @@ export default class Header extends React.Component<IProps, IState>{
   // 输入搜索内容
   private onChangeSearch = (value: string) =>
   {
-    this.setState({  
-      inputValue: value
+    // 只能输入字母数字.
+    this.setState({
+      inputValue:value.replace(/[^\w\.]/ig,'').replace("_","")
     })
   }
   // 获取焦点
@@ -248,46 +249,44 @@ export default class Header extends React.Component<IProps, IState>{
     this.props.onSearch(false)
   }
   // 检测输入域名是否合法
-  private checkDomainname(domainname: string)
-  {
-    let domain = domainname;
-    if (/\.neo$/.test(domainname))
-    {
-      domain = domain.substring(0, domain.length - 4);
-    }
-    else if (/\.test$/.test(domainname))
-    {
-      domain = domain.substring(0, domain.length - 5);
-    }
-    else
-    {
-      return false;
-    }
-    if (domain.length >= 2 && domain.length <= 32)
-    {
-      return true;
-    } else
-    {
-      return false;
-    }
-  }
+  // private checkDomainname(domainname: string)
+  // {
+  //   let domain = domainname;
+  //   if (/\.neo$/.test(domainname))
+  //   {
+  //     domain = domain.substring(0, domain.length - 4);
+  //   }
+  //   else if (/\.test$/.test(domainname))
+  //   {
+  //     domain = domain.substring(0, domain.length - 5);
+  //   }
+  //   else
+  //   {
+  //     return false;
+  //   }
+
+  //   if (domain.length >= 2 && domain.length <= 32)
+  //   {
+  //     return true;
+  //   } else
+  //   {
+  //     return false;
+  //   }
+  // }
   // 跳转到搜索页
   private goSearch = () =>
   {
     let search: string = this.state.inputValue;
     search = search.trim().toLowerCase();
-    const checked = this.checkDomainname(search);
-    if(!checked){
-      return
-    }
-    const base = this.props.common.network === 'MainNet'?'':'/test';
+    const base = this.props.common.network === 'MainNet' ? '' : '/test';
     window.open(`${location.origin}${base || ''}/search?keywords=${search}`);
     this.onCancelSearch();
   }
   // 跳转到我的账户
-  private toMyaccount = ()=>{
+  private toMyaccount = () =>
+  {
     // const base = this.props.common.network === 'MainNet'?'':'/test';
-    if(!this.props.common.address)
+    if (!this.props.common.address)
     {
       this.props.common.login();
       // this.props.history.goBack();

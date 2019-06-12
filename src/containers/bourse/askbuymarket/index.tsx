@@ -11,15 +11,10 @@ import Select from '@/components/select';
 import Card from '@/components/card';
 import { IAskBuyMarketProps, IAskBuyList } from '../interface/askbuymarket.interface';
 
-@inject('askbuymarket','common')
+@inject('askbuymarket', 'common')
 @observer
 class AskBuyMarket extends React.Component<IAskBuyMarketProps, any> {
   public state = {
-    askbuyPage: 1,
-    askbuySize: 15,
-    askbuyOrderBy: 'MortgagePayments_High',// 筛选排序方式
-    askbuyAsset: 'All',   // 筛选币种
-    askbuyStar: 'All', // 是否只看关注
     // askbuyLoading: true, // 是否正在加载
     askbuyFistLoad: true // 是否初次加载
   }
@@ -63,6 +58,10 @@ class AskBuyMarket extends React.Component<IAskBuyMarketProps, any> {
   ]
   public componentWillUnmount()
   {
+    this.props.askbuymarket.askbuyPage =1;
+    this.props.askbuymarket.askbuyOrderBy = 'MortgagePayments_High';
+    this.props.askbuymarket.askbuyAsset = 'All';
+    this.props.askbuymarket.askbuyStar = 'All';
     this.props.askbuymarket.askbuyList = [];
     this.props.askbuymarket.askbuyListCount = 0;
   }
@@ -120,8 +119,8 @@ class AskBuyMarket extends React.Component<IAskBuyMarketProps, any> {
           </ul>
           <Page
             totalCount={this.props.askbuymarket.askbuyListCount}
-            pageSize={this.state.askbuySize}
-            currentPage={this.state.askbuyPage}
+            pageSize={this.props.askbuymarket.askbuySize}
+            currentPage={this.props.askbuymarket.askbuyPage}
             onChange={this.onChangeAskbuyPage}
           />
         </div>
@@ -133,71 +132,51 @@ class AskBuyMarket extends React.Component<IAskBuyMarketProps, any> {
   // 获取数据
   private getAskbuyData = () =>
   {
-    this.props.askbuymarket.getAskBuyList(this.props.common.address,this.state.askbuyPage, this.state.askbuySize, this.state.askbuyOrderBy, this.state.askbuyAsset, this.state.askbuyStar)
+    this.props.askbuymarket.getAskBuyList(this.props.common.address)
   }
   // 排序显示
   private onAskbuyOrderBy = (item) =>
   {
-    this.setState({
-      askbuyPage: 1,
-      askbuyOrderBy: item.id,
-      // askbuyLoading: true,
-    }, () =>
-      {
-        this.getAskbuyData();
-      })
+    this.props.askbuymarket.askbuyPage = 1;
+    this.props.askbuymarket.askbuyOrderBy = item.id;
+    this.getAskbuyData();
   }
   // 筛选条件待定
   private onAskbuyAssetSelect = (item) =>
   {
-    this.setState({
-      askbuyPage: 1,
-      askbuyAsset: item.id,
-      // askbuyLoading: true
-    }, () =>
-      {
-        if (!this.state.askbuyFistLoad)
-        {
-          this.getAskbuyData();
-        } else
-        {
-          this.setState({
-            askbuyFistLoad: false
-          })
-        }
+    this.props.askbuymarket.askbuyPage = 1;
+    this.props.askbuymarket.askbuyAsset = item.id;
+
+    if (!this.state.askbuyFistLoad)
+    {
+      this.getAskbuyData();
+    } else
+    {
+      this.setState({
+        askbuyFistLoad: false
       })
+    }
   }
   // 只看关注 todo
   private onAskbuyMyAttention = (flag: boolean) =>
   {
-    console.log('flag:' + flag + ',' + typeof (flag))
     const starFlag = flag ? 'Mine' : 'All';
-    console.log(starFlag)
-    this.setState({
-      askbuyStar: starFlag
-    }, () =>
-      {
-        this.getAskbuyData();
-      })
+    this.props.askbuymarket.askbuyStar = starFlag;
+    this.getAskbuyData();
   }
   // 翻页
   private onChangeAskbuyPage = (index: number) =>
   {
-    this.setState({
-      askbuyPage: index,
-      // askbuyLoading: true
-    }, () =>
-      {
-        this.getAskbuyData();
-      })
+    this.props.askbuymarket.askbuyPage = index;
+    this.getAskbuyData();
   }
   // 跳转到详情页
-  private onGoDomainInfo = (item:IAskBuyList) =>
+  private onGoDomainInfo = (item: IAskBuyList) =>
   {
     this.props.history.push('/askbuyinfo/' + item.orderid + '?addr=' + item.buyer)
   }
   // 关注或取消关注
-  private  onStarClick = async (item: IAskBuyList, event: any) =>
+  private onStarClick = async (item: IAskBuyList, event: any) =>
   {
     event.preventDefault();
     event.stopPropagation();
@@ -207,9 +186,10 @@ class AskBuyMarket extends React.Component<IAskBuyMarketProps, any> {
       this.props.common.login();
       return
     }
-    const isStar = item.isStar?0:1;
-    await this.props.askbuymarket.setAskbuyStarDomain(this.props.common.address,1,item.orderid,isStar)
-    if(this.props.askbuymarket.askbuyStar){
+    const isStar = item.isStar ? 0 : 1;
+    await this.props.askbuymarket.setAskbuyStarDomain(this.props.common.address, 1, item.orderid, isStar)
+    if (this.props.askbuymarket.isAskbuyStar)
+    {
       item.isStar = !item.isStar
     }
   }

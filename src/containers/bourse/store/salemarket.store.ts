@@ -4,6 +4,11 @@ import { ISaleMarketStore, ISaleList } from '../interface/salemarket.interface';
 
 class Salemarket implements ISaleMarketStore
 {
+    @observable public salePage: number = 1;
+    @observable public saleSize: number = 15;
+    @observable public saleOrderBy: string = 'MortgagePayments_High';// 筛选排序方式
+    @observable public saleAsset: string = 'All';// 筛选币种
+    @observable public saleStar: string = 'All'; // 是否只看关注
     @observable public saleList: ISaleList[] = []; // 所有交易列表
     @observable public saleListCount: number = 0; // 所有交易总数
     @observable public resStar: boolean = false;
@@ -13,12 +18,12 @@ class Salemarket implements ISaleMarketStore
      * @param page 当前页码
      * @param size 每页条数
      */
-    @action public async getSaleList(addr: string, page: number, size: number, orderby: string, asset: string, star: string)
+    @action public async getSaleList(addr: string)
     {
         let result: any = null;
         try
         {
-            result = await Api.getselllist(addr, page, size, orderby, asset, star);
+            result = await Api.getselllist(addr, this.salePage, this.saleSize, this.saleOrderBy, this.saleAsset, this.saleStar);
         } catch (error)
         {
             this.saleListCount = 0;

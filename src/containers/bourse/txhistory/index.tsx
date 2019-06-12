@@ -9,14 +9,10 @@ import { injectIntl } from 'react-intl';
 import Page from '@/components/Page';
 import Select from '@/components/select';
 import { ITxHistoryProps, ITxHistoryList } from '../interface/txhistory.interface';
-@inject('txhistory','common')
+@inject('txhistory', 'common')
 @observer
 class TXHistory extends React.Component<ITxHistoryProps, any> {
   public state = {
-    txhistoryPage: 1,
-    txhistorySize: 15,
-    txhistoryOrderBy: 'MortgagePayments_High',// 筛选排序方式
-    txhistoryAsset: 'All',   // 筛选币种
     txhistoryFistLoad: true // 是否初次加载
   }
   // 筛选条件
@@ -59,6 +55,9 @@ class TXHistory extends React.Component<ITxHistoryProps, any> {
   ]
   public componentWillUnmount()
   {
+    this.props.txhistory.txhistoryPage = 1;
+    this.props.txhistory.txhistoryOrderBy = 'MortgagePayments_High';
+    this.props.txhistory.txhistoryAsset = 'All';
     this.props.txhistory.txhistoryList = [];
     this.props.txhistory.txhistoryListCount = 0;
   }
@@ -104,8 +103,8 @@ class TXHistory extends React.Component<ITxHistoryProps, any> {
           </ul>
           <Page
             totalCount={this.props.txhistory.txhistoryListCount}
-            pageSize={this.state.txhistorySize}
-            currentPage={this.state.txhistoryPage}
+            pageSize={this.props.txhistory.txhistorySize}
+            currentPage={this.props.txhistory.txhistoryPage}
             onChange={this.onChangeTxPage}
           />
         </div>
@@ -116,47 +115,37 @@ class TXHistory extends React.Component<ITxHistoryProps, any> {
   // 获取数据
   private getTxHistoryData = () =>
   {
-    this.props.txhistory.getTxHistoryList(this.props.common.address,this.state.txhistoryPage, this.state.txhistorySize, this.state.txhistoryOrderBy, this.state.txhistoryAsset)
+    this.props.txhistory.getTxHistoryList(this.props.common.address)
   }
   // 排序显示
   private onTxOrderBy = (item) =>
   {
-    this.setState({
-      txhistoryPage: 1,
-      txhistoryOrderBy: item.id
-    }, async () =>
-      {
-        this.getTxHistoryData();
-      })
+    this.props.txhistory.txhistoryPage = 1;
+    this.props.txhistory.txhistoryOrderBy = item.id
+    this.getTxHistoryData();
   }
   // 筛选条件待定
   private onTxAssetSelect = (item) =>
   {
-    this.setState({
-      txhistoryPage: 1,
-      txhistoryAsset: item.id
-    }, async () =>
-      {
-        if (!this.state.txhistoryFistLoad)
-        {
-          this.getTxHistoryData();
-        } else
-        {
-          this.setState({
-            txhistoryFistLoad: false
-          })
-        }
+    this.props.txhistory.txhistoryPage = 1;
+    this.props.txhistory.txhistoryAsset = item.id
+
+    if (!this.state.txhistoryFistLoad)
+    {
+      this.getTxHistoryData();
+    } else
+    {
+      this.setState({
+        txhistoryFistLoad: false
       })
+    }
+
   }
   // 翻页
   private onChangeTxPage = (index: number) =>
   {
-    this.setState({
-      txhistoryPage: index
-    }, async () =>
-      {
-        this.getTxHistoryData();
-      })
+    this.props.txhistory.txhistoryPage = index;
+    this.getTxHistoryData();
   }
 }
 

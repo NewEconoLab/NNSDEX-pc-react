@@ -29,6 +29,7 @@ export interface ICommonStore {
   // updateAllData:()=>Promise<boolean>, // 更新所有
   // setTimeGetBlock:()=>Promise<boolean>, // 定时请求高度
   getSessionAddress:()=>void // 获取登陆态
+  refreshCurrentPage:()=>void
 }
 export interface ICommonProps{
   common:ICommonStore
