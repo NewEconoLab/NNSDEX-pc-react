@@ -1,7 +1,7 @@
 import { RouteComponentProps } from "react-router";
 import { ICommonStore } from "@/store/interface/common.interface";
 export interface ISearchStore{
-    searchInfo:ISearchInfo|null, // 搜索详情
+    searchInfo:ISearchInfo[], // 搜索详情
     likeCount:number,// 相似列表总数
     likeList:ILikeList[],// 相似列表
     searchStar:boolean, // 关注与取消关注结果

@@ -122,7 +122,8 @@ class Setting extends React.Component<ISettingProps, any> {
       })
     }
     this.setState({
-      emailFlag: !this.state.emailFlag
+      emailFlag: !this.state.emailFlag,
+      emailInput:''
     })
   }
   // 邮箱输入
@@ -166,7 +167,8 @@ class Setting extends React.Component<ISettingProps, any> {
     await this.props.setting.clearEmail(this.props.common.address,email);
     this.getEmailInfo();
     this.setState({
-      cancelBox: false
+      cancelBox: false,
+      emailInput:''
     })
   }
 
@@ -188,6 +190,7 @@ class Setting extends React.Component<ISettingProps, any> {
   // 修改邮箱
   private onChangeEmailBind = () => {
     this.setState({
+      emailInput:'',
       inputEmailFlag:true
     })
   }

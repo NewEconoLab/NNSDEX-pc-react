@@ -29,5 +29,6 @@ export interface IAskBuyList
     price: string, // 资产价格
     isNewly: boolean, // 是否最新（3天内）
     canSell: boolean, // 是否可以出售给他
-    isStar: boolean // 是否标记关注
+    isStar: boolean, // 是否标记关注
+    isMineOrder:boolean // 是否是自己的求购挂单
 }

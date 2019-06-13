@@ -5,7 +5,7 @@ import { ISearchStore, ISearchInfo, ILikeList } from '../interface/search.interf
 
 class SearchPage implements ISearchStore
 {
-    @observable public searchInfo:ISearchInfo|null = null;
+    @observable public searchInfo:ISearchInfo[] = [];
     @observable public likeCount: number = 0; 
     @observable public likeList: ILikeList[] = []; 
     @observable public searchStar:boolean = false;
@@ -22,10 +22,10 @@ class SearchPage implements ISearchStore
             result = await Api.searchInfo(domain);
         } catch (error)
         {
-            this.searchInfo = null;
+            this.searchInfo = [];
             return false;
         }
-        this.searchInfo = result[0]||null;
+        this.searchInfo = result||[];
         // console.log(result[0])
         return true; 
     }

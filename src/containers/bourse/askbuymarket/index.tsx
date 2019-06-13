@@ -20,10 +20,10 @@ class AskBuyMarket extends React.Component<IAskBuyMarketProps, any> {
   }
   // 求购市场排序方式
   private askbuyOrder = [
-    {
-      id: 'MortgagePayments_High',
-      name: '默认',
-    },
+    // {
+    //   id: 'MortgagePayments_High',
+    //   name: '默认',
+    // },
     {
       id: 'LaunchTime_New',
       name: '最新上架',
@@ -59,7 +59,7 @@ class AskBuyMarket extends React.Component<IAskBuyMarketProps, any> {
   public componentWillUnmount()
   {
     this.props.askbuymarket.askbuyPage =1;
-    this.props.askbuymarket.askbuyOrderBy = 'MortgagePayments_High';
+    this.props.askbuymarket.askbuyOrderBy = 'LaunchTime_New';
     this.props.askbuymarket.askbuyAsset = 'All';
     this.props.askbuymarket.askbuyStar = 'All';
     this.props.askbuymarket.askbuyList = [];
@@ -71,7 +71,7 @@ class AskBuyMarket extends React.Component<IAskBuyMarketProps, any> {
       <div className="buy-page">
         <div className="orderby-wrap">
           <div className="orderby-one">
-            <Select defaultValue='MortgagePayments_High' options={this.askbuyOrder} text='排序' onCallback={this.onAskbuyOrderBy} />
+            <Select defaultValue='LaunchTime_New' options={this.askbuyOrder} text='排序' onCallback={this.onAskbuyOrderBy} />
           </div>
           <div className="orderby-two">
             <Select defaultValue='All' options={this.askbuyAssetOpt} text='筛选' onCallback={this.onAskbuyAssetSelect} />
@@ -103,6 +103,9 @@ class AskBuyMarket extends React.Component<IAskBuyMarketProps, any> {
                         }
                         {
                           item.isNewly && <Card text="新" style={{ 'marginLeft': '15px' }} cardsize="sm-card" colortype="cs-yellow" />
+                        }
+                        {
+                          item.isMineOrder && <Card text="我的" style={{ 'marginLeft': '15px' }} cardsize="sm-card" colortype="c-blue" />
                         }
                       </li>
                       <li className="td-li"><span>{item.price + ' ' + item.assetName}</span></li>

@@ -188,7 +188,7 @@ class Common implements ICommonStore
     this.socket.onmessage = (event: any) =>
     {
       const data = JSON.parse(event.data);
-      console.log(data.data.blockHeight)
+      console.log(data.data)
       // 初次链接
       if(data.type === 'LogIn'){
         return

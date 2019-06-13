@@ -74,7 +74,8 @@ export default class Header extends React.Component<IProps, IState>{
 
       if (location.pathname !== '/search')
       {
-        isNormalSearch = true
+        isNormalSearch = true;
+        this.onCancelSearch();
       }
 
       this.setState({
@@ -226,9 +227,13 @@ export default class Header extends React.Component<IProps, IState>{
   // 输入搜索内容
   private onChangeSearch = (value: string) =>
   {
-    // 只能输入字母数字.
+    // 禁止输入中文，以及其他特殊字符
+    console.log(!(/[^a-zA-Z\d\.]/g.test(value)))
+    if(/[^a-zA-Z\d\.]/g.test(value)){
+      return
+    }
     this.setState({
-      inputValue:value.replace(/[^\w\.]/ig,'').replace("_","")
+      inputValue:value.replace('_','')
     })
   }
   // 获取焦点
@@ -310,7 +315,7 @@ export default class Header extends React.Component<IProps, IState>{
     if (path === this.props.history.location.pathname)
     {
       return "active"
-    }
+    }    
     return '';
   }
   // 标题样式显示

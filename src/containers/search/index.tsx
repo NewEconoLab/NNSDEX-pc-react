@@ -9,7 +9,7 @@ import Button from '@/components/Button';
 import Card from '@/components/card';
 import Slider from '@/components/slider';
 import { getQueryString } from '@/utils/function'
-import { ISearchProps, ILikeList } from './interface/search.interface';
+import { ISearchProps, ILikeList, ISearchInfo } from './interface/search.interface';
 @inject('search', 'common')
 @observer
 class SearchPage extends React.Component<ISearchProps, any> {
@@ -20,17 +20,7 @@ class SearchPage extends React.Component<ISearchProps, any> {
   }
   public componentDidMount()
   {
-    // 截取域名
-    let domain = this.state.searchDomain;
-    if (/\.neo$/.test(this.state.searchDomain))
-    {
-      domain = this.state.searchDomain.substring(0, this.state.searchDomain.length - 4);
-    }
-    else if (/\.test$/.test(this.state.searchDomain))
-    {
-      domain = this.state.searchDomain.substring(0, this.state.searchDomain.length - 5);
-    }
-    this.props.search.getSearchInfo(domain);
+    this.props.search.getSearchInfo(this.state.searchDomain);
     this.getLikeList();
   }
   public render()
@@ -38,39 +28,46 @@ class SearchPage extends React.Component<ISearchProps, any> {
     return (
       <div className="search-page">
         <div className="search-title">搜索结果</div>
-        <div className="search-result">
-          <div className="left-side">
-            {
-              (this.props.search.searchInfo && this.props.search.searchInfo.state === 'CanAuction') && <Card text="可以竞拍" style={{ 'marginRight': '20px' }} cardsize="big-card" colortype="c-purple" />
-            }
-            {
-              (this.props.search.searchInfo && this.props.search.searchInfo.state === 'Auctioning') && <Card text="竞拍中" style={{ 'marginRight': '20px' }} cardsize="big-card" colortype="c-orange" />
-            }
-            {
-              (this.props.search.searchInfo && this.props.search.searchInfo.state === 'NotSelling') && <Card text="未出售" style={{ 'marginRight': '20px' }} cardsize="big-card" colortype="c-green" />
-            }
-            {
-              (this.props.search.searchInfo && this.props.search.searchInfo.state === 'YesSelling') && <Card text="出售中" style={{ 'marginRight': '20px' }} cardsize="big-card" colortype="c-red" />
-            }
-            <span>{this.state.searchDomain.toLowerCase()}</span>
-          </div>
-          <div className="right-side">
-            <span className="price-text">{this.props.search.searchInfo && this.props.search.searchInfo.price !== '0' ? (this.props.search.searchInfo.price + ' ' + this.props.search.searchInfo.assetName) : ''}</span>
+        {
+          this.props.search.searchInfo.length !== 0 && this.props.search.searchInfo.map((item: ISearchInfo, value: number) =>
+          {
+            return (
+              <div className="search-result" key={value}>
+                <div className="left-side">
+                  {
+                    (item.state === 'CanAuction') && <Card text="可以竞拍" style={{ 'marginRight': '20px' }} cardsize="big-card" colortype="c-purple" />
+                  }
+                  {
+                    (item.state === 'Auctioning') && <Card text="竞拍中" style={{ 'marginRight': '20px' }} cardsize="big-card" colortype="c-orange" />
+                  }
+                  {
+                    (item.state === 'NotSelling') && <Card text="未出售" style={{ 'marginRight': '20px' }} cardsize="big-card" colortype="c-green" />
+                  }
+                  {
+                    (item.state === 'YesSelling') && <Card text="出售中" style={{ 'marginRight': '20px' }} cardsize="big-card" colortype="c-red" />
+                  }
+                  <span>{item.fulldomain.toLowerCase()}</span>
+                </div>
+                <div className="right-side">
+                  <span className="price-text">{item.price !== '0' ? (item.price + ' ' + item.assetName) : ''}</span>
 
-            {
-              (this.props.search.searchInfo && this.props.search.searchInfo.state === 'CanAuction') && <Button text="立即开标" onClick={this.onGoAuction} />
-            }
-            {
-              (this.props.search.searchInfo && this.props.search.searchInfo.state === 'Auctioning') && <Button text="参与竞拍" onClick={this.onGoAuction} style={{ 'marginLeft': '30px' }} />
-            }
-            {
-              (this.props.search.searchInfo && this.props.search.searchInfo.state === 'NotSelling') && <Button text="求购" onClick={this.onGoAskbuy} />
-            }
-            {
-              (this.props.search.searchInfo && this.props.search.searchInfo.state === 'YesSelling') && <Button text="查看详情" onClick={this.onGoDomainInfo} style={{ 'marginLeft': '30px' }} />
-            }
-          </div>
-        </div>
+                  {
+                    (item.state === 'CanAuction') && <Button text="立即开标" onClick={this.onGoAuction} />
+                  }
+                  {
+                    (item.state === 'Auctioning') && <Button text="参与竞拍" onClick={this.onGoAuction} style={{ 'marginLeft': '30px' }} />
+                  }
+                  {
+                    (item.state === 'NotSelling') && <Button text="求购" onClick={this.onGoAskbuy} />
+                  }
+                  {
+                    (item.state === 'YesSelling') && <Button text="查看详情" onClick={this.onGoDomainInfo.bind(this,item)} style={{ 'marginLeft': '30px' }} />
+                  }
+                </div>
+              </div>
+            )
+          })
+        }
         <div className="search-title">出售中的相似域名</div>
         <div className="search-table">
           <ul className="table-ul">
@@ -130,10 +127,9 @@ class SearchPage extends React.Component<ISearchProps, any> {
   //     })
   // }
   // 跳转到详情页
-  private onGoDomainInfo = () =>
+  private onGoDomainInfo = (item: ISearchInfo) =>
   {
-    const orderid = this.props.search.searchInfo ? this.props.search.searchInfo.orderid : '';
-    this.props.history.push('/saleinfo/' + orderid)
+    this.props.history.push('/saleinfo/' + item.orderid)
   }
   private onGoOtherDomainInfo = (item: ILikeList) =>
   {

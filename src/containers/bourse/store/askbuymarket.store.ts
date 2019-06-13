@@ -6,7 +6,7 @@ class AskBuyMarket implements IAskBuyMarketStore
 {
     @observable public askbuyPage: number = 1;
     @observable public askbuySize: number = 15;
-    @observable public askbuyOrderBy: string = 'MortgagePayments_High';// 筛选排序方式
+    @observable public askbuyOrderBy: string = 'LaunchTime_New';// 筛选排序方式
     @observable public askbuyAsset: string = 'All';  // 筛选币种
     @observable public askbuyStar: string = 'All'; // 是否只看关注
     @observable public askbuyList: IAskBuyList[] = []; // 所有交易列表
