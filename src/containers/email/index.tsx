@@ -39,7 +39,7 @@ export default class EmailCheck extends React.Component<ISettingProps> {
                     )
                 }
                 {
-                    this.props.setting.verifyResult !== '0000' && (
+                    (this.props.setting.verifyResult !== '' && this.props.setting.verifyResult !== '0000') && (
                         <div className="fail-email">
                             <img src={require('@/img/fail.png')} className="fail-icon" alt="" />
                             <p>该链接已经失效。</p>
