@@ -58,7 +58,7 @@ class SearchPage extends React.Component<ISearchProps, any> {
                     (item.state === 'Auctioning') && <Button text="参与竞拍" onClick={this.onGoAuction} style={{ 'marginLeft': '30px' }} />
                   }
                   {
-                    (item.state === 'NotSelling') && <Button text="求购" onClick={this.onGoAskbuy} />
+                    (item.state === 'NotSelling') && <Button text="求购" onClick={this.onGoAskbuy.bind(this,item)} />
                   }
                   {
                     (item.state === 'YesSelling') && <Button text="查看详情" onClick={this.onGoDomainInfo.bind(this,item)} style={{ 'marginLeft': '30px' }} />
@@ -165,14 +165,14 @@ class SearchPage extends React.Component<ISearchProps, any> {
     }
   }
   // 跳转到请求挂单
-  private onGoAskbuy = () =>
+  private onGoAskbuy = (item: ISearchInfo) =>
   {
     if (!this.props.common.address)
     {
       this.props.common.login();
       return
     }
-    this.props.history.push('/askbuytable/' + this.state.searchDomain)
+    this.props.history.push('/askbuytable/' + item.fulldomain)
   }
 }
 
