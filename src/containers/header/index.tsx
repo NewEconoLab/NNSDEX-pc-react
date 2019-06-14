@@ -275,7 +275,7 @@ export default class Header extends React.Component<IProps, IState>{
   //     return true;
   //   } else
   //   {
-  //     return false;
+  //     return false; 
   //   }
   // }
   // 跳转到搜索页
@@ -284,8 +284,14 @@ export default class Header extends React.Component<IProps, IState>{
     let search: string = this.state.inputValue;
     search = search.trim().toLowerCase();
     const base = this.props.common.network === 'MainNet' ? '' : '/test';
-    window.open(`${location.origin}${base || ''}/search?keywords=${search}`);
-    this.onCancelSearch();
+    if(window.location.pathname === '/search' || window.location.pathname === '/test/search'){
+      console.log('d');
+      this.props.history.push(`/search?keywords=${search}`);
+      window.location.reload();
+    }else{
+      window.open(`${location.origin}${base || ''}/search?keywords=${search}`);
+      this.onCancelSearch();
+    }    
   }
   // 跳转到我的账户
   private toMyaccount = () =>

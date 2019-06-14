@@ -48,6 +48,7 @@ class SellFormTable implements ISellFormStore
             console.log(result)
         } catch (error)
         {
+            this.sellDomainList = [];
             // 报错 了统一认为到底部了
             this.isLast = true;
             return false;
@@ -80,7 +81,6 @@ class SellFormTable implements ISellFormStore
         try
         {
             result = await Api.getorderrange(num);
-            console.log(result)
         } catch (error)
         {
             this.orderRank = 0;

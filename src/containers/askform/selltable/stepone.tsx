@@ -95,11 +95,6 @@ class StepOne extends React.Component<ISellFormProps, any> {
             return;
         }
         const tableScroll = table.scrollTop
-        console.log('tableScroll:' + tableScroll);
-        console.log('(table[offsetHeight]):' + (table['offsetHeight']));
-        console.log('ul.offsetHeight:' + ul.offsetHeight);
-        console.log('左边:' + (tableScroll + (table['offsetHeight'])));
-        console.log('右边：' + (ul.offsetHeight - 5));
         // console.log(tableScroll + (table['offsetHeight']) >= ul.offsetHeight-5)
         if ((tableScroll + (table['offsetHeight'])) >= (ul.offsetHeight - 5))
         {
@@ -123,12 +118,17 @@ class StepOne extends React.Component<ISellFormProps, any> {
     private doSearch = () =>
     {
         console.log(this.state.inputValue)
+        this.props.sellform.isLast = false;
+        this.getSellDomainData(true);
     }
     // 取消搜索
     private onCancelSearch = () =>
     {
         this.setState({
             inputValue: '',
+        },()=>{
+            this.props.sellform.isLast = false;
+            this.getSellDomainData(true);
         })
     }
     // 选择挂单域名
