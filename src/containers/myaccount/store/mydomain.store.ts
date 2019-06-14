@@ -10,8 +10,10 @@ class Mydomain implements IMydomainStore
     @observable public mydomainPage: number = 1; // 页码
     @observable public mydomainSize: number = 15; // 条数
     @observable public domainListCount: number = 0;
-    @observable public domainList: IDomainList[] = []; // 出售的域名
-
+    @observable public domainList: IDomainList[] = []; // 我的域名
+    @observable public editDomain:IDomainList|null = null; // 转让的域名
+    @observable public mapDomain:IDomainList|null = null; // 映射的域名
+    @observable public showEditNum:number = 0;// 默认为0 不显示，1为转让域名，2为映射地址
 
     /**
      * 查询该域名出售详情

@@ -10,6 +10,9 @@ export interface IMydomainStore
     mydomainSize: number, // 条数
     domainListCount: number,
     domainList: IDomainList[],
+    editDomain:IDomainList|null,// 转让的域名
+    mapDomain:IDomainList|null, // 映射的域名
+    showEditNum:number,// 默认为0 不显示，1为转让域名，2为映射地址
     getDomainList: (addr: string) => Promise<boolean>
 }
 export interface IMydomainProps extends RouteComponentProps

@@ -9,7 +9,7 @@ import salemarketStore from '@/containers/bourse/store/salemarket.store';
 import askbuymarketStore from '@/containers/bourse/store/askbuymarket.store';
 import txhistoryStore from '@/containers/bourse/store/txhistory.store';
 import mydeityStore from '@/containers/bourse/store/mydeity.store';
-import mydomainStore from '@/containers/myaccount/store/mydomain.store';
+// import mydomainStore from '@/containers/myaccount/store/mydomain.store';
 import settingStore from '@/containers/myaccount/store/setting.store';
 
 let lang = navigator.language;
@@ -210,10 +210,12 @@ class Common implements ICommonStore
       }else if(window.location.pathname === '/myaccount/balance' || window.location.pathname === '/test/myaccount/balance'){
         // 我的账户
         this.initAccountBalance();
-      }else if(window.location.pathname === '/myaccount/mydomain' || window.location.pathname === '/test/myaccount/mydomain'){
+      }
+      // else if(window.location.pathname === '/myaccount/mydomain' || window.location.pathname === '/test/myaccount/mydomain'){
         // 我的域名
-        mydomainStore.getDomainList(this.address);
-      }else if(window.location.pathname === '/myaccount/setting' || window.location.pathname === '/test/myaccount/setting'){
+        // mydomainStore.getDomainList(this.address);
+      // }
+      else if(window.location.pathname === '/myaccount/setting' || window.location.pathname === '/test/myaccount/setting'){
         // 账户设置
         settingStore.getEmailState(this.address);
       }

@@ -2,5 +2,89 @@
 .bind-page{
     padding: 50px .7rem;
     box-sizing: border-box;
-    
+    .bind-wrapper{
+        background: #FFFFFF;
+        box-shadow: 0 2px 6px 0 rgba(197,197,197,0.50);
+        border-radius: 5px;
+        font-size: 16px;
+        .bind-title{
+            padding: 30px;
+            .bind-left{
+                width: 250px; 
+                display: inline-block;               
+            }
+            .bind-right{
+                font-size: 20px;
+                display: inline-block;
+                font-weight: 600;
+            }
+        }
+        .bind-line{
+            border-top: 1px solid #E5E5E5;
+            padding: 22px 30px;
+            .bind-line-left{
+                display: inline-block;
+                width: 250px; 
+                color: #B2B2B2;
+                &.line-top{
+                    vertical-align: top;
+                }                
+            }
+            .bind-line-right{
+                display: inline-block;
+                clear: both;
+                .orange-text{
+                    color: #FBA200;
+                }
+                
+            }
+            .right-btn-wrapper{
+                float: right;
+                margin-top: -8px;
+            }
+        }
+        .bind-btn-wrapper{
+            text-align: center;
+            border-top: 1px solid  #E5E5E5;
+            padding-top: 60px;
+            padding-bottom: 50px;
+        }
+    }
+    .domain-list{
+        width: 3.3rem;
+        height: 1.6rem;
+        margin: 0 auto;
+        margin-top: 5px;
+        margin-bottom: .6rem;
+        background: #FFFFFF;
+        border: 1px solid #E5E5E5;
+        border-radius: 3px;
+        text-align: left;
+        overflow-y: scroll;
+        .list-ul{
+            .list-li{
+                padding: 10px 15px;
+                border-bottom: 1px solid #E5E5E5;
+                font-size: 14px;
+                cursor: pointer;
+                &:last-child{
+                    border-bottom: none;
+                }
+                &.active{
+                    color: #FF7C5C;
+                    position: relative;
+                    &::after{
+                        content: '';
+                        width: 20px;
+                        height: 20px;
+                        background: url('../../../img/choose.png') no-repeat;
+                        background-size: cover;
+                        position: absolute;
+                        top: 10px;
+                        right: 15px;
+                    }
+                }
+            }
+        }
+    }
 }
