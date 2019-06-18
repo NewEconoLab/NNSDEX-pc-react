@@ -25,16 +25,6 @@ export const getdomainlist = (addr:string,str:string,fillter:string,orderby:stri
   return request(opts);
 }
 
-// export const getorderrange = (num:number) =>
-// {
-//   const opts = {
-//     method: 'getOrderRange',
-//     params: [
-//       num
-//     ]
-//   }
-//   return request(opts);
-// }
 /**
  * 获取邮箱绑定状态
  * @param addr 当前地址
@@ -130,6 +120,21 @@ export const getBindDomainname = (address: string) =>
             address
         ],
         baseUrl: 'scan'
+    }
+
+    return request(opts);
+}
+/**
+ * 根据域名查询映射地址
+ * @param domain 域名
+ */
+export const getresolvedaddress = (domain: string) =>
+{
+    const opts = {
+        method: 'getresolvedaddress',
+        params: [
+          domain
+        ]
     }
 
     return request(opts);

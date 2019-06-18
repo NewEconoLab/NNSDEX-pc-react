@@ -1,6 +1,6 @@
 import { observable, action } from 'mobx';
 import * as Api from '../api/myaccount.api'
-import { IMydomainStore, IDomainList } from '../interface/mydomain.interface';
+import { IMydomainStore, IDomainList, IMapping } from '../interface/mydomain.interface';
 
 class Mydomain implements IMydomainStore
 {
@@ -14,6 +14,7 @@ class Mydomain implements IMydomainStore
     @observable public editDomain:IDomainList|null = null; // 转让的域名
     @observable public mapDomain:IDomainList|null = null; // 映射的域名
     @observable public showEditNum:number = 0;// 默认为0 不显示，1为转让域名，2为映射地址
+    @observable public mappingAddress:IMapping|null = null;// 已经映射的地址
 
     /**
      * 查询该域名出售详情
@@ -41,6 +42,20 @@ class Mydomain implements IMydomainStore
             }
         })
         console.log(result[0])
+        return true;
+    }
+    @action public async getAddressByDomain(domain:string){
+        let result: any = null;
+        try
+        {
+            result = await Api.getresolvedaddress(domain);
+        } catch (error)
+        {
+            this.mappingAddress = null;            
+            return false;
+        }
+        this.mappingAddress = result[0];
+        console.log('getAddressByDomain:'+result)
         return true;
     }
 }

@@ -13,13 +13,19 @@ export interface IMydomainStore
     editDomain:IDomainList|null,// 转让的域名
     mapDomain:IDomainList|null, // 映射的域名
     showEditNum:number,// 默认为0 不显示，1为转让域名，2为映射地址
-    getDomainList: (addr: string) => Promise<boolean>
+    mappingAddress:IMapping|null,
+    getDomainList: (addr: string) => Promise<boolean>,
+    getAddressByDomain:(domain:string) => Promise<boolean>
 }
 export interface IMydomainProps extends RouteComponentProps
 {
     mydomain: IMydomainStore,
     common: ICommonStore,
     intl: any
+}
+export interface IMapping{
+    TTL:number,
+    data:string
 }
 export interface IDomainList
 {

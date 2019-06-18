@@ -2,7 +2,7 @@
 /// <reference path="./inject.d.ts" />
 import { HASH_CONFIG } from "@/config";
 import common from '@/store/common'
-import * as Wallet from '@/utils/wallet';
+import * as Wallet from '@/utils/wallet'
 
 export class Contract
 {
@@ -285,7 +285,6 @@ export class Contract
      */
     public static async betDomain(buyer: string, auctionid: string, assetid: Neo.Uint160, price: number)
     {
-        // const domainHash = this.nameHashArray(domain.split("."));
         const priceStr = price.toFixed(HASH_CONFIG.assetDecimal[assetid.toString()]).replace(".", "");
         const amount = parseFloat(priceStr);
         const params: InvokeArgs = {
@@ -304,4 +303,99 @@ export class Contract
         }
         return Wallet.invoke(params);
     }
+
+    /**
+     * 域名转让
+     * @param domain 转让的域名
+     * @param newOwner 转让给某人
+     */
+    public static async transferOwner(domain:string,newOwner:string)
+    {
+        const hash = ThinNeo.Helper.GetPublicKeyScriptHash_FromAddress(common.address);
+        const hashstr = hash.reverse().toHexString();
+        const ownerHash = ThinNeo.Helper.GetPublicKeyScriptHash_FromAddress(newOwner);
+        const ownerHashStr = ownerHash.reverse().toHexString();
+        const arr = domain.split(".");
+        const nnshash: Neo.Uint256 = this.nameHashArray(arr);
+        const params: InvokeArgs = {
+            scriptHash: HASH_CONFIG.NNC_HASH.toString(),
+            operation: "owner_SetOwner",
+            arguments: [
+                { type: "Hash160", value: hashstr },
+                { type: "Hash256", value: nnshash.toString() },
+                { type: "Hash160", value: ownerHashStr }
+            ],
+            network: common.network,
+            description: common.language === 'zh' ? '转让域名' : '转让域名'
+        }
+        console.log(params)
+        return Wallet.invoke(params);
+    }
+    /**
+     * 地址映射
+     * @param domain 域名
+     * @param resolverhash 解析器
+     */
+    public static async setResolveAndMap(domain: string, resolverhash: Uint8Array,addr:string){
+        const hash = ThinNeo.Helper.GetPublicKeyScriptHash_FromAddress(common.address);
+        const hashstr = hash.reverse().toHexString();
+        const arr = domain.split(".");
+        const nnshash: Neo.Uint256 = this.nameHashArray(arr);
+        const resolvestr = resolverhash.reverse().toHexString();
+
+        const params: InvokeGroup = {
+            merge: false,
+            group: [
+                {
+                    scriptHash: HASH_CONFIG.NNC_HASH.toString(), // 合约地址
+                    operation: "owner_SetResolver",
+                    arguments: [
+                        { type: "Hash160", value: hashstr },
+                        { type: "Hash256", value: nnshash.toString() },
+                        { type: "Hash160", value: resolvestr }
+                    ],
+                    network: common.network
+                    // assets: 暂时用不到
+                },
+                {
+                    scriptHash: HASH_CONFIG.NNC_HASH.toString(),
+                    operation: "setResolverData",
+                    arguments: [
+                        { type: "Hash160", value: hashstr }, 
+                        { type: "Hash256", value: nnshash.toString() },
+                        { type: "String", value: '' }, 
+                        { type: "String", value: 'addr' },
+                        { type: "String", value: addr }, 
+                    ],
+                    network: common.network,
+                    description: common.language === 'zh' ? '地址映射' : '地址映射'
+                }
+            ]
+        }
+        console.log(params)
+        return Wallet.invokeGroup(params)
+    }
+
+    public static async renewDomain(domain:string, register: Neo.Uint160)
+    {
+        const who = new Neo.Uint160(ThinNeo.Helper.GetPublicKeyScriptHash_FromAddress(common.address).buffer);
+        const domainarr = domain.split(".").reverse();
+        const str = domainarr[ 1 ];
+        const roothash = this.nameHash(domainarr[ 0 ]);
+        const params: InvokeArgs = {
+            scriptHash: register.toString(),
+            operation: "renewDomain",
+            arguments: [
+                { type: "Hash160", value: who.toString() },
+                { type: "Hash256", value: roothash.toString() },
+                { type: "String", value: str }
+            ],
+            network: common.network,
+            description: common.language === 'zh' ? '转让域名' : '转让域名'
+        }
+        console.log(params)
+        return Wallet.invoke(params);
+    }
+    
 }
+

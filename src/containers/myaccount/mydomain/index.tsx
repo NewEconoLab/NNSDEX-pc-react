@@ -11,11 +11,13 @@ import Page from '@/components/Page';
 import Select from '@/components/select';
 import Input from '@/components/Input/Input';
 import Card from '@/components/card';
-// import Transfer from './transfer';
-// import Map from './map';
+import Transfer from './transfer';
+import Map from './map';
 import * as formatTime from '@/utils/formatTime';
 import { IMydomainProps, IDomainList } from '../interface/mydomain.interface';
 import { when } from 'mobx';
+import * as Neotool from '@/utils/neotools';
+import { Contract } from '@/utils/contract';
 
 @inject('mydomain', 'common')
 @observer
@@ -127,7 +129,7 @@ class Mydomain extends React.Component<IMydomainProps, any> {
                           {
                             (!item.isSelling && !item.isBind) && (
                               <>
-                                {/* <Button text="转让域名" btnColor="white-btn" onClick={this.openTransfer.bind(this,item,event)} /> */}
+                                <Button text="转让域名" btnColor="white-btn" onClick={this.openTransfer.bind(this,item,event)} />
                                 <Button text="出售域名" style={{ 'marginLeft': '15px' }} onClick={this.onGoSentDeity.bind(this, item)} />
                               </>
                             )
@@ -153,13 +155,13 @@ class Mydomain extends React.Component<IMydomainProps, any> {
                               <span>
                                 {formatTime.format('yyyy/MM/dd | hh:mm:ss', item.ttl.toString(), this.props.intl.locale)}
                               </span>
-                              {
-                                this.computeExpireTime(item) && (
+                              {/* {
+                                this.computeExpireTime(item) && ( */}
                                   <div className="li-btn">
-                                    <Button text="续约"  />
+                                    <Button text="续约" onClick={this.handleToRenew.bind(this,item)} />
                                   </div>
-                                )
-                              }
+                                {/* )
+                              } */}
                             </li>
                           </ul>
                           <ul className="open-ul">
@@ -168,9 +170,9 @@ class Mydomain extends React.Component<IMydomainProps, any> {
                             </li>
                             <li className="open-li">
                               <span>{item.data !== '' ? item.data : '-'}</span>
-                              {/* <div className="li-btn">
+                              <div className="li-btn">
                                 <Button text="修改" onClick={this.openMap.bind(this,item)} />
-                              </div> */}
+                              </div>
                             </li>
                           </ul>
                         </>
@@ -187,12 +189,12 @@ class Mydomain extends React.Component<IMydomainProps, any> {
             onChange={this.onTransPage}
           />
         </div>
-        {/* {
+        {
           this.props.mydomain.showEditNum === 1 && <Transfer {...this.props} />
         }
         {
           this.props.mydomain.showEditNum === 2 && <Map {...this.props} />
-        }        */}
+        }       
       </div>
     );
   }
@@ -204,17 +206,30 @@ class Mydomain extends React.Component<IMydomainProps, any> {
       () => this.props.mydomain.getDomainList(this.props.common.address)
     )
   }
-  // private openTransfer = (item: IDomainList,event:Event)=>{
-  //   event.preventDefault();
-  //   event.stopPropagation();
-  //   // event.nativeEvent.stopImmediatePropagation();
-  //   this.props.mydomain.editDomain = item;
-  //   this.props.mydomain.showEditNum = 1;
-  // }
-  // private openMap = (item: IDomainList)=>{
-  //   this.props.mydomain.mapDomain = item;
-  //   this.props.mydomain.showEditNum = 2;
-  // }
+  // 域名转让
+  private openTransfer = (item: IDomainList,event:Event)=>{
+    event.preventDefault();
+    event.stopPropagation();
+    // event.nativeEvent.stopImmediatePropagation();
+    this.props.mydomain.editDomain = item;
+    this.props.mydomain.showEditNum = 1;
+  }
+  // 地址映射
+  private openMap = (item: IDomainList)=>{
+    this.props.mydomain.mapDomain = item;
+    this.props.mydomain.showEditNum = 2;
+  }
+  // 域名续约
+  private handleToRenew = async (item: IDomainList)=>{
+    console.log(item);
+    const root = await Neotool.neotools.getRootInfo("neo");
+    console.log(root.register)
+    if(!root.register){
+      return
+    }
+    const res = await Contract.renewDomain(item.fulldomain,root.register);
+    console.log(res);
+  }
   // 筛选返回
   private onFillterBack = (item) =>
   {

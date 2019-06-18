@@ -138,3 +138,14 @@ export const getBalanceFromDex = (addr:string)=>{
   }
   return request(opts)
 }
+
+export const rpc_getInvokescript = (scripthash: Uint8Array)=>{
+  const opts = {
+    method:'invokescript',
+    params:[
+      scripthash.toHexString()
+    ],
+    baseUrl:'common'
+  }
+  return request(opts)
+}
