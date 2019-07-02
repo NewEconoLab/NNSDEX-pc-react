@@ -5,6 +5,10 @@ import * as Api from '../api/myaccount.api';
 
 class BindDomain implements IBindDomainStore
 {
+    @observable public willBindDomain: IBindList = {
+        fulldomain:'',
+        bindflag:''
+    };
     @observable public bindDomain: string = '';
     @observable public bindList: IBindList[] = [];
     //   @observable public bindListCount:number = 0;
@@ -30,7 +34,7 @@ class BindDomain implements IBindDomainStore
         return true;
     }
 
-    @action public async getBindDomainList( str?: string)
+    @action public async getBindDomainList(isFirst?: boolean, str?: string)
     {
         // 如果是last 或者 上一条还在加载中 就 return
         if (this.isLast || this.isLoading)
@@ -40,9 +44,18 @@ class BindDomain implements IBindDomainStore
         // 设置正在加载中
         this.isLoading = true;
         let result: any = [];
+        // 对定时刷新作处理
+        let pageIndex = this.pageIndex;
+        const pageSize = this.pageSize;
+
+        if (!isFirst)
+        {
+            this.pageIndex++;
+            pageIndex = this.pageIndex;
+        }
         try
         {
-            result = await Api.getBindDomainList(common.address, this.pageIndex, this.pageSize, str);
+            result = await Api.getBindDomainList(common.address, pageIndex, pageSize, str);
         } catch (e)
         {
             // 报错 了统一认为到底部了
@@ -55,10 +68,19 @@ class BindDomain implements IBindDomainStore
         }
 
         const list = result ? result[0].list : [];
+        if (list.length !== this.pageSize)
+        {
+            this.isLast = true;
+        }
         // 如果加载到的没结果了，认为是 last 最后一页了
         if (list.length === 0)
         {
             this.isLast = true;
+        }
+        if (isFirst)
+        {
+            this.bindList = list;
+            return true;
         }
         this.bindList.push(...list)
         return true;

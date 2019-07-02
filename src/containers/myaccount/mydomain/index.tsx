@@ -155,13 +155,13 @@ class Mydomain extends React.Component<IMydomainProps, any> {
                               <span>
                                 {formatTime.format('yyyy/MM/dd | hh:mm:ss', item.ttl.toString(), this.props.intl.locale)}
                               </span>
-                              {/* {
-                                this.computeExpireTime(item) && ( */}
+                              {
+                                this.computeExpireTime(item) && (
                                   <div className="li-btn">
                                     <Button text="续约" onClick={this.handleToRenew.bind(this,item)} />
                                   </div>
-                                {/* )
-                              } */}
+                                )
+                              }
                             </li>
                           </ul>
                           <ul className="open-ul">
@@ -221,8 +221,14 @@ class Mydomain extends React.Component<IMydomainProps, any> {
   }
   // 域名续约
   private handleToRenew = async (item: IDomainList)=>{
-    console.log(item);
-    const root = await Neotool.neotools.getRootInfo("neo");
+    console.log(item.fulldomain);
+    let root;
+    if(item.fulldomain.includes('.neo')){
+      root = await Neotool.neotools.getRootInfo("neo");
+    }
+    else if(item.fulldomain.includes('.test')){
+      root = await Neotool.neotools.getRootInfo("test");
+    }
     console.log(root.register)
     if(!root.register){
       return

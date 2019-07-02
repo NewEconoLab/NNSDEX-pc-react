@@ -358,7 +358,7 @@ export class Contract
                     // assets: 暂时用不到
                 },
                 {
-                    scriptHash: HASH_CONFIG.NNC_HASH.toString(),
+                    scriptHash: resolvestr,
                     operation: "setResolverData",
                     arguments: [
                         { type: "Hash160", value: hashstr }, 
@@ -375,7 +375,11 @@ export class Contract
         console.log(params)
         return Wallet.invokeGroup(params)
     }
-
+    /**
+     * 域名续约
+     * @param domain 域名
+     * @param register 
+     */
     public static async renewDomain(domain:string, register: Neo.Uint160)
     {
         const who = new Neo.Uint160(ThinNeo.Helper.GetPublicKeyScriptHash_FromAddress(common.address).buffer);
@@ -391,11 +395,56 @@ export class Contract
                 { type: "String", value: str }
             ],
             network: common.network,
-            description: common.language === 'zh' ? '转让域名' : '转让域名'
+            description: common.language === 'zh' ? '域名续约' : '域名续约'
         }
         console.log(params)
         return Wallet.invoke(params);
     }
-    
+    /**
+     * 绑定域名地址
+     * @param doamin 域名字符串
+     * @param address 当前地址
+     */
+    public static async bindDomain(domain: string, address: string)
+    {
+        let arr = domain.split(".").reverse();
+        arr = arr.map(str => `(str)${str}`);
+       
+        const params: InvokeArgs = {
+            scriptHash: HASH_CONFIG.bindContract.toString(),
+            operation: "authenticate",
+            arguments: [
+                { type: "Address", value: address },
+                {
+                    type: "Array", value: [
+                        { type: "String", value: arr[0] },
+                        { type: "String", value: arr[1] } 
+                    ]
+                },
+            ],
+            network: common.network,
+            description: common.language === 'zh' ? '绑定域名地址' : '绑定域名地址'
+        }
+        console.log(params)
+        return Wallet.invoke(params);
+    }
+    /**
+     * 解除绑定域名地址
+     * @param address 当前地址
+     */
+    public static async cancalBindDomain(address: string)
+    {
+        const params: InvokeArgs = {
+            scriptHash: HASH_CONFIG.bindContract.toString(),
+            operation: "revoke",
+            arguments: [
+                { type: "Address", value: address }                
+            ],
+            network: common.network,
+            description: common.language === 'zh' ? '解除绑定域名地址' : '解除绑定域名地址'
+        }
+        console.log(params)
+        return Wallet.invoke(params);
+    }
 }
 
