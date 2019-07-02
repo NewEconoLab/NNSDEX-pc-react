@@ -37,15 +37,19 @@ class BindDomain extends React.Component<IBindProps, any> {
               {this.props.common.address}
             </div>
           </div>
-          <div className="bind-line">
-            <div className="bind-line-left">已绑定域名</div>
-            <div className="bind-line-right">
-              <span className="orange-text">{this.props.bind.bindDomain ? this.props.bind.bindDomain : '-'}</span>
-            </div>
-            <div className="right-btn-wrapper">
-              <Button text={this.props.bind.bindDomain !== '' ? "修改" : "绑定"} btnSize="sm-btn" onClick={this.handleToChangeBind} />
-            </div>
-          </div>
+          {
+            this.state.bindChangeNum !== 2 && (
+              <div className="bind-line">
+                <div className="bind-line-left">已绑定域名</div>
+                <div className="bind-line-right">
+                  <span className="orange-text">{this.props.bind.bindDomain ? this.props.bind.bindDomain : '-'}</span>
+                </div>
+                <div className="right-btn-wrapper">
+                  <Button text={this.props.bind.bindDomain !== '' ? "修改" : "绑定"} btnSize="sm-btn" onClick={this.handleToChangeBind} />
+                </div>
+              </div>
+            )
+          }
           {
             this.state.bindChangeNum === 0 && (
               <div className="bind-line">
@@ -103,13 +107,12 @@ class BindDomain extends React.Component<IBindProps, any> {
                   {
                     this.state.bindChangeNum === 2 && (
                       <div className="bind-line-right">
-                        <span>{this.state.willDomainName === this.props.bind.bindDomain ? '解除绑定' : this.props.bind.willBindDomain}</span>
+                        <span>{this.state.willDomainName === this.props.bind.bindDomain ? '解除绑定' : this.state.willDomainName}</span>
                       </div>
                     )
                   }
 
                 </div>
-
                 <div className="bind-btn-wrapper">
                   <Button text="取消" btnColor='white-btn' style={{ 'marginRight': '30px' }} onClick={this.handleToCancelBind} />
                   {
@@ -191,7 +194,6 @@ class BindDomain extends React.Component<IBindProps, any> {
   private onChooseDomain = (item: IBindList) =>
   {
     console.log(item)
-    this.props.bind.willBindDomain = item
     this.setState({
       willDomainName: item.fulldomain
     })
@@ -203,6 +205,7 @@ class BindDomain extends React.Component<IBindProps, any> {
     this.setState({
       bindChangeNum: 1
     })
+    this.props.bind.isLast = false;
     this.getBindList(true);
   }
   // 获取域名列表
@@ -213,7 +216,6 @@ class BindDomain extends React.Component<IBindProps, any> {
   // 绑定下一步
   private handleToNext = () =>
   {
-    alert(1)
     this.setState({
       bindChangeNum: 2
     })
@@ -225,23 +227,19 @@ class BindDomain extends React.Component<IBindProps, any> {
       bindChangeNum: 0,
       willDomainName: ''
     })
-    this.props.bind.willBindDomain = {
-      fulldomain: '',
-      bindflag: ''
-    }
   }
   // 绑定域名或解除绑定
   private handleToBindDomain = async () =>
   {
     //
-    if (!this.props.bind.willBindDomain)
+    if (this.state.willDomainName === '')
     {
       return
     }
     // 绑定
-    if (this.props.bind.willBindDomain.bindflag === '0')
+    if (this.state.willDomainName !== this.props.bind.bindDomain)
     {
-      const res = await Contract.bindDomain(this.props.bind.willBindDomain.fulldomain, this.props.common.address);
+      const res = await Contract.bindDomain(this.state.willDomainName, this.props.common.address);
       console.log(res);
     }// 解除绑定
     else

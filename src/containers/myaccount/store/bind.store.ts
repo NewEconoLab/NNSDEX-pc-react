@@ -5,10 +5,6 @@ import * as Api from '../api/myaccount.api';
 
 class BindDomain implements IBindDomainStore
 {
-    @observable public willBindDomain: IBindList = {
-        fulldomain:'',
-        bindflag:''
-    };
     @observable public bindDomain: string = '';
     @observable public bindList: IBindList[] = [];
     //   @observable public bindListCount:number = 0;

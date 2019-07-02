@@ -2,7 +2,6 @@
 import { ICommonStore } from "@/store/interface/common.interface";
 export interface IBindDomainStore
 {
-    willBindDomain:IBindList, // 将要绑定的域名
     bindDomain: string, // 绑定的域名
     bindList: IBindList[], // 可绑定域名列表
     isLast: boolean, // 是否是最后的请求

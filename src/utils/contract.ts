@@ -408,7 +408,7 @@ export class Contract
     public static async bindDomain(domain: string, address: string)
     {
         let arr = domain.split(".").reverse();
-        arr = arr.map(str => `(str)${str}`);
+        arr = arr.map(str => `${str}`);
        
         const params: InvokeArgs = {
             scriptHash: HASH_CONFIG.bindContract.toString(),
