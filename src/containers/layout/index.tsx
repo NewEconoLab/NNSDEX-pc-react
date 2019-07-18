@@ -2,7 +2,7 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import Header from '@/containers/header';
-import { zh_CN, en_US } from '@/language';
+// import { zh_CN, en_US } from '@/language';
 import store from '@/store/common';
 import HomeStore from '@/containers/home/store/home.store';
 import CommonStore from '@/store/common';
@@ -58,9 +58,9 @@ export default class LayoutIndex extends React.Component<any, any> {
           <Header
             home={HomeStore}
             history={this.context.router.history}
-            locale={this.state.lang === 'en' ? en_US.header : zh_CN.header}
-            btn={this.state.lang === 'en' ? en_US.btn : zh_CN.btn}
-            input={this.state.lang === 'en' ? en_US.input : zh_CN.input}
+            // locale={this.state.lang === 'en' ? en_US.header : zh_CN.header}
+            // btn={this.state.lang === 'en' ? en_US.btn : zh_CN.btn}
+            // input={this.state.lang === 'en' ? en_US.input : zh_CN.input}
             onChangeLanguage={this.onChangeLanguage}
             onSearch={this.onSearch}
             common={CommonStore}

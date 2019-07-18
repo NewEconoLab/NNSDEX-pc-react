@@ -20,7 +20,7 @@ interface IState
 {
   isShowSearch: boolean,         // 是否在首页显示search功能
   inputValue: string,            // 输入框的输入
-  inputPlaceHolder: string,      // 输入框的placeholder
+  // inputPlaceHolder: string,      // 输入框的placeholder
   isNormalSearch: boolean,      // 是否正常显示header上的search
   isShowLanguage: boolean        // 是否显示语言下拉框
   languageText: string,
@@ -33,10 +33,10 @@ interface IProps
 {
   home: IHomeStore,
   history: History,
-  locale: any,
+  // locale: any,
   common: ICommonStore,
-  btn: any,
-  input: any,
+  // btn: any,
+  // input: any,
   onChangeLanguage: (lang: string) => void;
   onSearch: (flag: boolean) => void;// 是否在搜索中
 }
@@ -46,7 +46,7 @@ export default class Header extends React.Component<IProps, IState>{
     isShowSearch: false,
     isNormalSearch: false,
     inputValue: '',
-    inputPlaceHolder: this.props.input.placeholder,
+    // inputPlaceHolder: this.props.input.placeholder,
     isShowLanguage: false,
     languageText: store['common'].language === 'en' ? "En" : "中",
     languageImg: store['common'].language === 'en' ? en : zh,
