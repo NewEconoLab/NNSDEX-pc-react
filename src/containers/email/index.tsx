@@ -1,5 +1,5 @@
 /**
- * 域名交易
+ * 邮箱验证
  */
 import * as React from 'react';
 import { Link } from 'react-router-dom';
